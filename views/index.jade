@@ -1,0 +1,44 @@
+extends layout
+
+block body
+  div#wrapper
+    div#sidebar-wrapper
+      ul.sidebar-nav
+        li.sidebar-brand
+          a(href='/') #1draw
+        li
+          a(href='/showDetail/lovelive') #LoveLive!
+            span.pull-right.sidebar-arrow
+              i.fa.fa-angle-right
+        li
+          a(href='/showDetail/aikatsu') #Ailatsu!
+            span.pull-right.sidebar-arrow
+              i.fa.fa-angle-right
+        li
+          a(href='/showDetail/yuruyuri') #yuruyuri
+            span.pull-right.sidebar-arrow
+              i.fa.fa-angle-right
+        li
+          a(href='/showDetail/kancolle') #kancolle
+            span.pull-right.sidebar-arrow
+              i.fa.fa-angle-right
+        li
+          a(href="http://1draw-layk.tumblr.com", target="_blank") tumblr
+            span.pull-right.sidebar-arrow
+              i.fa.fa-angle-right
+
+    div(ng-view)
+
+  script(src='bower_components/jquery/dist/jquery.min.js')
+  script(src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+  script(src='/socket.io/socket.io.js')
+  script(src='js/lib/angular/angular.js')
+  script(src='bower_components/angular-socket-io/socket.js')
+  script(src='js/app.js')
+  script(src='js/services.js')
+  script(src='js/controllers.js')
+  script(src='js/filters.js')
+  script(src='js/directives.js')
+  script(src='bower_components/d3/d3.min.js')
+  script(src='bower_components/nvd3/nv.d3.min.js')
+  script(src='bower_components/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js')
