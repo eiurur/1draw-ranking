@@ -1,5 +1,6 @@
 var mongoose  = require('mongoose')
   , db        = mongoose.connect('mongodb://127.0.0.1/third-mongo')
+  // , db        = mongoose.connect('mongodb://127.0.0.1/fourth')
   , Schema    = mongoose.Schema
   , ObjectId  = Schema.Objectid
   ;
@@ -83,6 +84,16 @@ PostProvider.prototype.findNew = function(params, callback) {
 PostProvider.prototype.findDescRetweet = function(params, callback) {
   Post.find({category: params['name'], correspondDate: params['correspondDate']})
       .sort({retweetNum: -1})
+      .limit(params['numShow'])
+      .exec(function(err, posts) {
+          callback(null, posts)
+      });
+};
+
+// 総合得点を降順に、データを取得
+PostProvider.prototype.findDescTotalPoint = function(params, callback) {
+  Post.find({category: params['name'], correspondDate: params['correspondDate']})
+      .sort({totalNum: -1})
       .limit(params['numShow'])
       .exec(function(err, posts) {
           callback(null, posts)

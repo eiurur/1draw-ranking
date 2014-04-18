@@ -10,10 +10,6 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 
         templateUrl: 'partials/ShowDetail',
         controller: ShowDetailCtrl
       }).
-      // when('/readPost/:id', {
-      //   templateUrl: 'partials/readPost',
-      //   controller: ReadPostCtrl
-      // }).
       otherwise({
         redirectTo: '/'
       });

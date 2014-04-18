@@ -3,12 +3,14 @@
  * Module dependencies
  */
 
-var express = require('express'),
-    routes  = require('./routes'),
-    api     = require('./routes/api'),
-    http    = require('http'),
-    path    = require('path'),
-　  　util    = require('util');
+var express = require('express')
+  , routes  = require('./routes')
+  , api     = require('./routes/api')
+  , http    = require('http')
+  , path    = require('path')
+  , util    = require('util')
+  , bson    = require('bson')
+  ;
 
 var app = module.exports = express();
 var server = http.createServer(app);
@@ -32,8 +34,8 @@ app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 app.use(function(req, res, next){
-  res.status(404);
-  res.render('404', {title: "お探しのページは存在しません。"});
+  res.status(404);
+  res.render('404', {title: "お探しのページは存在しません。"});
 });
 
 

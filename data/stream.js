@@ -224,16 +224,19 @@
 
         console.log("## Lets New Save to MongoDB");
         console.log(category + " original INSERT OK = " + data.user.screen_name + " :  " + data.text);
-        
+
         // 公式画像のみサイズを取得して、横サイズの比率ごとの縦サイズを保存する。
         // twitpicなどの外部サービスを利用した投稿画像は取得できないので分岐。
         // picWidthが空なら600に自動で補完する処理をapi.jsで行うため、こちらで書く必要はない。
 
         // 外部サービスはmediaプロパティがない
         if(_.has(data.entities, 'media')) {
+          console.log("ehhhhhhhhhhhhhhhhhhhhhight");
 
-          // twitter公式 
+          // twitter公式
           if(_.has(data.entities.media[0], "sizes")) {
+            console.log("siiiiiiiiiiiiiiiiiiiiiiiiize");
+
             var picWidth = {}
               , mW = data.entities.media[0].sizes.medium.w
               , mH = data.entities.media[0].sizes.medium.h
@@ -290,29 +293,143 @@
    *
    */
   exports.getTweetStatus = function(nowTime) {
-    var correspondDate;
-    console.log("crooooo000000000000000000000000000000000000000000000oooooons");
+
+
     console.log("nowTimw = " + nowTime);
-    _.each(settings.categories, function(categoryName) {
-      correspondDate = cd.getCorrespondDate(categoryName);
-      PostProvider.findOnlyCorrespondDate({
-          categoryName: categoryName
-        , correspondDate: correspondDate
-      }, function(error, posts) {
-        _.each(posts, function(post, i){
-          var historyNumFavAndRT = {};
-          historyNumFavAndRT.retweetNum = post.retweetNum;
-          historyNumFavAndRT.favNum     = post.favNum;
-          historyNumFavAndRT.totalNum   = post.retweetNum + post.favNum;
-          historyNumFavAndRT.createdAt  = nowTime;
-          post.historiesNumFavAndRT.push(historyNumFavAndRT);
-          PostProvider.insertHistory({
-            tweetId: post.tweetId,
-            historiesNumFavAndRT: post.historiesNumFavAndRT
-          }, function(error, docs) {
-            //
-          });
-        });
+    var correspondDate;
+
+    // Kancolle, Yuruyuri, Aikatsu!
+    // 21:59
+    var numShowK = 20;
+    var numShowYA = 5;
+    PostProvider.findDescTotalPoint({
+        name: name
+      , correspondDate: correspondDate
+      , numShow: numShowK
+    }, function(error, posts) {
+      var postText2Tumblr = '';
+      postDatas.forEach(function (postData, i) {
+        i++;
+        if(i === 1) {
+          postText2Tumblr += '<h1>2014/04/18</h1><h2>' + i + '位</h2>';
+        } else if (i === 2) {
+          postText2Tumblr += '<h3>' + i + '位</h3>';
+        } else if (i === 3) {
+          postText2Tumblr += '<h4>' + i + '位</h4>';
+        } else {
+          postText2Tumblr += '<h5>' + i + '位</h5>';
+        }
+        postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
+        postText2Tumblr += '<blockquote>' + postData.text + '</blockquote>';
+        postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet">' + postData.retweetNum + '</i>';
+        postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star">' + postData.favNum + '</i>';
+        postText2Tumblr += '<a href="https://twitter.com/' + postData.tweetId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
+        postText2Tumblr += '<hr>';
+      });
+
+      // post to tumblr
+      ml.cl("Go ------> Tumblr : " + tags);
+      settings.tumblr.post('/post', {
+          type: 'text'
+        , tags: tags
+        , title: title
+        , body: postText2Tumblr
+      }, function(err, json){
+        ml.cl(json);
+      });
+    });
+
+      // PostProvider.findDescRetweet({
+      //   name: name,
+      //   correspondDate: correspondDate,
+      //   numShow: numShow
+      // }, function(error, postDatas) {
+
+      //   // ツイートごとのデータ
+      //   var rankWidth      = 0;
+      //   var rankPosts      = [];
+      //   postDatas.forEach(function (postData) {
+      //     rankCategoryPosts.push({
+      //       tweetId: postData.tweetId,
+      //       userName: postData.userName,
+      //       userId: postData.userId,
+      //       tweetText: postData.tweetText,
+      //       tweetUrl: postData.tweetUrl,
+      //       sourceUrl: postData.sourceUrl.replace(/:large/g, ':medium'),
+      //       tags: postData.tags,
+      //       category: postData.category,
+      //       retweetNum: postData.retweetNum,
+      //       favNum: postData.favNum,
+      //       createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm"),
+      //       correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm"),
+      //       correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
+      //     });
+
+      //     if(_.isObject(postData.picWidths[0])) {
+      //       rankWidth += postData.picWidths[0].height300;
+      //     } else {
+      //       rankWidth += 600;
+      //     }
+      //     dataCount++;
+      //   });
+
+      //   // CSSの余白分を追加
+      //   rankWidth += dataCount * margin;
+
+      //   // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
+      //   rankCategoryPosts.push({
+      //     rankWidth: rankWidth
+      //   });
+      //   rankAllCategoryPosts.push(rankCategoryPosts);
+
+      //   // 同期処理
+      //   cb();
+      // });
+    // }, function() {
+    //   // ml.dump(rankAllCategoryPosts);
+    //   res.json({
+    //     rankAllCategoryPosts: rankAllCategoryPosts
+    //   });
+    // });
+
+    // LoveLive
+    // 23:29
+
+    var numShowLL = 20;
+    PostProvider.findDescTotalPoint({
+        name: name
+      , correspondDate: correspondDate
+      , numShow: numShowLL
+    }, function(error, posts) {
+      var postText2Tumblr = '';
+      postDatas.forEach(function (postData, i) {
+        i++;
+        if(i === 1) {
+          postText2Tumblr += '<h1>2014/04/18</h1><h2>' + i + '位</h2>';
+        } else if (i === 2) {
+          postText2Tumblr += '<h3>' + i + '位</h3>';
+        } else if (i === 3) {
+          postText2Tumblr += '<h4>' + i + '位</h4>';
+        } else {
+          postText2Tumblr += '<h5>' + i + '位</h5>';
+        }
+        postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
+        postText2Tumblr += '<blockquote>' + postData.text + '</blockquote>';
+        postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet">' + postData.retweetNum + '</i>';
+        postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star">' + postData.favNum + '</i>';
+        postText2Tumblr += '<a href="https://twitter.com/' + postData.tweetId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
+        postText2Tumblr += '<hr>';
+      });
+
+      // post to tumblr
+      ml.cl("Go ------> Tumblr : " + tags);
+      settings.tumblr.post('/post', {
+          type: 'text'
+        , tags: tags
+        , title: title
+        , body: postText2Tumblr
+      }, function(err, json){
+        ml.cl(json);
       });
     });
   }
