@@ -12,8 +12,6 @@
   var PostProvider = require('./model').PostProvider;
 
   exports.t2t = function (data) {
-      // ml.dump(data);
-      // return;
 
     console.log("-----------------------------------");
 
@@ -175,10 +173,10 @@
     try {
       if(!_.has(data.entities, 'hashtags')) throw new exception.NoHashtagsTweetException();
       if(!_.has(data, 'text')) throw new exception.NoTextTweetException();
-      if(_.isNull(linkUrl)) throw new exception.TextOnlyTweetException();
 
       hashtag = data.entities.hashtags[0].text;
       linkUrl = data.text.match(twitter_short_url_pattern);
+      if(_.isNull(linkUrl)) throw new exception.TextOnlyTweetException();
 
       assingCategoryAndTags();
       assingPictAndSourceUrl();
@@ -290,147 +288,118 @@
   }
 
   /**
-   *
+   *  post to tumblr
    */
-  exports.getTweetStatus = function(nowTime) {
+  exports.post2Tumblr2200 = function(nowTime) {
+    settings.categories.forEach(function (name) {
+      console.log("---------------------------");
+      console.log("カテゴリ : " + name);
+      var numShow;
+      var correspondDate = cd.getCorrespondDate(name);
 
-
-    console.log("nowTimw = " + nowTime);
-    var correspondDate;
-
-    // Kancolle, Yuruyuri, Aikatsu!
-    // 21:59
-    var numShowK = 20;
-    var numShowYA = 5;
-    PostProvider.findDescTotalPoint({
-        name: name
-      , correspondDate: correspondDate
-      , numShow: numShowK
-    }, function(error, posts) {
-      var postText2Tumblr = '';
-      postDatas.forEach(function (postData, i) {
-        i++;
-        if(i === 1) {
-          postText2Tumblr += '<h1>2014/04/18</h1><h2>' + i + '位</h2>';
-        } else if (i === 2) {
-          postText2Tumblr += '<h3>' + i + '位</h3>';
-        } else if (i === 3) {
-          postText2Tumblr += '<h4>' + i + '位</h4>';
+      // 21:59
+      // Kancolle, Yuruyuri, Aikatsu!
+      if(name !== 'lovelive') {
+        if(name === 'kancolle') {
+          numShow = 20;
         } else {
-          postText2Tumblr += '<h5>' + i + '位</h5>';
+          numShow = 10;
         }
-        postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
-        postText2Tumblr += '<blockquote>' + postData.text + '</blockquote>';
-        postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet">' + postData.retweetNum + '</i>';
-        postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star">' + postData.favNum + '</i>';
-        postText2Tumblr += '<a href="https://twitter.com/' + postData.tweetId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
-        postText2Tumblr += '<hr>';
-      });
+        PostProvider.findDescTotalPoint({
+            name: name
+          , correspondDate: correspondDate
+          , numShow: numShow
+        }, function(error, postDatas) {
+          if(_.isEmpty(postDatas)) return;
+          var tags, title;
+          var postText2Tumblr = '<strong>' + (postDatas[0].tags.split(","))[2] + '</strong><hr>';
+          postDatas.forEach(function (postData, i) {
+            i++;
+            if(i === 1) {
+              tags = postData.tags
+              title = correspondDate;
+              postText2Tumblr += '<h2>' + i + '位</h2>';
+            } else if (i === 2) {
+              postText2Tumblr += '<h3>' + i + '位</h3>';
+            } else if (i === 3) {
+              postText2Tumblr += '<h4>' + i + '位</h4>';
+            } else {
+              postText2Tumblr += '<h5>' + i + '位</h5>';
+            }
+            postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
+            postText2Tumblr += '<blockquote>' + postData.tweetText + '</blockquote>';
+            postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet"> ' + postData.retweetNum + '</i>';
+            postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star"> ' + postData.favNum + '</i>';
+            postText2Tumblr += '<a href="https://twitter.com/' + postData.userId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
+            postText2Tumblr += '<br><hr><br>';
+          });
 
-      // post to tumblr
-      ml.cl("Go ------> Tumblr : " + tags);
-      settings.tumblr.post('/post', {
-          type: 'text'
-        , tags: tags
-        , title: title
-        , body: postText2Tumblr
-      }, function(err, json){
-        ml.cl(json);
-      });
+          // post to tumblr
+          ml.cl("Go ------> Tumblr : " + tags);
+          settings.tumblr.post('/post', {
+              type: 'text'
+            , tags: tags
+            , title: title
+            , body: postText2Tumblr
+          }, function(err, json){
+            ml.cl(json);
+          });
+        });
+      }
     });
+  }
 
-      // PostProvider.findDescRetweet({
-      //   name: name,
-      //   correspondDate: correspondDate,
-      //   numShow: numShow
-      // }, function(error, postDatas) {
+  exports.post2Tumblr2330 = function(nowTime) {
+    settings.categories.forEach(function (name) {
+      console.log("---------------------------");
+      console.log("カテゴリ : " + name);
+      var numShow = 20;
+      var correspondDate = cd.getCorrespondDate(name);
 
-      //   // ツイートごとのデータ
-      //   var rankWidth      = 0;
-      //   var rankPosts      = [];
-      //   postDatas.forEach(function (postData) {
-      //     rankCategoryPosts.push({
-      //       tweetId: postData.tweetId,
-      //       userName: postData.userName,
-      //       userId: postData.userId,
-      //       tweetText: postData.tweetText,
-      //       tweetUrl: postData.tweetUrl,
-      //       sourceUrl: postData.sourceUrl.replace(/:large/g, ':medium'),
-      //       tags: postData.tags,
-      //       category: postData.category,
-      //       retweetNum: postData.retweetNum,
-      //       favNum: postData.favNum,
-      //       createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm"),
-      //       correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm"),
-      //       correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
-      //     });
+      // 23:30
+      // LoveLive!
+      if(name === 'lovelive') {
+        PostProvider.findDescTotalPoint({
+            name: name
+          , correspondDate: correspondDate
+          , numShow: numShow
+        }, function(error, postDatas) {
+          if(_.isEmpty(postDatas)) return;
+          var tags, title;
+          var postText2Tumblr = '<strong>' + (postDatas[0].tags.split(","))[2] + '</strong><hr>';
+          postDatas.forEach(function (postData, i) {
+            i++;
+            if(i === 1) {
+              tags = postData.tags
+              title = correspondDate;
+              postText2Tumblr += '<h2>' + i + '位</h2>';
+            } else if (i === 2) {
+              postText2Tumblr += '<h3>' + i + '位</h3>';
+            } else if (i === 3) {
+              postText2Tumblr += '<h4>' + i + '位</h4>';
+            } else {
+              postText2Tumblr += '<h5>' + i + '位</h5>';
+            }
+            postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
+            postText2Tumblr += '<blockquote>' + postData.tweetText + '</blockquote>';
+            postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet"> ' + postData.retweetNum + '</i>';
+            postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star"> ' + postData.favNum + '</i>';
+            postText2Tumblr += '<a href="https://twitter.com/' + postData.userId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
+            postText2Tumblr += '<br><hr><br>';
+          });
 
-      //     if(_.isObject(postData.picWidths[0])) {
-      //       rankWidth += postData.picWidths[0].height300;
-      //     } else {
-      //       rankWidth += 600;
-      //     }
-      //     dataCount++;
-      //   });
-
-      //   // CSSの余白分を追加
-      //   rankWidth += dataCount * margin;
-
-      //   // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
-      //   rankCategoryPosts.push({
-      //     rankWidth: rankWidth
-      //   });
-      //   rankAllCategoryPosts.push(rankCategoryPosts);
-
-      //   // 同期処理
-      //   cb();
-      // });
-    // }, function() {
-    //   // ml.dump(rankAllCategoryPosts);
-    //   res.json({
-    //     rankAllCategoryPosts: rankAllCategoryPosts
-    //   });
-    // });
-
-    // LoveLive
-    // 23:29
-
-    var numShowLL = 20;
-    PostProvider.findDescTotalPoint({
-        name: name
-      , correspondDate: correspondDate
-      , numShow: numShowLL
-    }, function(error, posts) {
-      var postText2Tumblr = '';
-      postDatas.forEach(function (postData, i) {
-        i++;
-        if(i === 1) {
-          postText2Tumblr += '<h1>2014/04/18</h1><h2>' + i + '位</h2>';
-        } else if (i === 2) {
-          postText2Tumblr += '<h3>' + i + '位</h3>';
-        } else if (i === 3) {
-          postText2Tumblr += '<h4>' + i + '位</h4>';
-        } else {
-          postText2Tumblr += '<h5>' + i + '位</h5>';
-        }
-        postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
-        postText2Tumblr += '<blockquote>' + postData.text + '</blockquote>';
-        postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet">' + postData.retweetNum + '</i>';
-        postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star">' + postData.favNum + '</i>';
-        postText2Tumblr += '<a href="https://twitter.com/' + postData.tweetId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
-        postText2Tumblr += '<hr>';
-      });
-
-      // post to tumblr
-      ml.cl("Go ------> Tumblr : " + tags);
-      settings.tumblr.post('/post', {
-          type: 'text'
-        , tags: tags
-        , title: title
-        , body: postText2Tumblr
-      }, function(err, json){
-        ml.cl(json);
-      });
+          // post to tumblr
+          ml.cl("Go ------> Tumblr : " + tags);
+          settings.tumblr.post('/post', {
+              type: 'text'
+            , tags: tags
+            , title: title
+            , body: postText2Tumblr
+          }, function(err, json){
+            ml.cl(json);
+          });
+        });
+      }
     });
   }
 }).call(this);
