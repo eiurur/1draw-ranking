@@ -1,21 +1,17 @@
-/**
- * Module dependencies
- */
-var http     = require('http')
-  , path     = require('path')
-  , util     = require('util')
-  , settings = require('./settings')
-  , ml       = require('./lib')
-  , t2t      = require('./stream')
-  , cronJob  = require('cron').CronJob
-  , bson     = require('bson')
-  ;
+(function() {
+  var http     = require('http')
+    , path     = require('path')
+    , util     = require('util')
+    , settings = require('./settings')
+    , ml       = require('./lib')
+    , t2t      = require('./stream')
+    , cronJob  = require('cron').CronJob
+    , bson     = require('bson')
+    ;
 
-
-/**
- * 新規ツイート保存処理
- */
-var t = (function() {
+  /**
+   * 新規ツイート保存処理
+   */
   settings.twitter.stream('statuses/filter', {'track': settings.keywords}, function(stream) {
     stream.on('data', function(data){
       t2t.t2t(data);
@@ -25,7 +21,7 @@ var t = (function() {
       ml.cl("end");
 
       // 自動で再起動
-      t();
+      arguments.callee();
       ml.cl("------------------");
       ml.cl("再開");
       ml.cl("------------------");
@@ -35,46 +31,48 @@ var t = (function() {
       ml.cl("destroy");
     });
   });
+
+  /**
+   * 指定時刻になったらその日のTOPポストをTumblrへ投稿
+   */
+  // for Kancolle, Yuruyuri, Aikatsu
+  var cronTime2200 = "59 21 * * *";
+
+  // for Lovelive
+  var cronTime2330  = "29 23 * * *";
+
+  var jobKYA = new cronJob({
+    cronTime: cronTime2200
+
+    , onTick: function() {
+      var nowTime = new Date();
+      t2t.post2Tumblr2200(nowTime);
+    }
+
+    , onComplete: function() {
+      console.log('Completed.')
+    }
+
+    , start: false
+    , timeZone: "Japan/Tokyo"
+  });
+
+  var jobLL = new cronJob({
+    cronTime: cronTime2330
+
+    , onTick: function() {
+      var nowTime = new Date();
+      t2t.post2Tumblr2330(nowTime);
+    }
+
+    , onComplete: function() {
+      console.log('Completed.')
+    }
+
+    , start: false
+    , timeZone: "Japan/Tokyo"
+  });
+
+  jobKYA.start();
+  jobLL.start();
 })();
-
-/**
- * 指定時刻になったらその日のTOPポストをTumblrへ投稿
- */
-// var cronTimeKYA = "59 21 * * *";
-var cronTimeKYA = "59 21 * * *";
-var cronTimeLL  = "29 23 * * *";
-
-var jobKYA = new cronJob({
-  cronTime: cronTimeKYA
-
-  , onTick: function() {
-    var nowTime = new Date();
-    t2t.post2Tumblr2200(nowTime);
-  }
-
-  , onComplete: function() {
-    console.log('Completed.')
-  }
-
-  , start: false
-  , timeZone: "Japan/Tokyo"
-});
-
-var jobLL = new cronJob({
-  cronTime: cronTimeLL
-
-  , onTick: function() {
-    var nowTime = new Date();
-    t2t.post2Tumblr2330(nowTime);
-  }
-
-  , onComplete: function() {
-    console.log('Completed.')
-  }
-
-  , start: false
-  , timeZone: "Japan/Tokyo"
-});
-
-jobKYA.start();
-jobLL.start();

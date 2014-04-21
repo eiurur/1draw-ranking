@@ -3,7 +3,6 @@ div#page-content-wrapper
     h1 総合ランキング
   div.page-content.inset
     div.row
-      //- hr.hr-position
       div(ng-repeat='rankCategoryPosts in rankAllCategoryPosts')
         div(ng-hide="rankCategoryPosts[$index].rankWidth == 0")
           div.col-md-12.panel-padding-bottom

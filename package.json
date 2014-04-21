@@ -1,9 +1,8 @@
 {
-  "name": "1draw",
+  "name": "1draw-Ranking",
   "version": "0.0.1",
   "private": true,
   "description": "",
-  "bin": "",
   "main": "app.js",
   "author": "eiurur",
   "license": "MIT",

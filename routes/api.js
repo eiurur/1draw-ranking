@@ -101,7 +101,7 @@ exports.readRanking = function (req, res) {
           correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm"),
           correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
         });
-        
+
         if(_.isObject(postData.picWidths[0])) {
           rankWidth += postData.picWidths[0].height300;
         } else {
@@ -178,7 +178,6 @@ exports.readRankingAllCategory = function (req, res) {
         cb();
       });
     }, function() {
-      // ml.dump(rankAllCategoryPosts);
       res.json({
         rankAllCategoryPosts: rankAllCategoryPosts
       });

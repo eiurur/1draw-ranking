@@ -10,10 +10,10 @@
 
   var Twitter = require('ntwitter');
   exports.twitter = new Twitter({
-    consumer_key: tw_consumer_key,
-    consumer_secret: tw_consumer_secret,
-    access_token_key: tw_access_token_key,
-    access_token_secret: tw_access_token_secret
+      consumer_key: tw_consumer_key
+    , consumer_secret: tw_consumer_secret
+    , access_token_key: tw_access_token_key
+    , access_token_secret: tw_access_token_secret
   });
 
   /*
@@ -28,10 +28,10 @@
 
   var Tumblr = require('tumblrwks');
   exports.tumblr = new Tumblr({
-      consumerKey: tum_consumer_key,
-      consumerSecret: tum_consumer_secret,
-      accessToken: tum_access_token_key,
-      accessSecret: tum_access_token_secret
+      consumerKey: tum_consumer_key
+    , consumerSecret: tum_consumer_secret
+    , accessToken: tum_access_token_key
+    , accessSecret: tum_access_token_secret
     }, tumblogName + ".tumblr.com"
     // specify the blog url now or the time you want to use
   );
@@ -44,12 +44,14 @@
     , "#アイカツ版深夜の真剣お絵描き60分一本勝負"
     , "#艦これ版深夜の真剣お絵描き60分一本勝負"
     , "#ゆるゆり版深夜の真剣お絵描き60分一本勝負"
+    , "#モバマス版深夜の真剣お絵かき60分1本勝負"
   ];
   exports.categories = [
       "lovelive"
     , "aikatsu"
     , "kancolle"
     , "yuruyuri"
+    , "mobamas"
   ];
   exports.NGUsers  = [
       'kankorefanz'
@@ -86,5 +88,6 @@
     , 'anime_life_'
     , 'BOT04861474'
     , 'arienai_www_bot'
+    , 'pa_bot_pa'
   ];
 }).call(this);

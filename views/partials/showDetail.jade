@@ -30,10 +30,10 @@ div#page-content-wrapper
                   img.img-responsive.thumb-pict(src="{{post.sourceUrl}}")
                   .pict-discription
                     div
-                      i.fa.fa-retweet.fa-border(style="color: #85B95E;")  {{post.retweetNum}}
-                      i.fa.fa-star.fa-border(style="color: #FF9B00;")  {{post.favNum}}
+                      i.fa.fa-retweet.fa-border.icon-retweet  {{post.retweetNum}}
+                      i.fa.fa-star.fa-border.icon-star  {{post.favNum}}
                       a(href='https://{{post.tweetUrl}}', target="_blank")
-                        .fa.fa-twitter.fa-border(style="color: #009FE9;")
+                        .fa.fa-twitter.fa-border.icon-twitter
 
     div(ng-hide="rankWidth")
       div(ng-hide="rankPosts.length == 0")

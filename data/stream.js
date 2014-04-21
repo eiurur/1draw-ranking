@@ -54,6 +54,9 @@
       } else if(hashtag.indexOf('ゆるゆり版深夜の真剣お絵描き60分一本勝負') >= 0) {
         category = 'yuruyuri';
         tags     = 'yuruyuri, ゆるゆり, #ゆるゆり版深夜の真剣お絵描き60分一本勝負';
+      } else if(hashtag.indexOf('モバマス版深夜の真剣お絵かき60分1本勝負') >= 0) {
+        category = 'mobamas';
+        tags     = 'mobamas, モバマス, #モバマス版深夜の真剣お絵かき60分1本勝負';
       }
     };
 
@@ -226,17 +229,18 @@
         // 公式画像のみサイズを取得して、横サイズの比率ごとの縦サイズを保存する。
         // twitpicなどの外部サービスを利用した投稿画像は取得できないので分岐。
         // picWidthが空なら600に自動で補完する処理をapi.jsで行うため、こちらで書く必要はない。
+        var picWidth = {};
+
+        ml.dump(data.entities);
 
         // 外部サービスはmediaプロパティがない
         if(_.has(data.entities, 'media')) {
-          console.log("ehhhhhhhhhhhhhhhhhhhhhight");
 
           // twitter公式
           if(_.has(data.entities.media[0], "sizes")) {
             console.log("siiiiiiiiiiiiiiiiiiiiiiiiize");
 
-            var picWidth = {}
-              , mW = data.entities.media[0].sizes.medium.w
+            var mW = data.entities.media[0].sizes.medium.w
               , mH = data.entities.media[0].sizes.medium.h
               ;
             picWidth.height150 = Math.ceil(mW * (150 / mH));
@@ -287,119 +291,95 @@
     }
   }
 
+
+  var postText2tumblr = function(params) {
+    PostProvider.findDescTotalPoint({
+        name: params['name']
+      , correspondDate: params['correspondDate']
+      , numShow: params['numShow']
+    }, function(error, postDatas) {
+      if(_.isEmpty(postDatas)) return;
+      var tags, title;
+      var postText2Tumblr = '<strong>' + (postDatas[0].tags.split(","))[2] + '</strong><hr>';
+      postDatas.forEach(function (postData, i) {
+        i++;
+        if(i === 1) {
+          tags = postData.tags
+          title = correspondDate;
+          postText2Tumblr += '<h2>' + i + '位</h2>';
+        } else if (i === 2) {
+          postText2Tumblr += '<h3>' + i + '位</h3>';
+        } else if (i === 3) {
+          postText2Tumblr += '<h4>' + i + '位</h4>';
+        } else {
+          postText2Tumblr += '<h5>' + i + '位</h5>';
+        }
+        postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
+        postText2Tumblr += '<blockquote>' + postData.tweetText + '</blockquote>';
+        postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet"> ' + postData.retweetNum + '</i>';
+        postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star"> ' + postData.favNum + '</i>';
+        postText2Tumblr += '<a href="https://twitter.com/' + postData.userId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
+        postText2Tumblr += '<br><hr><br>';
+      });
+
+      // post to tumblr
+      ml.cl("Go ------> Tumblr : " + tags);
+      settings.tumblr.post('/post', {
+          type: 'text'
+        , tags: tags
+        , title: title
+        , body: postText2Tumblr
+      }, function(err, json){
+        ml.cl(json);
+      });
+    });
+  };
+
   /**
    *  post to tumblr
    */
   exports.post2Tumblr2200 = function(nowTime) {
     settings.categories.forEach(function (name) {
-      console.log("---------------------------");
-      console.log("カテゴリ : " + name);
-      var numShow;
-      var correspondDate = cd.getCorrespondDate(name);
+      var numShow
+        , correspondDate = cd.getCorrespondDate(name)
+        ;
 
       // 21:59
       // Kancolle, Yuruyuri, Aikatsu!
-      if(name !== 'lovelive') {
-        if(name === 'kancolle') {
-          numShow = 20;
-        } else {
-          numShow = 10;
-        }
-        PostProvider.findDescTotalPoint({
-            name: name
-          , correspondDate: correspondDate
-          , numShow: numShow
-        }, function(error, postDatas) {
-          if(_.isEmpty(postDatas)) return;
-          var tags, title;
-          var postText2Tumblr = '<strong>' + (postDatas[0].tags.split(","))[2] + '</strong><hr>';
-          postDatas.forEach(function (postData, i) {
-            i++;
-            if(i === 1) {
-              tags = postData.tags
-              title = correspondDate;
-              postText2Tumblr += '<h2>' + i + '位</h2>';
-            } else if (i === 2) {
-              postText2Tumblr += '<h3>' + i + '位</h3>';
-            } else if (i === 3) {
-              postText2Tumblr += '<h4>' + i + '位</h4>';
-            } else {
-              postText2Tumblr += '<h5>' + i + '位</h5>';
-            }
-            postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
-            postText2Tumblr += '<blockquote>' + postData.tweetText + '</blockquote>';
-            postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet"> ' + postData.retweetNum + '</i>';
-            postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star"> ' + postData.favNum + '</i>';
-            postText2Tumblr += '<a href="https://twitter.com/' + postData.userId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
-            postText2Tumblr += '<br><hr><br>';
-          });
+      if(name === 'lovelive') return;
 
-          // post to tumblr
-          ml.cl("Go ------> Tumblr : " + tags);
-          settings.tumblr.post('/post', {
-              type: 'text'
-            , tags: tags
-            , title: title
-            , body: postText2Tumblr
-          }, function(err, json){
-            ml.cl(json);
-          });
-        });
+      if(name === 'kancolle') {
+        numShow = 20;
+      } else {
+        numShow = 10;
       }
+      console.log("---------------------------");
+      console.log("カテゴリ : " + name);
+      postText2tumblr({
+          name: name
+        , correspondDate: correspondDate
+        , numShow: numShow
+      });
     });
-  }
+  };
 
   exports.post2Tumblr2330 = function(nowTime) {
     settings.categories.forEach(function (name) {
-      console.log("---------------------------");
-      console.log("カテゴリ : " + name);
-      var numShow = 20;
-      var correspondDate = cd.getCorrespondDate(name);
+      var numShow = 20
+        , correspondDate = cd.getCorrespondDate(name)
+        ;
 
       // 23:30
       // LoveLive!
-      if(name === 'lovelive') {
-        PostProvider.findDescTotalPoint({
-            name: name
-          , correspondDate: correspondDate
-          , numShow: numShow
-        }, function(error, postDatas) {
-          if(_.isEmpty(postDatas)) return;
-          var tags, title;
-          var postText2Tumblr = '<strong>' + (postDatas[0].tags.split(","))[2] + '</strong><hr>';
-          postDatas.forEach(function (postData, i) {
-            i++;
-            if(i === 1) {
-              tags = postData.tags
-              title = correspondDate;
-              postText2Tumblr += '<h2>' + i + '位</h2>';
-            } else if (i === 2) {
-              postText2Tumblr += '<h3>' + i + '位</h3>';
-            } else if (i === 3) {
-              postText2Tumblr += '<h4>' + i + '位</h4>';
-            } else {
-              postText2Tumblr += '<h5>' + i + '位</h5>';
-            }
-            postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
-            postText2Tumblr += '<blockquote>' + postData.tweetText + '</blockquote>';
-            postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet"> ' + postData.retweetNum + '</i>';
-            postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star"> ' + postData.favNum + '</i>';
-            postText2Tumblr += '<a href="https://twitter.com/' + postData.userId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
-            postText2Tumblr += '<br><hr><br>';
-          });
+      if(name !== 'lovelive') return;
 
-          // post to tumblr
-          ml.cl("Go ------> Tumblr : " + tags);
-          settings.tumblr.post('/post', {
-              type: 'text'
-            , tags: tags
-            , title: title
-            , body: postText2Tumblr
-          }, function(err, json){
-            ml.cl(json);
-          });
-        });
-      }
+      console.log("---------------------------");
+      console.log("カテゴリ : " + name);
+      postText2tumblr({
+          name: name
+        , correspondDate: correspondDate
+        , numShow: numShow
+      });
     });
-  }
+  };
 }).call(this);
