@@ -22,36 +22,40 @@ exports.readAll = function (req, res) {
     // ラブライブ！の場合
     // 4/7 22:12 -> 表示は 4/6 23:30 からの分
     // 4/8 12:32 -> 表示は 4/7 23:30 からの分
-    var correspondDate = cd.getCorrespondDate(name);
-    var dataCount = 0;
-    var numShow = 10;
+    var correspondDate = cd.getCorrespondDate(name)
+      ,  dataCount     = 0
+      ,  numShow       = 10
+      ;
 
     // 該当日(correspondDate)の中から、投稿日が新しい順に10件だけ取得
     PostProvider.findNew({
-      name: name,
-      correspondDate: correspondDate,
-      numShow: numShow
+        name: name
+      , correspondDate: correspondDate
+      , numShow: numShow
     }, function(error, postDatas) {
       var postWidth = 0;
       var posts = [];
       postDatas.forEach(function (postData) {
         posts.push({
-          tweetId: postData.tweetId,
-          userName: postData.userName,
-          userId: postData.userId,
-          tweetText: postData.tweetText,
-          tweetUrl: postData.tweetUrl,
-          sourceUrl: postData.sourceUrl.replace(/:large/g, ':medium'),
-          tags: postData.tags,
-          category: postData.category,
-          retweetNum: postData.retweetNum,
-          favNum: postData.favNum,
-          picWidths: postData.picWidths,
-          createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm"),
-          correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm"),
-          correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
+            tweetId: postData.tweetId
+          , userName: postData.userName
+          , userId: postData.userId
+          , tweetText: postData.tweetText
+          , tweetUrl: postData.tweetUrl
+          , sourceUrl: postData.sourceUrl.replace(/:large/g, ':medium')
+          , tags: postData.tags
+          , category: postData.category
+          , retweetNum: postData.retweetNum
+          , favNum: postData.favNum
+          , picWidths: postData.picWidths
+          , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
+          , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
+          , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
         });
-        if(_.isObject(postData.picWidths[0])) {
+
+        // 公式以外の画像ポストは postData.picWidths[0] をオブジェクトとして持っていても、
+        // postData.picWidths[0].height300　は undefinedなので下の条件でないと文字と数字を足すことになり、NaNになる。
+        if(!_.isUndefined(postData.picWidths[0].height300)) {
           postWidth += postData.picWidths[0].height300;
         } else {
           postWidth += 600;
@@ -62,11 +66,11 @@ exports.readAll = function (req, res) {
       // CSSの余白分を追加
       postWidth += dataCount * margin;
 
-      console.log("postWidth = " + postWidth);
+      console.log("readAll postWidth = " + postWidth);
 
       res.json({
-        posts: posts,
-        postWidth: postWidth
+          posts: posts
+        , postWidth: postWidth
       });
     });
 };
@@ -74,35 +78,36 @@ exports.readAll = function (req, res) {
 exports.readRanking = function (req, res) {
     var name = req.params.name;
 
-    var dataCount = 0;
-    var numShow = 20;
-    var correspondDate = cd.getCorrespondDate(name);
+    var correspondDate = cd.getCorrespondDate(name)
+      ,  dataCount     = 0
+      ,  numShow       = 20
+      ;
 
     PostProvider.findDescRetweet({
-      name: name,
-      correspondDate: correspondDate,
-      numShow: numShow
+        name: name
+      , correspondDate: correspondDate
+      , numShow: numShow
     }, function(error, postDatas) {
       var rankWidth      = 0;
       var rankPosts      = [];
       postDatas.forEach(function (postData) {
         rankPosts.push({
-          tweetId: postData.tweetId,
-          userName: postData.userName,
-          userId: postData.userId,
-          tweetText: postData.tweetText,
-          tweetUrl: postData.tweetUrl,
-          sourceUrl: postData.sourceUrl.replace(/:large/g, ':medium'),
-          tags: postData.tags,
-          category: postData.category,
-          retweetNum: postData.retweetNum,
-          favNum: postData.favNum,
-          createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm"),
-          correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm"),
-          correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
+            tweetId: postData.tweetId
+          , userName: postData.userName
+          , userId: postData.userId
+          , tweetText: postData.tweetText
+          , tweetUrl: postData.tweetUrl
+          , sourceUrl: postData.sourceUrl.replace(/:large/g, ':medium')
+          , tags: postData.tags
+          , category: postData.category
+          , retweetNum: postData.retweetNum
+          , favNum: postData.favNum
+          , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
+          , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
+          , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
         });
 
-        if(_.isObject(postData.picWidths[0])) {
+        if(!_.isUndefined(postData.picWidths[0].height300)) {
           rankWidth += postData.picWidths[0].height300;
         } else {
           rankWidth += 600;
@@ -122,64 +127,65 @@ exports.readRanking = function (req, res) {
 };
 
 exports.readRankingAllCategory = function (req, res) {
-    var correspondDate;
-    var rankAllCategoryPosts = [];
-    var dataCount = 0;
-    var numShow = 10;
+  var correspondDate
+    , dataCount            = 0
+    , numShow              = 10
+    , rankAllCategoryPosts = []
+    ;
 
-    // カテゴリごと
-    async.forEach(settings.categories, function (name, cb) {
-      var rankCategoryPosts = [];
-      correspondDate = cd.getCorrespondDate(name);
-      PostProvider.findDescRetweet({
-        name: name,
-        correspondDate: correspondDate,
-        numShow: numShow
-      }, function(error, postDatas) {
+  // カテゴリごと
+  async.forEach(settings.categories, function (name, cb) {
+    var rankCategoryPosts = [];
+    correspondDate = cd.getCorrespondDate(name);
+    PostProvider.findDescRetweet({
+        name: name
+      , correspondDate: correspondDate
+      , numShow: numShow
+    }, function(error, postDatas) {
 
-        // ツイートごとのデータ
-        var rankWidth      = 0;
-        var rankPosts      = [];
-        postDatas.forEach(function (postData) {
-          rankCategoryPosts.push({
-            tweetId: postData.tweetId,
-            userName: postData.userName,
-            userId: postData.userId,
-            tweetText: postData.tweetText,
-            tweetUrl: postData.tweetUrl,
-            sourceUrl: postData.sourceUrl.replace(/:large/g, ':medium'),
-            tags: postData.tags,
-            category: postData.category,
-            retweetNum: postData.retweetNum,
-            favNum: postData.favNum,
-            createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm"),
-            correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm"),
-            correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
-          });
-
-          if(_.isObject(postData.picWidths[0])) {
-            rankWidth += postData.picWidths[0].height300;
-          } else {
-            rankWidth += 600;
-          }
-          dataCount++;
-        });
-
-        // CSSの余白分を追加
-        rankWidth += dataCount * margin;
-
-        // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
+      // ツイートごとのデータ
+      var rankWidth      = 0;
+      var rankPosts      = [];
+      postDatas.forEach(function (postData) {
         rankCategoryPosts.push({
-          rankWidth: rankWidth
+            tweetId: postData.tweetId
+          , userName: postData.userName
+          , userId: postData.userId
+          , tweetText: postData.tweetText
+          , tweetUrl: postData.tweetUrl
+          , sourceUrl: postData.sourceUrl.replace(/:large/g, ':medium')
+          , tags: postData.tags
+          , category: postData.category
+          , retweetNum: postData.retweetNum
+          , favNum: postData.favNum
+          , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
+          , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
+          , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
         });
-        rankAllCategoryPosts.push(rankCategoryPosts);
 
-        // 同期処理
-        cb();
+        if(_.isObject(postData.picWidths[0])) {
+          rankWidth += postData.picWidths[0].height300;
+        } else {
+          rankWidth += 600;
+        }
+        dataCount++;
       });
-    }, function() {
-      res.json({
-        rankAllCategoryPosts: rankAllCategoryPosts
+
+      // CSSの余白分を追加
+      rankWidth += dataCount * margin;
+
+      // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
+      rankCategoryPosts.push({
+        rankWidth: rankWidth
       });
+      rankAllCategoryPosts.push(rankCategoryPosts);
+
+      // 同期処理
+      cb();
     });
+  }, function() {
+    res.json({
+      rankAllCategoryPosts: rankAllCategoryPosts
+    });
+  });
 };

@@ -6,7 +6,6 @@
     , ml       = require('./lib')
     , t2t      = require('./stream')
     , cronJob  = require('cron').CronJob
-    , bson     = require('bson')
     ;
 
   /**
@@ -17,6 +16,7 @@
       t2t.t2t(data);
     });
     stream.on('end', function (response) {
+
       // 切断された場合の処理
       ml.cl("end");
 
@@ -27,6 +27,7 @@
       ml.cl("------------------");
     });
     stream.on('destroy', function (response) {
+
       // 接続が破棄された場合の処理
       ml.cl("destroy");
     });
