@@ -18,18 +18,20 @@
     /**
      * マジックナンバー
      */
-    var numRTOfPost2Tumblr = 15;
-    var oneDayUnixTime     = 24 * 60 * 60;
-    var displaySizeHeight  = 300;
+    var numRTOfPost2Tumblr = 15
+      , oneDayUnixTime     = 24 * 60 * 60
+      , displaySizeHeight  = 300
+      ;
 
     /**
      * 正規表現
      */
-    var rt_exclude_pattern        = /(RT)/g;
-    var tumblr_pict_pattern       = /^[\s\S]*(http|https):\/\/tmblr.co\/[\s\S]*/g;
-    var twitpic_pict_pattern      = /^[\s\S]*(twitpic)/;
-    var twipple_pict_pattern      = /^[\s\S]*(p.twipple.jp)/;
-    var twitter_short_url_pattern = /^[\s\S]*(http:\/\/t.co\/[\w]+)/;
+    var rt_exclude_pattern        = /(RT)/g
+      , tumblr_pict_pattern       = /^[\s\S]*(http|https):\/\/tmblr.co\/[\s\S]*/g
+      , twitpic_pict_pattern      = /^[\s\S]*(twitpic)/
+      , twipple_pict_pattern      = /^[\s\S]*(p.twipple.jp)/
+      , twitter_short_url_pattern = /^[\s\S]*(http:\/\/t.co\/[\w]+)/
+      ;
 
     /**
      * init
@@ -39,25 +41,12 @@
     /**
      * Method list
      */
-    var assingCategoryAndTags = function() {
 
-      // Tumblrに投稿するためのタグと、index.jadeに表示するカラムの判定用のカテゴリをここで決定する。
-      if(hashtag.indexOf('ラブライブ版深夜の真剣お絵描き60分一本勝負') >= 0) {
-        category = 'lovelive';
-        tags     = 'lovelive!, ラブライブ！, #ラブライブ版深夜の真剣お絵描き60分一本勝負';
-      } else if(hashtag.indexOf('アイカツ版深夜の真剣お絵描き60分一本勝負') >= 0){
-        category = 'aikatsu';
-        tags     = 'Aikatsu!, アイカツ！, #アイカツ版深夜の真剣お絵描き60分一本勝負';
-      } else if(hashtag.indexOf('艦これ版深夜の真剣お絵描き60分一本勝負') >= 0) {
-        category = 'kancolle';
-        tags     = 'kancolle, 艦これ, #艦これ版深夜の真剣お絵描き60分一本勝負';
-      } else if(hashtag.indexOf('ゆるゆり版深夜の真剣お絵描き60分一本勝負') >= 0) {
-        category = 'yuruyuri';
-        tags     = 'yuruyuri, ゆるゆり, #ゆるゆり版深夜の真剣お絵描き60分一本勝負';
-      } else if(hashtag.indexOf('モバマス版深夜の真剣お絵かき60分1本勝負') >= 0) {
-        category = 'mobamas';
-        tags     = 'mobamas, モバマス, #モバマス版深夜の真剣お絵かき60分1本勝負';
-      }
+    // Tumblrに投稿するためのタグと、index.jadeに表示するカラムの判定用のカテゴリをここで決定する。
+    var assingCategoryAndTags = function() {
+      var idx  = _.indexOf(settings.keywords, hashtag);
+      category = settings.categories[idx];
+      tags     = settings.tags[idx];
     };
 
     var assingPictAndSourceUrl = function() {
@@ -170,6 +159,53 @@
       }
     }
 
+    var insertDB = function(params){
+
+      // 公式画像のみサイズを取得して、横サイズの比率ごとの縦サイズを保存する。
+      // twitpicなどの外部サービスを利用した投稿画像は取得できないので分岐。
+      // picWidthが空なら600に自動で補完する処理をapi.jsで行うため、こちらで書く必要はない。
+      var picWidth = {};
+
+      // 外部サービスはmediaプロパティがない
+      if(_.has(params['entities'], 'media')) {
+
+        // twitter公式
+        if(_.has(params['entities'].media[0], "sizes")) {
+          console.log("siiiiiiiiiiiiiiiiiiiiiiiiize");
+
+          var mW = params['entities'].media[0].sizes.medium.w
+            , mH = params['entities'].media[0].sizes.medium.h
+            ;
+          picWidth.height150 = Math.ceil(mW * (150 / mH));
+          picWidth.height200 = Math.ceil(mW * (200 / mH));
+          picWidth.height250 = Math.ceil(mW * (250 / mH));
+          picWidth.height300 = Math.ceil(mW * (300 / mH));
+          picWidth.height350 = Math.ceil(mW * (350 / mH));
+          picWidth.height400 = Math.ceil(mW * (400 / mH));
+        }
+      }
+      PostProvider.save({
+          tweetId: params['tweetId']
+        , userId: params['userId']
+        , userName: params['userName']
+        , tweetText: params['tweetText']
+        , tweetUrl: params['tweetUrl']
+        , sourceUrl: params['sourceUrl']
+        , category: params['category']
+        , tags: params['tags']
+        , retweetNum: params['retweetNum']
+        , favNum: params['favNum']
+        , totalNum: params['totalNum']
+        , picWidths: picWidth
+        , createdAt: mc
+        , correspondDate: params['correspondDate']
+        , correspondTime: params['correspondTime']
+      }, function(error, docs) {
+          console.log("okk mc = " + mc);
+          ml.dump(picWidth);
+      });
+    }
+
     /**
      * Main
      */
@@ -177,7 +213,8 @@
       if(!_.has(data.entities, 'hashtags')) throw new exception.NoHashtagsTweetException();
       if(!_.has(data, 'text')) throw new exception.NoTextTweetException();
 
-      hashtag = data.entities.hashtags[0].text;
+      hashtag = "#" + data.entities.hashtags[0].text;
+
       linkUrl = data.text.match(twitter_short_url_pattern);
       if(_.isNull(linkUrl)) throw new exception.TextOnlyTweetException();
 
@@ -201,14 +238,42 @@
         // 元ツイートの投稿時刻と締め切り時刻を取得し、変数に代入
         assingDateAndTime();
 
-        // リツイート数とお気に入り数を更新
-        PostProvider.update({
-          tweetId: data.retweeted_status.id,
-          retweetNum: data.retweeted_status.retweet_count,
-          favNum: data.retweeted_status.favorite_count,
-          totalNum: data.retweeted_status.retweet_count + data.retweeted_status.favorite_count
+        // 重複の確認
+        PostProvider.countDuplicatedPic({
+          tweetId: data.retweeted_status.id
         }, function(error, docs) {
-          console.log(category + " retweet UPDATTE OK = " + data.retweeted_status.text);
+          console.log("pic num = " + docs + " doc typeof = " + typeof docs);
+          if(docs === 0) {
+            console.log("INSERT DB");
+            insertDB({
+                entities: data.retweeted_status.entities
+              , tweetId: data.retweeted_status.id
+              , userId: data.retweeted_status.user.screen_name
+              , userName: data.retweeted_status.user.name
+              , tweetText: data.retweeted_status.text
+              , tweetUrl: tweetUrl
+              , sourceUrl: sourceUrl
+              , category: category
+              , tags: tags
+              , retweetNum: data.retweeted_status.retweet_count
+              , favNum: data.retweeted_status.favorite_count
+              , totalNum: data.retweeted_status.retweet_count + data.retweeted_status.favorite_count
+              , createdAt: mc
+              , correspondDate: correspondDate
+              , correspondTime: correspondTime
+            });
+          } else {
+
+            // リツイート数とお気に入り数を更新
+            PostProvider.update({
+              tweetId: data.retweeted_status.id,
+              retweetNum: data.retweeted_status.retweet_count,
+              favNum: data.retweeted_status.favorite_count,
+              totalNum: data.retweeted_status.retweet_count + data.retweeted_status.favorite_count
+            }, function(error, docs) {
+              console.log(category + " retweet UPDATTE OK = " + data.retweeted_status.text);
+            });
+          }
         });
       } else {
 
@@ -226,50 +291,22 @@
         console.log("## Lets New Save to MongoDB");
         console.log(category + " original INSERT OK = " + data.user.screen_name + " :  " + data.text);
 
-        // 公式画像のみサイズを取得して、横サイズの比率ごとの縦サイズを保存する。
-        // twitpicなどの外部サービスを利用した投稿画像は取得できないので分岐。
-        // picWidthが空なら600に自動で補完する処理をapi.jsで行うため、こちらで書く必要はない。
-        var picWidth = {};
-
-        ml.dump(data.entities);
-
-        // 外部サービスはmediaプロパティがない
-        if(_.has(data.entities, 'media')) {
-
-          // twitter公式
-          if(_.has(data.entities.media[0], "sizes")) {
-            console.log("siiiiiiiiiiiiiiiiiiiiiiiiize");
-
-            var mW = data.entities.media[0].sizes.medium.w
-              , mH = data.entities.media[0].sizes.medium.h
-              ;
-            picWidth.height150 = Math.ceil(mW * (150 / mH));
-            picWidth.height200 = Math.ceil(mW * (200 / mH));
-            picWidth.height250 = Math.ceil(mW * (250 / mH));
-            picWidth.height300 = Math.ceil(mW * (300 / mH));
-            picWidth.height350 = Math.ceil(mW * (350 / mH));
-            picWidth.height400 = Math.ceil(mW * (400 / mH));
-          }
-        }
-        PostProvider.save({
-          tweetId: data.id,
-          userId: data.user.screen_name,
-          userName: data.user.name,
-          tweetText: data.text,
-          tweetUrl: tweetUrl,
-          sourceUrl: sourceUrl,
-          category: category,
-          tags: tags,
-          retweetNum: data.retweet_count,
-          favNum: data.favorite_count,
-          totalNum: data.retweet_count + data.favorite_count,
-          picWidths: picWidth,
-          createdAt: mc,
-          correspondDate: correspondDate,
-          correspondTime: correspondTime
-        }, function(error, docs) {
-            console.log("okk mc = " + mc);
-            ml.dump(picWidth);
+        insertDB({
+            entities: data.entities
+          , tweetId: data.id
+          , userId: data.user.screen_name
+          , userName: data.user.name
+          , tweetText: data.text
+          , tweetUrl: tweetUrl
+          , sourceUrl: sourceUrl
+          , category: category
+          , tags: tags
+          , retweetNum: data.retweet_count
+          , favNum: data.favorite_count
+          , totalNum: data.retweet_count + data.favorite_count
+          , createdAt: mc
+          , correspondDate: correspondDate
+          , correspondTime: correspondTime
         });
       }
     } catch(e) {
@@ -292,6 +329,9 @@
   }
 
 
+  /**
+   * Post to tumblr with cron
+   */
   var postText2tumblr = function(params) {
     PostProvider.findDescTotalPoint({
         name: params['name']
@@ -305,7 +345,7 @@
         i++;
         if(i === 1) {
           tags = postData.tags
-          title = correspondDate;
+          title = params['correspondDate'];
           postText2Tumblr += '<h2>' + i + '位</h2>';
         } else if (i === 2) {
           postText2Tumblr += '<h3>' + i + '位</h3>';
@@ -326,7 +366,7 @@
       ml.cl("Go ------> Tumblr : " + tags);
       settings.tumblr.post('/post', {
           type: 'text'
-        , tags: tags
+        // , tags: tags
         , title: title
         , body: postText2Tumblr
       }, function(err, json){
@@ -335,9 +375,7 @@
     });
   };
 
-  /**
-   *  post to tumblr
-   */
+  // for lovelive
   exports.post2Tumblr2200 = function(nowTime) {
     settings.categories.forEach(function (name) {
       var numShow
@@ -363,6 +401,7 @@
     });
   };
 
+  // for kancolle, aikatsu, yuruyuri, mobamas
   exports.post2Tumblr2330 = function(nowTime) {
     settings.categories.forEach(function (name) {
       var numShow = 20

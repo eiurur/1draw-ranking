@@ -100,6 +100,22 @@ PostProvider.prototype.findDescTotalPoint = function(params, callback) {
       });
 };
 
+// 重複を検索
+PostProvider.prototype.countDuplicatedPic = function(params, callback) {
+  Post.find({tweetId:params['tweetId']})
+      .count()
+      .exec(function(err, num) {
+          callback(null, num)
+      });
+
+  // Post.find({category: params['name'], correspondDate: params['correspondDate']})
+  //     .sort({totalNum: -1})
+  //     .limit(params['numShow'])
+  //     .exec(function(err, posts) {
+  //         callback(null, posts)
+  //     });
+};
+
 PostProvider.prototype.save = function(params, callback) {
     var post = new Post({
         tweetId: params['tweetId']
