@@ -1,11 +1,12 @@
 (function() {
-  var http     = require('http')
-    , path     = require('path')
-    , util     = require('util')
-    , settings = require('./settings')
-    , ml       = require('./lib')
-    , t2t      = require('./stream')
-    , cronJob  = require('cron').CronJob
+  var http      = require('http')
+    , path      = require('path')
+    , util      = require('util')
+    , settings  = require('./settings')
+    , ml        = require('./lib')
+    , aggregate = require('./aggregate')
+    , t2t       = require('./t2t')
+    , cronJob   = require('cron').CronJob
     ;
 
   /**
@@ -13,7 +14,7 @@
    */
   settings.twitter.stream('statuses/filter', {'track': settings.keywords}, function(stream) {
     stream.on('data', function(data){
-      t2t.t2t(data);
+      aggregate.aggregate(data);
     });
     stream.on('end', function (response) {
 
