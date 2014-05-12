@@ -43,17 +43,17 @@
      */
     var assingHashtag = function() {
       data.entities.hashtags.forEach(function(val){
-        var idx = _.indexOf(settings.keywords, "#"+val.text);
+        var idx = _.indexOf(settings.KEYWORDS, "#"+val.text);
         if(idx === -1) return; // is equivalent a continue of for or while
-        hashtag = settings.keywords[idx];
+        hashtag = settings.KEYWORDS[idx];
       });
     };
 
     var assingCategoryAndTags = function() {
       // Tumblrに投稿するためのタグと、index.jadeに表示するカラムの判定用のカテゴリをここで決定する。
-      var idx  = _.indexOf(settings.keywords, hashtag);
-      category = settings.categories[idx];
-      tags     = settings.tags[idx];
+      var idx  = _.indexOf(settings.KEYWORDS, hashtag);
+      category = settings.CATEGORIES[idx];
+      tags     = settings.TAGS[idx];
     };
 
     var assingPictAndSourceUrl = function() {
@@ -218,7 +218,7 @@
      */
     try {
       if(!_.has(data, 'text')) throw new exception.NoTextTweetException();
-      // if(!_.has(data.entities, 'hashtags')) throw new exception.NoHashtagsTweetException();
+      if(!_.has(data.entities, 'hashtags')) throw new exception.NoHashtagsTweetException();
 
 
       linkUrl = data.text.match(twitter_short_url_pattern);
@@ -231,7 +231,7 @@
 
       if(_.has(data, 'retweeted_status')) {
 
-        if(_.contains(settings.NGUsers, data.retweeted_status.user.screen_name)) throw new exception.NGUserException();
+        if(_.contains(settings.NG_USERS, data.retweeted_status.user.screen_name)) throw new exception.NGUserException();
 
         isUnofficialRT = rt_exclude_pattern.test(data.retweeted_status.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
@@ -286,7 +286,7 @@
       } else {
 
         // Nブラックリスト入りのユーザは除外
-        if(_.contains(settings.NGUsers, data.user.screen_name)) throw new exception.NGUserException();
+        if(_.contains(settings.NG_USERS, data.user.screen_name)) throw new exception.NGUserException();
 
         // 非公式RTは除外
         isUnofficialRT = rt_exclude_pattern.test(data.text);

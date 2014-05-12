@@ -39,28 +39,31 @@
   /**
    * other
    */
-  exports.keywords = [
+  exports.KEYWORDS = [
       "#ラブライブ版深夜の真剣お絵描き60分一本勝負"
     , "#アイカツ版深夜の真剣お絵描き60分一本勝負"
     , "#艦これ版深夜の真剣お絵描き60分一本勝負"
     , "#ゆるゆり版深夜の真剣お絵描き60分一本勝負"
     , "#モバマス版深夜の真剣お絵かき60分1本勝負"
+    , "#ミリマス版深夜の真剣お絵描き60分一本勝負"
   ];
-  exports.categories = [
+  exports.CATEGORIES = [
       "lovelive"
     , "aikatsu"
     , "kancolle"
     , "yuruyuri"
     , "mobamas"
+    , "millimas"
   ];
-  exports.tags = [
-      'lovelive!, ラブライブ！, #ラブライブ版深夜の真剣お絵描き60分一本勝負'
-    , 'Aikatsu!, アイカツ！, #アイカツ版深夜の真剣お絵描き60分一本勝負'
-    , 'kancolle, 艦これ, #艦これ版深夜の真剣お絵描き60分一本勝負'
-    , 'yuruyuri, ゆるゆり, #ゆるゆり版深夜の真剣お絵描き60分一本勝負'
-    , 'mobamas, モバマス, #モバマス版深夜の真剣お絵かき60分1本勝負'
+  exports.TAGS = [
+      'lovelive!, ラブライブ！, #ラブライブ版深夜の真剣お絵描き60分一本勝負, LL'
+    , 'Aikatsu!, アイカツ！, #アイカツ版深夜の真剣お絵描き60分一本勝負, A!'
+    , 'kancolle, 艦これ, #艦これ版深夜の真剣お絵描き60分一本勝負, kc'
+    , 'yuruyuri, ゆるゆり, #ゆるゆり版深夜の真剣お絵描き60分一本勝負, yy'
+    , 'mobamas, モバマス, #モバマス版深夜の真剣お絵かき60分1本勝負, m'
+    , 'millimas, ミリマス, #ミリマス版深夜の真剣お絵描き60分一本勝負, mill'
   ];
-  exports.NGUsers  = [
+  exports.NG_USERS  = [
       'kankorefanz'
     , 'A867997426'
     , 'happy_botom'
@@ -96,5 +99,10 @@
     , 'BOT04861474'
     , 'arienai_www_bot'
     , 'pa_bot_pa'
+    , 'gazo_takuhai'
+    , 'kankore_tweet'
+    , 'love_live_123'
+    , 'hakkutuw_w'
+    , 'kankoreyasumi'
   ];
 }).call(this);

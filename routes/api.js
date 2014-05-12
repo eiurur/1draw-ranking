@@ -134,7 +134,7 @@ exports.readRankingAllCategory = function (req, res) {
     ;
 
   // カテゴリごと
-  async.forEach(settings.categories, function (name, cb) {
+  async.forEach(settings.CATEGORIES, function (name, cb) {
     var rankCategoryPosts = [];
     correspondDate = cd.getCorrespondDate(name);
     PostProvider.findDescRetweet({

@@ -9,7 +9,6 @@ var express = require('express')
   , http    = require('http')
   , path    = require('path')
   , util    = require('util')
-  , bson    = require('bson')
   ;
 
 var app = module.exports = express();

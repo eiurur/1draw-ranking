@@ -12,7 +12,7 @@
   /**
    * 新規ツイート保存処理
    */
-  settings.twitter.stream('statuses/filter', {'track': settings.keywords}, function(stream) {
+  settings.twitter.stream('statuses/filter', {'track': settings.KEYWORDS}, function(stream) {
     stream.on('data', function(data){
       aggregate.aggregate(data);
     });
@@ -43,7 +43,7 @@
   // for Lovelive
   var cronTime2330  = "29 23 * * *";
 
-  var jobKYA = new cronJob({
+  var jobKYAMM = new cronJob({
     cronTime: cronTime2200
 
     , onTick: function() {
@@ -75,6 +75,6 @@
     , timeZone: "Japan/Tokyo"
   });
 
-  jobKYA.start();
+  jobKYAMM.start();
   jobLL.start();
 })();
