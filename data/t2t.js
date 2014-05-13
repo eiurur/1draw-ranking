@@ -22,35 +22,36 @@
     }, function(error, postDatas) {
       if(_.isEmpty(postDatas)) return;
       var tags, title;
-      var postText2Tumblr = '<strong>' + (postDatas[0].tags.split(","))[2] + '</strong><hr>';
+      var postText = '<strong>' + (postDatas[0].tags.split(","))[2] + '</strong><hr>';
       postDatas.forEach(function (postData, i) {
         i++;
         if(i === 1) {
-          tags = postData.tags
+          // tags = postData.tags
+          tags = (postDatas[0].tags.split(","))[3];
           title = params['correspondDate'];
-          postText2Tumblr += '<h2>' + i + '位</h2>';
+          postText += '<h2>' + i + '位</h2>';
         } else if (i === 2) {
-          postText2Tumblr += '<h3>' + i + '位</h3>';
+          postText += '<h3>' + i + '位</h3>';
         } else if (i === 3) {
-          postText2Tumblr += '<h4>' + i + '位</h4>';
+          postText += '<h4>' + i + '位</h4>';
         } else {
-          postText2Tumblr += '<h5>' + i + '位</h5>';
+          postText += '<h5>' + i + '位</h5>';
         }
-        postText2Tumblr += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
-        postText2Tumblr += '<blockquote>' + postData.tweetText + '</blockquote>';
-        postText2Tumblr += '<i class="fa fa-retweet fa-2x fa-border icon-retweet"> ' + postData.retweetNum + '</i>';
-        postText2Tumblr += '<i class="fa fa-star fa-2x fa-border icon-star"> ' + postData.favNum + '</i>';
-        postText2Tumblr += '<a href="https://twitter.com/' + postData.userId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
-        postText2Tumblr += '<br><hr><br>';
+        postText += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
+        postText += '<blockquote>' + postData.tweetText + '</blockquote>';
+        postText += '<i class="fa fa-retweet fa-2x fa-border icon-retweet"> ' + postData.retweetNum + '</i>';
+        postText += '<i class="fa fa-star fa-2x fa-border icon-star"> ' + postData.favNum + '</i>';
+        postText += '<a href="https://twitter.com/' + postData.userId + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
+        postText += '<br><hr><br>';
       });
 
       // post to tumblr
       ml.cl("Go ------> Tumblr : " + tags);
       settings.tumblr.post('/post', {
           type: 'text'
-        // , tags: tags
+        , tags: tags
         , title: title
-        , body: postText2Tumblr
+        , body: postText
       }, function(err, json){
         ml.cl(json);
       });
@@ -59,7 +60,7 @@
 
   // for lovelive
   exports.post2Tumblr2200 = function(nowTime) {
-    settings.categories.forEach(function (name) {
+    settings.CATEGORIES.forEach(function (name) {
       var numShow
         , correspondDate = cd.getCorrespondDate(name)
         ;
@@ -85,7 +86,7 @@
 
   // for kancolle, aikatsu, yuruyuri, mobamas
   exports.post2Tumblr2330 = function(nowTime) {
-    settings.categories.forEach(function (name) {
+    settings.CATEGORIES.forEach(function (name) {
       var numShow = 20
         , correspondDate = cd.getCorrespondDate(name)
         ;
