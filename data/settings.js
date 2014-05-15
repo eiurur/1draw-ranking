@@ -104,5 +104,7 @@
     , 'love_live_123'
     , 'hakkutuw_w'
     , 'kankoreyasumi'
+    , 'renitks0102'
+    , 'kkazuha0705'
   ];
 }).call(this);
