@@ -106,5 +106,10 @@
     , 'kankoreyasumi'
     , 'renitks0102'
     , 'kkazuha0705'
+    , 'oekaki_bott'
+    , 'aoaoaowww'
+    , 'paa_aa_a'
+    , 'Leonora1019'
+    , 'chuni_kusuguru'
   ];
 }).call(this);

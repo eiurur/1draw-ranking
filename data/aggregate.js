@@ -67,7 +67,7 @@
 
         // twitter公式
         tweetUrl  = data.entities.media[0].display_url;
-        sourceUrl = data.entities.media[0].media_url + ':large';
+        sourceUrl = data.entities.media[0].media_url + ':orig';
         return;
       }
 
