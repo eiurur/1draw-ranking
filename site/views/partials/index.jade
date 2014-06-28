@@ -14,7 +14,7 @@ div#page-content-wrapper
                   div
                     .box(ng-repeat='rankCategoryPost in rankCategoryPosts')
                       span(ng-hide="$last")
-                        img.img-responsive.thumb-pict(src="{{rankCategoryPost.sourceUrl}}")
+                        img.img-responsive.thumb-pict.fade(img-preload, ng-src="{{rankCategoryPost.sourceUrl}}")
                         .pict-discription
                           div
                             i.fa.fa-retweet.fa-border.icon-retweet  {{rankCategoryPost.retweetNum}}

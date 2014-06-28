@@ -10,8 +10,8 @@ div#page-content-wrapper
           div(style="overflow-x: auto;")
             .panel-body(style="width:{{rankWidth}}px;")
               div
-                .box(ng-repeat='rankPost in rankPosts')
-                  img.img-responsive.thumb-pict(src="{{rankPost.sourceUrl}}")
+                .box(ng-repeat='rankPost in rankPosts | orderBy : "retweetNum" : "desc" | limitTo : 20')
+                  img.img-responsive.thumb-pict.fade(img-preload, ng-src="{{rankPost.sourceUrl}}")
                   .pict-discription
                     div
                       i.fa.fa-retweet.fa-border.icon-retweet  {{rankPost.retweetNum}}
@@ -26,8 +26,8 @@ div#page-content-wrapper
           div(style="overflow-x: auto;")
             .panel-body(style="width:{{postWidth}}px;")
               div
-                .box(ng-repeat='post in posts')
-                  img.img-responsive.thumb-pict(src="{{post.sourceUrl}}")
+                .box(ng-repeat='post in posts | orderBy:"createdAt" | limitTo : 10')
+                  img.img-responsive.thumb-pict.fade(img-preload, ng-src="{{post.sourceUrl}}")
                   .pict-discription
                     div
                       i.fa.fa-retweet.fa-border.icon-retweet  {{post.retweetNum}}
