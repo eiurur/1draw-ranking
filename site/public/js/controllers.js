@@ -9,22 +9,22 @@ function ShowDetailCtrl($scope, $http, $routeParams) {
 
   var timer = '';
 
-  // var getData = function(){
-    $http.get('/api/readAll/' + $routeParams.name).
-      success(function(data) {
-          $scope.posts = data.posts;
-          $scope.postWidth = data.postWidth;
-      });
-    $http.get('/api/readRanking/' + $routeParams.name).
-      success(function(data) {
-        $scope.rankPosts = data.rankPosts;
-        $scope.rankWidth = data.rankWidth;
-      });
+  $http.get('/api/readAll/' + $routeParams.name).
+    success(function(data) {
+        $scope.posts = data.posts;
+        $scope.postWidth = data.postWidth;
+    });
+  $http.get('/api/readRanking/' + $routeParams.name).
+    success(function(data) {
+      $scope.rankPosts = data.rankPosts;
+      $scope.rankWidth = data.rankWidth;
+    });
 
   function updateTweetList(data) {
-    posts = data.rankPosts || data.posts;
-    width = data.rankWidth || data.postWidth;
-    target = data.rankPosts !== undefined ? "ranking" : "new"
+    var posts  = data.rankPosts || data.posts
+      , width  = data.rankWidth || data.postWidth
+      , target = data.rankPosts !== undefined ? "ranking" : "new"
+      ;
 
     posts.forEach(function(newData, newDataIndex){
 
@@ -55,8 +55,6 @@ function ShowDetailCtrl($scope, $http, $routeParams) {
 
         // リツイート数、ふぁぼ数に変化があれば更新
         if($scope.rankPosts[idx].favNum !== newData.favNum) {
-
-          // console.log("fav数を更新します！！" + $scope.rankPosts[idx].favNum + " -> " + newData.favNum);
           if(target === "ranking") {
             $scope.rankPosts[idx].favNum = newData.favNum;
           } else {
@@ -65,8 +63,6 @@ function ShowDetailCtrl($scope, $http, $routeParams) {
         }
 
         if($scope.rankPosts[idx].retweetNum !== newData.retweetNum){
-
-          // console.log("retweet数を更新します！！" + $scope.rankPosts[idx].retweetNum + " -> " + newData.retweetNum);
           if(target === "ranking") {
             $scope.rankPosts[idx].retweetNum = newData.retweetNum;
           } else {

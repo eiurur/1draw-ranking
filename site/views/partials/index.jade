@@ -4,7 +4,7 @@ div#page-content-wrapper
   div.page-content.inset
     div.row
       div(ng-repeat='rankCategoryPosts in rankAllCategoryPosts')
-        div(ng-hide="rankCategoryPosts[$index].rankWidth == 0")
+        div(ng-hide="rankCategoryPosts.length == 1")
           div.col-md-12.panel-padding-bottom
             .panel.panel-default(ng-hide="rankCategoryPosts[$index].rankWidth == 0")
               .panel-heading
