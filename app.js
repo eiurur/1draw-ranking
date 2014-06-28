@@ -1,73 +1,81 @@
+(function() {
+  var async               = require('async')
+    , cronJob             = require('cron').CronJob
+    , ml                  = require('./data/lib')
+    , serve               = require('./site/app').serve
+    , getTweetFromTwitter = require('./data/app').getTweetFromTwitter
+    , settings            = process.env.NODE_ENV === "production" ? require("./data/production") : require("./data/development")
+    ;
 
-/**
- * Module dependencies
- */
+  tasks4StartUp = [
 
-var express = require('express')
-  , routes  = require('./routes')
-  , api     = require('./routes/api')
-  , http    = require('http')
-  , path    = require('path')
-  , util    = require('util')
-  ;
+    function(callback) {
+      console.log("■ Twitter task start");
 
-var app = module.exports = express();
-var server = http.createServer(app);
-var io = require('socket.io').listen(server);
+      setTimeout((function(){
+        getTweetFromTwitter(null, "Getting Tweet");
+        return callback(null, "Go! Twitter\n");
+      }), 1000);
+    }, function(callback) {
+      console.log("■ Server task start");
 
-io.set('log level', 1);
+      setTimeout((function(){
+        serve(null, "Create Server");
+        return callback(null, "Create! Server\n");
+      }), 1000);
+    }
+  ];
 
-
-/**
- * Configuration
- */
-
-// all environments
-app.set('port', process.env.PORT || 9000);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.locals.pretty = true;
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(app.router);
-app.use(function(req, res, next){
-  res.status(404);
-  res.render('404', {title: "お探しのページは存在しません。"});
-});
+  async.series(tasks4StartUp, function(err, results) {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log("\nall done... Start!!!!\n");
+    }
+  });
 
 
-// development only
-if (app.get('env') === 'development') {
-  app.use(express.errorHandler());
-}
+  // /**
+  //  * 指定時刻になったらその日のTOPポストをTumblrへ投稿
+  //  */
+  // // for Kancolle, Yuruyuri, Aikatsu
+  // var cronTime2200 = "59 21 * * *";
 
-// production only
-if (app.get('env') === 'production') {
-  // TODO
-}
+  // // for Lovelive
+  // var cronTime2330  = "29 23 * * *";
 
+  // var jobKYAMM = new cronJob({
+  //   cronTime: cronTime2200
 
-/**
- * Routes
- */
+  //   , onTick: function() {
+  //     var nowTime = new Date();
+  //     t2t.post2Tumblr2200(nowTime);
+  //   }
 
-// serve index and view partials
-app.get('/', routes.index);
-app.get('/partials/:name', routes.partials);
+  //   , onComplete: function() {
+  //     console.log('Completed.')
+  //   }
 
-// JSON API
-app.get('/api/readAll/:name', api.readAll);
-app.get('/api/readRanking/:name', api.readRanking);
-app.get('/api/readRankingAllCategory', api.readRankingAllCategory);
+  //   , start: false
+  //   , timeZone: "Japan/Tokyo"
+  // });
 
-app.get('*', routes.index);
+  // var jobLL = new cronJob({
+  //   cronTime: cronTime2330
 
+  //   , onTick: function() {
+  //     var nowTime = new Date();
+  //     t2t.post2Tumblr2330(nowTime);
+  //   }
 
-/**
- * Start Server
- */
-http.createServer(app).listen(app.get('port'), function () {
-  console.log('Express server listening on port ' + app.get('port'));
-});
+  //   , onComplete: function() {
+  //     console.log('Completed.')
+  //   }
+
+  //   , start: false
+  //   , timeZone: "Japan/Tokyo"
+  // });
+
+  // jobKYAMM.start();
+  // jobLL.start();
+})();

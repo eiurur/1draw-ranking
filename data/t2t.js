@@ -1,11 +1,11 @@
 (function(){
   var ml        = require('./lib')
-    , settings  = require('./settings')
     , exception = require('./exception')
     , _         = require('underscore-node')
     , php       = require('phpjs')
     , moment    = require('moment')
     , cd        = require('./corresponddate')
+    , settings  = process.env.NODE_ENV === "production" ? require("./production") : require("./development")
     ;
 
   //====== Mongoose object =======//

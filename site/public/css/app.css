@@ -1,0 +1,136 @@
+/* app css stylesheet */
+
+/*body {
+  overflow-y : hidden;
+}*/
+a {
+  text-decoration: none;
+}
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}20px;
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+.menu > li:nth-child(1):before {
+  content: "";
+  padding: 0;
+}
+
+.dummy {
+    margin-top: 100%;
+}
+.thumbnail {
+    position: absolute;
+    /*
+    top: 15px;
+    bottom: 0;
+    left: 15px;
+    right: 0;
+    */
+    text-align:center;
+    margin: 5px;
+    /*padding-top:calc(50% - 30px); */
+}
+.thumb-pict {
+  border: 1px solid #ddd;;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4), 5px 5px 10px rgba(255,255,255,0.3) inset, -5px -5px 10px rgba(255,255,255,0.3) inset;
+  margin-bottom: 20px;
+}
+
+.pict-discription {
+  float: left;
+  margin: 0px 20px;
+}
+
+.sidebar-arrow {
+  margin-right: 20px;
+}
+
+.scroll-pict {
+  /*float: left;*/
+  width: auto;
+  max-height: 200px;
+/*  width: 128px;
+  line-height: 128px;
+  text-align: center;*/
+  border: 1px solid #888;
+  margin: 15px;
+}
+
+.box {
+  float: left;
+  margin-left: -20px;
+}
+
+.box img{
+  width: auto;
+  max-height: 300px;
+  margin: 0px 20px 20px;
+}
+
+.box-container {
+  display: block;
+  border: 1px solid #dddddd;
+  background-color: #f9f9f9;
+  /* color:#0000FF; */
+  overflow: auto;
+  /*padding: 2px 2px 2px 2px;*/
+  margin-left: 10px;
+}
+
+/* clearfix */
+.box-container:before,
+.box-container:after {
+    content: "";
+    display: table;
+}
+ 
+.box-container:after {
+    clear: both;
+}
+ 
+/* For IE 6/7 (trigger hasLayout) */
+.box-container {
+    zoom: 1;
+}
+
+.hidden-scrollbar {
+  overflow:hidden;
+}
+
+.icon-retweet {
+  color: #85B95E;
+}
+
+.icon-star {
+  color: #FF9B00;
+}
+
+.icon-twitter {
+  color: #009FE9;
+}
+
+.panel-padding-bottom {
+  padding-bottom: 20px;
+}
