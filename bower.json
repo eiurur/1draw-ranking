@@ -11,7 +11,8 @@
     "angular-socket-io": "~0.3.0",
     "angular-route": "~1.2.14"
   },
-  "resolutions": {
-    "d3": "~3.3.13"
+  "devDependencies": {
+    "underscore": "~1.6.0",
+    "lodash": "~2.4.1"
   }
 }
