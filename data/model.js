@@ -1,8 +1,8 @@
-var mongoose  = require('mongoose')
-  , db        = mongoose.connect('mongodb://127.0.0.1/third-mongo')
-  // , db        = mongoose.connect('mongodb://127.0.0.1/fourth')
-  , Schema    = mongoose.Schema
-  , ObjectId  = Schema.Objectid
+var mongoose = require('mongoose')
+  , uri      = process.env.MONGOHQ_URL || 'mongodb://127.0.0.1/third-mongo'
+  , db       = mongoose.connect(uri)
+  , Schema   = mongoose.Schema
+  , ObjectId = Schema.Objectid
   ;
 
 /**
@@ -37,7 +37,7 @@ var PostSchema = new Schema({
   , favNum: Number
   , totalNum: Number
   , picWidths: [PicWidthsSchema]
-  , historiesNumFavAndRT: [HistoriesNumFavAndRTSchema]
+  // , historiesNumFavAndRT: [HistoriesNumFavAndRTSchema]
   , createdAt: Date
   , correspondDate: Date
   , correspondTime: Date

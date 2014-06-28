@@ -10,19 +10,25 @@
   tasks4StartUp = [
 
     function(callback) {
+
       console.log("■ Twitter task start");
 
-      setTimeout((function(){
-        getTweetFromTwitter(null, "Getting Tweet");
-        return callback(null, "Go! Twitter\n");
-      }), 1000);
-    }, function(callback) {
-      console.log("■ Server task start");
+      getTweetFromTwitter(null, "Getting Tweet");
 
       setTimeout((function(){
-        serve(null, "Create Server");
+        return callback(null, "Go! Twitter\n");
+      }), 1000);
+
+    }, function(callback) {
+
+      console.log("■ Server task start");
+
+      serve(null, "Create Server");
+
+      setTimeout((function(){
         return callback(null, "Create! Server\n");
       }), 1000);
+
     }
   ];
 
