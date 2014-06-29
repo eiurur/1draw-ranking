@@ -5,9 +5,12 @@ function IndexCtrl($scope, $http) {
     });
 }
 
-function ShowDetailCtrl($scope, $http, $routeParams) {
+function ShowDetailCtrl($scope, $http, $routeParams, $timeout) {
 
-  var timer = '';
+  var onTimeout
+    , timer
+    , INTERVAL = 5 * 1000
+    ;
 
   $http.get('/api/readAll/' + $routeParams.name).
     success(function(data) {
@@ -72,17 +75,28 @@ function ShowDetailCtrl($scope, $http, $routeParams) {
     });
   }
 
-  timer = setInterval(function() {
+  // v1.0.7には$intervalが未実装であるため
+  // $timeoutを再帰的に呼び出して擬似的な処理で賄う
+  onTimeout = function() {
+
     $http.get('/api/readAll/' + $routeParams.name).
       success(function(data) {
         updateTweetList(data);
       });
     $http.get('/api/readRanking/' + $routeParams.name).
       success(function(data) {
-
-        // console.log("data.rankPosts", data.rankPosts);
         updateTweetList(data);
       });
-  }, 1000 * 5);
+
+    timer = $timeout(onTimeout, INTERVAL);
+  };
+
+  timer = $timeout(onTimeout, INTERVAL);
+
+  $scope.$on("$destroy", function() {
+    if (timer) {
+      $timeout.cancel(timer);
+    }
+  });
 
 }
