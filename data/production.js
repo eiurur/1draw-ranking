@@ -110,5 +110,8 @@
     , 'paa_aa_a'
     , 'Leonora1019'
     , 'chuni_kusuguru'
+    , '1000favimage'
+    , 'alilqome'
+    , 'kan__kore'
   ];
 }).call(this);

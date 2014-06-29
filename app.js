@@ -40,48 +40,4 @@
     }
   });
 
-
-  // /**
-  //  * 指定時刻になったらその日のTOPポストをTumblrへ投稿
-  //  */
-  // // for Kancolle, Yuruyuri, Aikatsu
-  // var cronTime2200 = "59 21 * * *";
-
-  // // for Lovelive
-  // var cronTime2330  = "29 23 * * *";
-
-  // var jobKYAMM = new cronJob({
-  //   cronTime: cronTime2200
-
-  //   , onTick: function() {
-  //     var nowTime = new Date();
-  //     t2t.post2Tumblr2200(nowTime);
-  //   }
-
-  //   , onComplete: function() {
-  //     console.log('Completed.')
-  //   }
-
-  //   , start: false
-  //   , timeZone: "Japan/Tokyo"
-  // });
-
-  // var jobLL = new cronJob({
-  //   cronTime: cronTime2330
-
-  //   , onTick: function() {
-  //     var nowTime = new Date();
-  //     t2t.post2Tumblr2330(nowTime);
-  //   }
-
-  //   , onComplete: function() {
-  //     console.log('Completed.')
-  //   }
-
-  //   , start: false
-  //   , timeZone: "Japan/Tokyo"
-  // });
-
-  // jobKYAMM.start();
-  // jobLL.start();
 })();
