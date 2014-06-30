@@ -37,10 +37,6 @@ function ShowDetailCtrl($scope, $http, $routeParams, $timeout) {
           idx = _.findIndex($scope.posts, {tweetId: newData.tweetId});
         }
 
-        // console.log("posts.newData", newData);
-        // console.log("idx = " + idx);
-        // console.log("newDataIndex = " + newDataIndex);
-
         // もし、新しい画像があれば
         if(idx === -1) {
 
@@ -53,6 +49,7 @@ function ShowDetailCtrl($scope, $http, $routeParams, $timeout) {
             $scope.posts.push(posts[newDataIndex]);
             $scope.postWidth = width;
           }
+
           return;
         }
 
@@ -83,12 +80,14 @@ function ShowDetailCtrl($scope, $http, $routeParams, $timeout) {
       success(function(data) {
         updateTweetList(data);
       });
+
     $http.get('/api/readRanking/' + $routeParams.name).
       success(function(data) {
         updateTweetList(data);
       });
 
     timer = $timeout(onTimeout, INTERVAL);
+
   };
 
   timer = $timeout(onTimeout, INTERVAL);

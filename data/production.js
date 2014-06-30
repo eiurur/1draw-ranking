@@ -113,5 +113,6 @@
     , '1000favimage'
     , 'alilqome'
     , 'kan__kore'
+    , '3000favo_'
   ];
 }).call(this);
