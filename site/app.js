@@ -3,7 +3,6 @@ exports.serve = function() {
   /**
    * Module dependencies
    */
-
   var express = require('express')
     , routes  = require('./routes')
     , api     = require('./routes/api')
@@ -13,8 +12,6 @@ exports.serve = function() {
     , app     = module.exports = express()
     , server  = http.createServer(app)
     ;
-
-
 
   /**
    * Configuration
