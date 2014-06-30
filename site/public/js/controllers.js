@@ -5,7 +5,7 @@ function IndexCtrl($scope, $http) {
     });
 }
 
-function ShowDetailCtrl($scope, $http, $routeParams, $timeout) {
+function DetailCtrl($scope, $http, $routeParams, $timeout) {
 
   var onTimeout
     , timer

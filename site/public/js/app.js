@@ -6,9 +6,9 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives'])
         templateUrl: 'partials/index',
         controller: IndexCtrl
       }).
-      when('/showDetail/:name', {
-        templateUrl: 'partials/ShowDetail',
-        controller: ShowDetailCtrl
+      when('/detail/:name', {
+        templateUrl: 'partials/detail',
+        controller: DetailCtrl
       }).
       otherwise({
         redirectTo: '/'
