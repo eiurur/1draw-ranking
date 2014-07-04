@@ -64,11 +64,8 @@ exports.readAll = function (req, res) {
         dataCount++;
       });
 
-      // CSSの余白分を追加  
-      console.log("postWidth = " + postWidth);
+      // CSSの余白分を追加
       postWidth += dataCount * margin;
-
-      console.log("readAll postWidth = " + postWidth);
 
       res.json({
           posts: posts
@@ -166,19 +163,15 @@ exports.readRankingAllCategory = function (req, res) {
         });
 
         if(!_.isUndefined(postData.picWidths[0].height300)) {
-          console.log("dataCount = " + dataCount + ", rankWidth = " + rankWidth);
           rankWidth += postData.picWidths[0].height300;
         } else {
           rankWidth += 600;
         }
-        console.log("userId = " + postData.userId);
-        console.log("tweetText = " + postData.tweetText);
         dataCount++;
       });
 
       // CSSの余白分を追加
       rankWidth += dataCount * margin;
-      console.log("rankWidth = " + rankWidth);
 
       // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
       rankCategoryPosts.push({
