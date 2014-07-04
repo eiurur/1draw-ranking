@@ -1,5 +1,5 @@
 div#page-content-wrapper
-  div.content-header(ng-show="rankAllCategoryPosts")
+  div.content-header(ng-show="rankAllCategoryPosts.length")
     h1 総合ランキング
   div.page-content.inset
     div.row(ng-show="rankAllCategoryPosts")
@@ -22,7 +22,7 @@ div#page-content-wrapper
                             a(href='https://{{rankCategoryPost.tweetUrl}}', target="_blank")
                               .fa.fa-twitter.fa-border.icon-twitter
 
-    div(ng-hide="rankAllCategoryPosts[0].rankWidth")
+    div(ng-hide="rankAllCategoryPosts.length")
       div(ng-hide="rankAllCategoryPosts.length == 0")
         i.fa.fa-refresh.fa-5x.pull-left.fa-spin
       div(ng-show="rankAllCategoryPosts.length == 0")
