@@ -1,6 +1,7 @@
 (function() {
   var async               = require('async')
     , cronJob             = require('cron').CronJob
+    , newrelic            = require('newrelic')
     , my                  = require('./lib/my')
     , serve               = require('./site/app').serve
     , getTweetFromTwitter = require('./data/app').getTweetFromTwitter
