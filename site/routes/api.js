@@ -1,9 +1,9 @@
-var dir           = '../../data/'
+var dir      = '../../lib/'
   , moment   = require('moment')
   , _        = require('underscore-node')
   , async    = require('async')
   , cd       = require(dir + 'corresponddate')
-  , ml       = require(dir + 'lib')
+  , my       = require(dir + 'my')
   , settings = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
   ;
 
@@ -64,7 +64,8 @@ exports.readAll = function (req, res) {
         dataCount++;
       });
 
-      // CSSの余白分を追加
+      // CSSの余白分を追加  
+      console.log("postWidth = " + postWidth);
       postWidth += dataCount * margin;
 
       console.log("readAll postWidth = " + postWidth);
@@ -164,16 +165,20 @@ exports.readRankingAllCategory = function (req, res) {
           , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
         });
 
-        if(_.isObject(postData.picWidths[0])) {
+        if(!_.isUndefined(postData.picWidths[0].height300)) {
+          console.log("dataCount = " + dataCount + ", rankWidth = " + rankWidth);
           rankWidth += postData.picWidths[0].height300;
         } else {
           rankWidth += 600;
         }
+        console.log("userId = " + postData.userId);
+        console.log("tweetText = " + postData.tweetText);
         dataCount++;
       });
 
       // CSSの余白分を追加
       rankWidth += dataCount * margin;
+      console.log("rankWidth = " + rankWidth);
 
       // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
       rankCategoryPosts.push({
