@@ -1,21 +1,22 @@
 (function() {
-  var ml        = require('./lib')
-    , exception = require('./exception')
+  var dir       = '../lib/'
+    , my        = require(dir + 'my')
+    , exception = require(dir + 'exception')
     , _         = require('underscore-node')
     , php       = require('phpjs')
     , moment    = require('moment')
-    , cd        = require('./corresponddate')
-    , settings  = process.env.NODE_ENV === "production" ? require("./production") : require("./development")
+    , cd        = require(dir + 'corresponddate')
+    , settings  = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
     ;
 
   //====== Mongoose object =======//
-  var PostProvider = require('./model').PostProvider;
+  var PostProvider = require(dir + 'model').PostProvider;
 
   exports.aggregate = function (data) {
 
     console.log("-----------------------------------");
 
-    // ml.dump(data);
+    // my.dump(data);
 
     /**
      * マジックナンバー
@@ -211,7 +212,7 @@
         , correspondTime: params['correspondTime']
       }, function(error, docs) {
           console.log("okk mc = " + mc);
-          ml.dump(picWidth);
+          my.dump(picWidth);
       });
     }
 
@@ -238,9 +239,9 @@
         isUnofficialRT = rt_exclude_pattern.test(data.retweeted_status.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
 
-        ml.cl("RT数  " + data.retweeted_status.retweet_count);
-        ml.cl("fav数 " + data.retweeted_status.favorite_count);
-        ml.cl("RT元  " + data.retweeted_status.user.screen_name);
+        my.cl("RT数  " + data.retweeted_status.retweet_count);
+        my.cl("fav数 " + data.retweeted_status.favorite_count);
+        my.cl("RT元  " + data.retweeted_status.user.screen_name);
 
         // 日時データを要素分解
         tweetTime = data.retweeted_status.created_at.split(" ");
@@ -333,7 +334,7 @@
         console.log(e.message);
         console.log(e.errorHappendAt.toString());
       } else {
-        ml.dump(e);
+        my.dump(e);
       }
     }
   }

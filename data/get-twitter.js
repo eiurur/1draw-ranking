@@ -3,9 +3,9 @@
     , http      = require('http')
     , path      = require('path')
     , util      = require('util')
+    , ml        = require(dir + 'my')
     , aggregate = require('./aggregate')
-    , my        = require(dir + 'my')
-    , settings  = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
+    , settings  = process.env.NODE_ENV === "production" ? require("./production") : require("./development")
     ;
 
   exports.getTweetFromTwitter= function(){

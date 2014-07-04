@@ -1,10 +1,11 @@
 (function() {
   var async               = require('async')
     , cronJob             = require('cron').CronJob
-    , ml                  = require('./data/lib')
+    , my                  = require('./lib/my')
     , serve               = require('./site/app').serve
     , getTweetFromTwitter = require('./data/app').getTweetFromTwitter
-    , settings            = process.env.NODE_ENV === "production" ? require("./data/production") : require("./data/development")
+    , manageCron          = require('./lib/manage-cron').manageCron
+    , settings            = process.env.NODE_ENV === "production" ? require("./lib/production") : require("./lib/development")
     ;
 
   tasks4StartUp = [
@@ -17,6 +18,16 @@
 
       setTimeout((function(){
         return callback(null, "Go! Twitter\n");
+      }), 1000);
+
+    }, function(callback) {
+
+      console.log("■ Cron task start");
+
+      manageCron(null, "Start up Cron");
+
+      setTimeout((function(){
+        return callback(null, "Ok! Cron\n");
       }), 1000);
 
     }, function(callback) {
