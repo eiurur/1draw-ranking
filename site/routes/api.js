@@ -42,7 +42,7 @@ exports.readAll = function (req, res) {
           , userName: postData.userName
           , userId: postData.userId
           , tweetText: postData.tweetText
-          , tweetUrl: postData.tweetUrl
+          , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
           , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
           , tags: postData.tags
           , category: postData.category
@@ -95,7 +95,7 @@ exports.readRanking = function (req, res) {
           , userName: postData.userName
           , userId: postData.userId
           , tweetText: postData.tweetText
-          , tweetUrl: postData.tweetUrl
+          , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
           , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
           , tags: postData.tags
           , category: postData.category
@@ -151,7 +151,7 @@ exports.readRankingAllCategory = function (req, res) {
           , userName: postData.userName
           , userId: postData.userId
           , tweetText: postData.tweetText
-          , tweetUrl: postData.tweetUrl
+          , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
           , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
           , tags: postData.tags
           , category: postData.category

@@ -1,8 +1,8 @@
 div#page-content-wrapper
-  div.content-header
+  div.content-header(ng-show="rankAllCategoryPosts")
     h1 総合ランキング
   div.page-content.inset
-    div.row
+    div.row(ng-show="rankAllCategoryPosts")
       div(ng-repeat='rankCategoryPosts in rankAllCategoryPosts')
         div(ng-hide="rankCategoryPosts.length == 1")
           div.col-md-12.panel-padding-bottom
@@ -22,3 +22,11 @@ div#page-content-wrapper
                             a(href='https://{{rankCategoryPost.tweetUrl}}', target="_blank")
                               .fa.fa-twitter.fa-border.icon-twitter
 
+    div(ng-hide="rankAllCategoryPosts[0].rankWidth")
+      div(ng-hide="rankAllCategoryPosts.length == 0")
+        i.fa.fa-refresh.fa-5x.pull-left.fa-spin
+      div(ng-show="rankAllCategoryPosts.length == 0")
+        span.fa-stack.fa-5x
+          i.fa.fa-picture-o.fa-stack-1x.pull-left
+          i.fa.fa-ban.fa-stack-2x.pull-left.text-danger
+        .fa-5x No data ...
