@@ -63,8 +63,9 @@
   // for lovelive
   exports.post2Tumblr2200 = function() {
     var nowTime = new Date();
+
     console.log("post2Tumblr2200");
-    return;
+
     settings.CATEGORIES.forEach(function (name) {
       var numShow
         , correspondDate = cd.getCorrespondDate(name)
@@ -92,8 +93,9 @@
   // for kancolle, aikatsu, yuruyuri, mobamas
   exports.post2Tumblr2330 = function() {
     var nowTime = new Date();
+
     console.log("post2Tumblr2330");
-    return;
+
     settings.CATEGORIES.forEach(function (name) {
       var numShow = 20
         , correspondDate = cd.getCorrespondDate(name)
