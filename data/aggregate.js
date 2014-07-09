@@ -253,7 +253,8 @@
         PostProvider.countDuplicatedPic({
           tweetId: data.retweeted_status.id
         }, function(error, docs) {
-          console.log("pic num = " + docs + " doc typeof = " + typeof docs);
+          console.log("カテゴリ = " + tags);
+          console.log("投稿者 = " + data.retweeted_status.user.name);
           if(docs === 0) {
             console.log("INSERT DB");
             insertDB({

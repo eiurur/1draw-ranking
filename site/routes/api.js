@@ -136,7 +136,8 @@ exports.readRankingAllCategory = function (req, res) {
   async.forEach(settings.CATEGORIES, function (name, cb) {
     var rankCategoryPosts = [];
     correspondDate = cd.getCorrespondDate(name);
-    PostProvider.findDescRetweet({
+    // PostProvider.findDescRetweet({
+    PostProvider.findDescTotalPoint({
         name: name
       , correspondDate: correspondDate
       , numShow: numShow
