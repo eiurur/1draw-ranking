@@ -10,7 +10,9 @@ var dir      = '../../lib/'
 //====== Mongoose object =======//
 var PostProvider = require(dir + 'model').PostProvider;
 
-var margin = 40;
+var margin = 40
+  , IMAGE_MAX_WIDTH_300 = 300
+  ;
 
 exports.readAll = function (req, res) {
     var name = req.params.name;
@@ -59,7 +61,7 @@ exports.readAll = function (req, res) {
         if(!_.isUndefined(postData.picWidths[0].height300)) {
           postWidth += postData.picWidths[0].height300;
         } else {
-          postWidth += 600;
+          postWidth += IMAGE_MAX_WIDTH_300;
         }
         dataCount++;
       });
@@ -109,7 +111,7 @@ exports.readRanking = function (req, res) {
         if(!_.isUndefined(postData.picWidths[0].height300)) {
           rankWidth += postData.picWidths[0].height300;
         } else {
-          rankWidth += 600;
+          rankWidth += IMAGE_MAX_WIDTH_300;
         }
         dataCount++;
       });
@@ -127,7 +129,6 @@ exports.readRanking = function (req, res) {
 
 exports.readRankingAllCategory = function (req, res) {
   var correspondDate
-    , dataCount            = 0
     , numShow              = 10
     , rankAllCategoryPosts = []
     ;
@@ -144,8 +145,11 @@ exports.readRankingAllCategory = function (req, res) {
     }, function(error, postDatas) {
 
       // ツイートごとのデータ
-      var rankWidth      = 0;
-      var rankPosts      = [];
+      var rankWidth = 0
+        , dataCount = 0
+        , rankPosts = []
+        ;
+      console.log("前 rankWidth: " + rankWidth);
       postDatas.forEach(function (postData) {
         rankCategoryPosts.push({
             tweetId: postData.tweetId
@@ -166,13 +170,14 @@ exports.readRankingAllCategory = function (req, res) {
         if(!_.isUndefined(postData.picWidths[0].height300)) {
           rankWidth += postData.picWidths[0].height300;
         } else {
-          rankWidth += 600;
+          rankWidth += IMAGE_MAX_WIDTH_300;
         }
         dataCount++;
       });
 
       // CSSの余白分を追加
       rankWidth += dataCount * margin;
+      console.log("あと rankWidth: " + rankWidth);
 
       // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
       rankCategoryPosts.push({

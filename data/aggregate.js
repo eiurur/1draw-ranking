@@ -14,8 +14,6 @@
 
   exports.aggregate = function (data) {
 
-    console.log("-----------------------------------");
-
     // my.dump(data);
 
     /**
@@ -181,7 +179,6 @@
 
         // twitter公式
         if(_.has(params['entities'].media[0], "sizes")) {
-          console.log("siiiiiiiiiiiiiiiiiiiiiiiiize");
 
           var mW = params['entities'].media[0].sizes.medium.w
             , mH = params['entities'].media[0].sizes.medium.h
@@ -211,8 +208,8 @@
         , correspondDate: params['correspondDate']
         , correspondTime: params['correspondTime']
       }, function(error, docs) {
-          console.log("okk mc = " + mc);
-          my.dump(picWidth);
+          // console.log("okk mc = " + mc);
+          // my.dump(picWidth);
       });
     }
 
@@ -239,9 +236,9 @@
         isUnofficialRT = rt_exclude_pattern.test(data.retweeted_status.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
 
-        my.cl("RT数  " + data.retweeted_status.retweet_count);
-        my.cl("fav数 " + data.retweeted_status.favorite_count);
-        my.cl("RT元  " + data.retweeted_status.user.screen_name);
+        // my.cl("RT数  " + data.retweeted_status.retweet_count);
+        // my.cl("fav数 " + data.retweeted_status.favorite_count);
+        // my.cl("RT元  " + data.retweeted_status.user.screen_name);
 
         // 日時データを要素分解
         tweetTime = data.retweeted_status.created_at.split(" ");
@@ -253,10 +250,7 @@
         PostProvider.countDuplicatedPic({
           tweetId: data.retweeted_status.id
         }, function(error, docs) {
-          console.log("カテゴリ = " + tags);
-          console.log("投稿者 = " + data.retweeted_status.user.name);
           if(docs === 0) {
-            console.log("INSERT DB");
             insertDB({
                 entities: data.retweeted_status.entities
               , tweetId: data.retweeted_status.id
@@ -283,7 +277,7 @@
               favNum: data.retweeted_status.favorite_count,
               totalNum: data.retweeted_status.retweet_count + data.retweeted_status.favorite_count
             }, function(error, docs) {
-              console.log(category + " retweet UPDATTE OK = " + data.retweeted_status.text);
+              // console.log(category + " retweet UPDATTE OK = " + data.retweeted_status.text);
             });
           }
         });
@@ -300,8 +294,7 @@
 
         assingDateAndTime();
 
-        console.log("## Lets New Save to MongoDB");
-        console.log(category + " original INSERT OK = " + data.user.screen_name + " :  " + data.text);
+        console.log("\nTW者: " + data.user.screen_name + "  -  カテゴリ:  " + category + "\n");
 
         insertDB({
             entities: data.entities
