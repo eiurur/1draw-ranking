@@ -26,7 +26,6 @@ exports.readAll = function (req, res) {
     // 4/7 22:12 -> 表示は 4/6 23:30 からの分
     // 4/8 12:32 -> 表示は 4/7 23:30 からの分
     var correspondDate = cd.getCorrespondDate(name)
-      ,  dataCount     = 0
       ,  numShow       = 10
       ;
 
@@ -36,8 +35,10 @@ exports.readAll = function (req, res) {
       , correspondDate: correspondDate
       , numShow: numShow
     }, function(error, postDatas) {
-      var postWidth = 0;
-      var posts = [];
+      var postWidth = 0
+        , dataCount = 0
+        , posts     = []
+        ;
       postDatas.forEach(function (postData) {
         posts.push({
             tweetId: postData.tweetId
@@ -80,7 +81,6 @@ exports.readRanking = function (req, res) {
     var name = req.params.name;
 
     var correspondDate = cd.getCorrespondDate(name)
-      ,  dataCount     = 0
       ,  numShow       = 20
       ;
 
@@ -89,8 +89,11 @@ exports.readRanking = function (req, res) {
       , correspondDate: correspondDate
       , numShow: numShow
     }, function(error, postDatas) {
-      var rankWidth      = 0;
-      var rankPosts      = [];
+      var rankWidth = 0
+        , dataCount = 0
+        , rankPosts = []
+        ;
+
       postDatas.forEach(function (postData) {
         rankPosts.push({
             tweetId: postData.tweetId
@@ -149,7 +152,7 @@ exports.readRankingAllCategory = function (req, res) {
         , dataCount = 0
         , rankPosts = []
         ;
-      console.log("前 rankWidth: " + rankWidth);
+
       postDatas.forEach(function (postData) {
         rankCategoryPosts.push({
             tweetId: postData.tweetId
@@ -177,7 +180,6 @@ exports.readRankingAllCategory = function (req, res) {
 
       // CSSの余白分を追加
       rankWidth += dataCount * margin;
-      console.log("あと rankWidth: " + rankWidth);
 
       // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
       rankCategoryPosts.push({
