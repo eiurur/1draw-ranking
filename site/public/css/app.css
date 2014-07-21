@@ -67,6 +67,16 @@ a {
   margin-right: 20px;
 }
 
+.sidebar-ex-link {
+  font-size: 10px;
+  margin-right: 16px;
+}
+
+.sidebar-share {
+  font-size: 8px;
+  margin-right: 16px;
+}
+
 .scroll-pict {
   /*float: left;*/
   width: auto;
