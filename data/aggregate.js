@@ -14,7 +14,7 @@
 
   exports.aggregate = function (data) {
 
-    // my.dump(data);
+    // my.dump(data.entities.hashtags);
 
     /**
      * マジックナンバー
@@ -213,6 +213,12 @@
       });
     }
 
+    var excludeTweetWithNGTag = function() {
+      _.each(data.entities.hashtags, function(val) {
+        if(_.contains(settings.NG_TAGS, val.text)) throw new exception.NGTagException();
+      });
+    };
+
     /**
      * Main
      */
@@ -232,6 +238,7 @@
       if(_.has(data, 'retweeted_status')) {
 
         if(_.contains(settings.NG_USERS, data.retweeted_status.user.screen_name)) throw new exception.NGUserException();
+        excludeTweetWithNGTag();
 
         isUnofficialRT = rt_exclude_pattern.test(data.retweeted_status.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
@@ -283,7 +290,10 @@
         });
       } else {
 
-        // Nブラックリスト入りのユーザは除外
+        // ブラックリスト入りのタグを含んだツイートは除外
+        excludeTweetWithNGTag();
+
+        // ブラックリスト入りのユーザは除外
         if(_.contains(settings.NG_USERS, data.user.screen_name)) throw new exception.NGUserException();
 
         // 非公式RTは除外
