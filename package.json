@@ -1,11 +1,10 @@
 {
   "name": "1draw-Ranking",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "description": "",
   "main": "app.js",
   "author": "eiurur",
-  "license": "MIT",
   "dependencies": {
     "express": "~3.2.6",
     "jade": "~0.31.2"
