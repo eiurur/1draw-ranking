@@ -13,12 +13,12 @@
 
     function(callback) {
 
-      console.log("■ Twitter task start");
+      console.log("■ Server task start");
 
-      getTweetFromTwitter(null, "Getting Tweet");
+      serve(null, "Create Server");
 
       setTimeout((function(){
-        return callback(null, "Go! Twitter\n");
+        return callback(null, "Create! Server\n");
       }), 1000);
 
     }, function(callback) {
@@ -33,12 +33,12 @@
 
     }, function(callback) {
 
-      console.log("■ Server task start");
+      console.log("■ Twitter task start");
 
-      serve(null, "Create Server");
+      getTweetFromTwitter(null, "Getting Tweet");
 
       setTimeout((function(){
-        return callback(null, "Create! Server\n");
+        return callback(null, "Go! Twitter\n");
       }), 1000);
 
     }
