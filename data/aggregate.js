@@ -213,9 +213,10 @@
       });
     }
 
-    var excludeTweetWithNGTag = function() {
-      _.each(data.entities.hashtags, function(val) {
-        if(_.contains(settings.NG_TAGS, val.text)) throw new exception.NGTagException();
+    // 艦これ画像botが多すぎて対処しきれないのでワイルドカードで一掃
+    var excludeNGUser = function(screenName) {
+      _.each(settings.NG_USERS, function(name) {
+        if(screenName.indexOf(name) !== -1) throw new exception.NGUserException();
       });
     };
 
@@ -237,8 +238,8 @@
 
       if(_.has(data, 'retweeted_status')) {
 
-        if(_.contains(settings.NG_USERS, data.retweeted_status.user.screen_name)) throw new exception.NGUserException();
-        excludeTweetWithNGTag();
+        // ブラックリスト入りのユーザは除外
+        excludeNGUser(data.retweeted_status.user.screen_name);
 
         isUnofficialRT = rt_exclude_pattern.test(data.retweeted_status.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
@@ -290,11 +291,8 @@
         });
       } else {
 
-        // ブラックリスト入りのタグを含んだツイートは除外
-        excludeTweetWithNGTag();
-
         // ブラックリスト入りのユーザは除外
-        if(_.contains(settings.NG_USERS, data.user.screen_name)) throw new exception.NGUserException();
+        excludeNGUser(data.user.screen_name);
 
         // 非公式RTは除外
         isUnofficialRT = rt_exclude_pattern.test(data.text);
