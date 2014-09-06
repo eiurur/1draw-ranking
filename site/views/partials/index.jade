@@ -9,7 +9,7 @@ div#page-content-wrapper
             .panel.panel-default(ng-hide="rankCategoryPosts[$index].rankWidth == 0")
               .panel-heading
                 h3.panel-title {{(rankCategoryPosts[0].tags.split(","))[2]}}
-              div(style="overflow-x: auto;")
+              div(style="overflow-x: scroll;")
                 .panel-body(style="width:{{rankCategoryPosts[rankCategoryPosts.length-1].rankWidth}}px;")
                   div
                     .box(ng-repeat='rankCategoryPost in rankCategoryPosts')
@@ -21,6 +21,8 @@ div#page-content-wrapper
                             i.fa.fa-star.fa-border.icon-star  {{rankCategoryPost.favNum}}
                             a(href='https://{{rankCategoryPost.tweetUrl}}', target="_blank")
                               .fa.fa-twitter.fa-border.icon-twitter
+                            a(href='{{rankCategoryPost.sourceOrigUrl}}', download)
+                              .fa.fa-download.fa-border
 
     div(ng-hide="rankAllCategoryPosts.length")
       div(ng-hide="rankAllCategoryPosts.length == 0")
