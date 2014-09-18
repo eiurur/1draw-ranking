@@ -116,10 +116,10 @@ ProxyingAgent.prototype.startProxying = function(req, host, port, localAddress) 
         this.emitError(req, 'Tunnel creation failed. Received status code ' + response.statusCode);
         return;
       }
-      var tlsOptions = {
-        socket: response.socket,
-        servername: host
-      }
+      var tlsOptions = this.options.tlsOptions || {};
+      tlsOptions.socket = response.socket;
+      tlsOptions.servername = host;
+
       // upgrade the socket to TLS
       var tlsSocket = tls.connect(tlsOptions, function() {
         this.setSocket(req, tlsSocket);

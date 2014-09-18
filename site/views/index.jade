@@ -1,7 +1,7 @@
 extends layout
 
 block body
-  div#wrapper
+  div#wrapper(ng-controller='AdminUserCtrl')
     div#sidebar-wrapper
       ul.sidebar-nav
         li.sidebar-brand
@@ -39,8 +39,19 @@ block body
             span.pull-right.sidebar-ex-link
               i.fa.fa-external-link
         li
-          a(href='https://twitter.com/intent/tweet?url=http://ldraw-ranking.herokuapp.com/&text=1draw-Ranking \/ ', target="_blank") twitter
+          a(href='/auth/twitter/callback', target='_self', ng-hide='isAuthenticated') Login with Twitter
+            span.pull-right.sidebar-share
+        li
+          a(href='/logout', target='_self', ng-show='isAuthenticated') Logout
             span.pull-right.sidebar-share
               i.fa.fa-share
+        li.li-user(ng-if='isAuthenticated')
+          a.user(href='/user/{{user._json.id_str}}')
+            img.pull-right.icon(ng-src='{{user._json.profile_image_url_https}}')
+            span.username @{{user.username}}
+        //- li
+        //-   a(href='https://twitter.com/intent/tweet?url=http://ldraw-ranking.herokuapp.com/&text=1draw-Ranking \/ ', target="_blank") twitter
+        //-     span.pull-right.sidebar-share
+        //-       i.fa.fa-share
 
     div(ng-view)

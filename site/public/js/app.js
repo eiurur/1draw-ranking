@@ -1,16 +1,25 @@
 // Declare app level module which depends on filters, and services
-angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives']).
+angular.module('myApp', [
+    'ngRoute'
+  , 'myApp.filters'
+  , 'myApp.services'
+  , 'myApp.directives'
+  , 'myApp.controllers'
+  ]).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
       when('/', {
         templateUrl: 'partials/index',
-        controller: IndexCtrl
+        controller: 'IndexCtrl'
       }).
       when('/detail/:name', {
         templateUrl: 'partials/detail',
-        controller: DetailCtrl
+        controller: 'DetailCtrl'
       }).
-      otherwise({
+      when('/logout', {
+        redirectTo: '/'
+      }).
+      when('http://127.0.0.1:9000/auth/twitter/callback', {
         redirectTo: '/'
       });
     $locationProvider.html5Mode(true);

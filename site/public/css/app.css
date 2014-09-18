@@ -78,18 +78,14 @@ a {
 }
 
 .scroll-pict {
-  /*float: left;*/
   width: auto;
   max-height: 200px;
-/*  width: 128px;
-  line-height: 128px;
-  text-align: center;*/
   border: 1px solid #888;
   margin: 15px;
 }
 
 .box {
-  float: left;
+  display: inline-block;
   margin-left: -20px;
 }
 
@@ -115,11 +111,11 @@ a {
     content: "";
     display: table;
 }
- 
+
 .box-container:after {
     clear: both;
 }
- 
+
 /* For IE 6/7 (trigger hasLayout) */
 .box-container {
     zoom: 1;
@@ -143,4 +139,12 @@ a {
 
 .panel-padding-bottom {
   padding-bottom: 20px;
+}
+
+.li-user {
+  line-height: 80px !important;
+}
+.icon {
+  border-radius: 8px;
+  padding: 16px 10px 10px 0;
 }

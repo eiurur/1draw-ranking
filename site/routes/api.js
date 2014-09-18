@@ -1,9 +1,11 @@
 var dir      = '../../lib/'
   , moment   = require('moment')
-  , _        = require('underscore-node')
+  , _        = require('lodash')
   , async    = require('async')
   , cd       = require(dir + 'corresponddate')
   , my       = require(dir + 'my')
+  , twitterAPI      = require('node-twitter-api')
+  , UserProvider = require(dir + 'model').UserProvider
   , settings = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
   ;
 
@@ -199,3 +201,48 @@ exports.readRankingAllCategory = function (req, res) {
     });
   });
 };
+
+
+
+exports.logout = function(req, res) {
+
+  console.log("!_.has前 API sign out req.session = ", req.session);
+
+  if(!_.has(req.session, 'id')) return;
+
+  console.log("API signOut req.session.id = " + req.session.id);
+
+  req.session.destroy();
+
+  res.json({
+      data: "ok"
+  });
+
+}
+
+exports.isAuthenticated = function(req, res) {
+
+  console.log("isAuthenticated req.session = ", req.session.passport);
+  console.log("isAuthenticated req.session.id = " + req.session.id);
+  console.log("isAuthenticated _.isUndefined(req.session.passport.user) = ", _.isUndefined(req.session.passport.user));
+
+  var sessionUserData = null;
+
+  if(!_.isUndefined(req.session.passport.user)) {
+    sessionUserData = req.session.passport.user;
+  }
+  res.json({
+    data: sessionUserData
+  });
+}
+
+exports.findUserById = function(req, res) {
+  UserProvider.findUserById({
+    twitterIdStr: req.body.twitterIdStr
+  }, function(err, data) {
+    console.log("findUserById", data);
+    res.json({
+      data: data
+    });
+  });
+}
