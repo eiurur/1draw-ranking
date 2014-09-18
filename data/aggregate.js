@@ -2,8 +2,7 @@
   var dir       = '../lib/'
     , my        = require(dir + 'my')
     , exception = require(dir + 'exception')
-    , _         = require('underscore-node')
-    , php       = require('phpjs')
+    , _         = require('lodash')
     , moment    = require('moment')
     , cd        = require(dir + 'corresponddate')
     , settings  = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
@@ -14,7 +13,7 @@
 
   exports.aggregate = function (data) {
 
-    // my.dump(data.entities.hashtags);
+    // my.dump(data);
 
     /**
      * マジックナンバー
@@ -124,7 +123,7 @@
         if(hour + ":" + minute < "23:30") {
 
           // 日を跨いだ投稿 == dayが締め切りの日
-          endUnixTimeL = php.strtotime(year + "-" + month + "-" + day + " 23:30:00");
+          endUnixTimeL = my.formatX(year + "-" + month + "-" + day + " 23:30:00");
 
           // 別のオブジェクトをそれぞれ使用しないと全く同じ値が代入される。
           // たとえ、addをする順番を変えてもそれは変わらない。
@@ -134,7 +133,7 @@
         } else {
 
           // => dayの次の日の23:30が締め切り
-          endUnixTimeL = php.strtotime(year + "-" + month + "-" + day + " 23:30:00") + 24 * 60 * 60
+          endUnixTimeL = my.formatX(year + "-" + month + "-" + day + " 23:30:00") + 24 * 60 * 60;
           correspondDate = m.format("YYYY-MM-DD");
           correspondTime = momentCreateAt.format("YYYY-MM-DD HH:mm");
         }
@@ -148,14 +147,14 @@
         if(hour < 22) {
 
           // 日を跨いだ投稿 == dayが締め切りの日
-          endUnixTimeKYA = php.strtotime(year + "-" + month + "-" + day + " 22:00:00");
+          endUnixTimeKYA = my.formatX(year + "-" + month + "-" + day + " 22:00:00");
           var m = moment(year + "-" + month + "-" + day + " " + hour + ":" + minute);
           correspondDate = m.add('days', -1).format("YYYY-MM-DD");
           correspondTime = momentCreateAt.format("YYYY-MM-DD HH:mm");
         } else {
 
           // => dayの次の日の22:00が締め切り
-          endUnixTimeKYA = php.strtotime(year + "-" + month + "-" + day + " 22:00:00") + 24 * 60 * 60
+          endUnixTimeKYA = my.formatX(year + "-" + month + "-" + day + " 22:00:00") + 24 * 60 * 60;
           var m = moment(year + "-" + month + "-" + day + " " + hour + ":" + minute);
           correspondDate = m.format("YYYY-MM-DD");
           correspondTime = momentCreateAt.format("YYYY-MM-DD HH:mm");
@@ -230,6 +229,7 @@
 
       linkUrl = data.text.match(twitter_short_url_pattern);
       if(_.isNull(linkUrl)) throw new exception.TextOnlyTweetException();
+
 
 
       assingHashtag();

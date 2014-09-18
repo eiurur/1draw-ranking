@@ -19,7 +19,7 @@
 
       setTimeout((function(){
         return callback(null, "Create! Server\n");
-      }), 1000);
+      }), 0);
 
     }, function(callback) {
 
@@ -29,7 +29,7 @@
 
       setTimeout((function(){
         return callback(null, "Ok! Cron\n");
-      }), 1000);
+      }), 0);
 
     }, function(callback) {
 
@@ -39,7 +39,7 @@
 
       setTimeout((function(){
         return callback(null, "Go! Twitter\n");
-      }), 1000);
+      }), 0);
 
     }
   ];

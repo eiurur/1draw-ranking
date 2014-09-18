@@ -1,7 +1,6 @@
 (function(){
   var dir       = '../lib/'
-    , _         = require('underscore-node')
-    , php       = require('phpjs')
+    , _         = require('lodash')
     , moment    = require('moment')
     , my        = require(dir + 'my')
     , exception = require(dir + 'exception')
