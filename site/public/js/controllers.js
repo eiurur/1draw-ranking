@@ -26,7 +26,8 @@ angular.module('myApp.controllers', [])
       });
 
     function updateTweetList(data) {
-      var posts  = data.rankPosts || data.posts
+      var idx
+        , posts  = data.rankPosts || data.posts
         , width  = data.rankWidth || data.postWidth
         , target = data.rankPosts !== undefined ? "ranking" : "new"
         ;

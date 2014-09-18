@@ -192,7 +192,8 @@
       }
       PostProvider.save({
           tweetId: params['tweetId']
-        , userId: params['userId']
+        , userIdStr: params['userIdStr']
+        , userScreenName: params['userScreenName']
         , userName: params['userName']
         , tweetText: params['tweetText']
         , tweetUrl: params['tweetUrl']
@@ -262,7 +263,8 @@
             insertDB({
                 entities: data.retweeted_status.entities
               , tweetId: data.retweeted_status.id
-              , userId: data.retweeted_status.user.screen_name
+              , userIdStr: data.retweeted_status.user.id_str
+              , userScreenName: data.retweeted_status.user.screen_name
               , userName: data.retweeted_status.user.name
               , tweetText: data.retweeted_status.text
               , tweetUrl: tweetUrl
@@ -307,7 +309,8 @@
         insertDB({
             entities: data.entities
           , tweetId: data.id
-          , userId: data.user.screen_name
+          , userIdStr: data.user.id_str
+          , userScreenName: data.user.screen_name
           , userName: data.user.name
           , tweetText: data.text
           , tweetUrl: tweetUrl
