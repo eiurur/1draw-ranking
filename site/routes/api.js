@@ -4,7 +4,6 @@ var dir      = '../../lib/'
   , async    = require('async')
   , cd       = require(dir + 'corresponddate')
   , my       = require(dir + 'my')
-  , twitterAPI      = require('node-twitter-api')
   , UserProvider = require(dir + 'model').UserProvider
   , settings = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
   ;
@@ -43,9 +42,9 @@ exports.readAll = function (req, res) {
         ;
       postDatas.forEach(function (postData) {
         posts.push({
-            tweetId: postData.tweetId
+            tweetIdStr: postData.tweetIdStr
           , userName: postData.userName
-          , userId: postData.userId
+          , userIdStr: postData.userIdStr
           , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
           , sourceOrigUrl: postData.sourceUrl
@@ -73,6 +72,8 @@ exports.readAll = function (req, res) {
       // CSSの余白分を追加
       postWidth += dataCount * margin;
 
+      // console.log("posts = ", posts);
+
       res.json({
           posts: posts
         , postWidth: postWidth
@@ -81,17 +82,14 @@ exports.readAll = function (req, res) {
 };
 
 exports.readRanking = function (req, res) {
-    var name = req.params.name;
 
-    var correspondDate = cd.getCorrespondDate(name)
-      ,  numShow       = 20
-      ;
+    var opt = {
+        name: req.params.name
+      , correspondDate: cd.getCorrespondDate(req.params.name)
+      , numShow: 20
+    };
 
-    PostProvider.findDescRetweet({
-        name: name
-      , correspondDate: correspondDate
-      , numShow: numShow
-    }, function(error, postDatas) {
+    PostProvider.findDescRetweet(opt, function(error, postDatas) {
       var rankWidth = 0
         , dataCount = 0
         , rankPosts = []
@@ -99,9 +97,9 @@ exports.readRanking = function (req, res) {
 
       postDatas.forEach(function (postData) {
         rankPosts.push({
-            tweetId: postData.tweetId
+            tweetIdStr: postData.tweetIdStr
           , userName: postData.userName
-          , userId: postData.userId
+          , userIdStr: postData.userIdStr
           , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
           , sourceOrigUrl: postData.sourceUrl
@@ -135,21 +133,18 @@ exports.readRanking = function (req, res) {
 };
 
 exports.readRankingAllCategory = function (req, res) {
-  var correspondDate
-    , numShow              = 10
-    , rankAllCategoryPosts = []
-    ;
+  var rankAllCategoryPosts = [];
 
   // カテゴリごと
   async.forEach(settings.CATEGORIES, function (name, cb) {
     var rankCategoryPosts = [];
-    correspondDate = cd.getCorrespondDate(name);
-    // PostProvider.findDescRetweet({
-    PostProvider.findDescTotalPoint({
+    var opt = {
         name: name
-      , correspondDate: correspondDate
-      , numShow: numShow
-    }, function(error, postDatas) {
+      , correspondDate: cd.getCorrespondDate(name)
+      , numShow: 10
+    }
+
+    PostProvider.findDescTotalPoint(opt, function(error, postDatas) {
 
       // ツイートごとのデータ
       var rankWidth = 0
@@ -159,9 +154,9 @@ exports.readRankingAllCategory = function (req, res) {
 
       postDatas.forEach(function (postData) {
         rankCategoryPosts.push({
-            tweetId: postData.tweetId
+            tweetIdStr: postData.tweetIdStr
           , userName: postData.userName
-          , userId: postData.userId
+          , userIdStr: postData.userIdStr
           , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
           , sourceOrigUrl: postData.sourceUrl
@@ -245,4 +240,22 @@ exports.findUserById = function(req, res) {
       data: data
     });
   });
+}
+
+exports.createFavorite = function(req, res) {
+  settings.twitterAPI.favorites("create", {
+      id: req.body.tweetIdStr
+    },
+    req.session.passport.user.twitter_token,
+    req.session.passport.user.twitter_token_secret,
+    function(error, data, response) {
+      if (error) {
+        // something went wrong
+        console.log("twitter.favorites error =  ", error);
+      } else {
+        // data contains the data sent by twitter
+        console.log("twitter.favorites data =  ", data);
+      }
+    }
+  );
 }

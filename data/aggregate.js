@@ -191,7 +191,7 @@
         }
       }
       PostProvider.save({
-          tweetId: params['tweetId']
+          tweetIdStr: params['tweetIdStr']
         , userIdStr: params['userIdStr']
         , userScreenName: params['userScreenName']
         , userName: params['userName']
@@ -257,12 +257,12 @@
 
         // 重複の確認
         PostProvider.countDuplicatedPic({
-          tweetId: data.retweeted_status.id
+          tweetIdStr: data.retweeted_status.id_str
         }, function(error, docs) {
           if(docs === 0) {
             insertDB({
                 entities: data.retweeted_status.entities
-              , tweetId: data.retweeted_status.id
+              , tweetIdStr: data.retweeted_status.id_str
               , userIdStr: data.retweeted_status.user.id_str
               , userScreenName: data.retweeted_status.user.screen_name
               , userName: data.retweeted_status.user.name
@@ -282,7 +282,7 @@
 
             // リツイート数とお気に入り数を更新
             PostProvider.update({
-              tweetId: data.retweeted_status.id,
+              tweetIdStr: data.retweeted_status.id_str,
               retweetNum: data.retweeted_status.retweet_count,
               favNum: data.retweeted_status.favorite_count,
               totalNum: data.retweeted_status.retweet_count + data.retweeted_status.favorite_count
@@ -308,7 +308,7 @@
 
         insertDB({
             entities: data.entities
-          , tweetId: data.id
+          , tweetIdStr: data.id_str
           , userIdStr: data.user.id_str
           , userScreenName: data.user.screen_name
           , userName: data.user.name

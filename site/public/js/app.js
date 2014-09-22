@@ -16,6 +16,11 @@ angular.module('myApp', [
         templateUrl: 'partials/detail',
         controller: 'DetailCtrl'
       }).
+
+      when('/user/:idStr', {
+        templateUrl: 'partials/user',
+        controller: 'UserCtrl'
+      }).
       when('/logout', {
         redirectTo: '/'
       }).

@@ -53,10 +53,11 @@ exports.serve = function() {
   }, function(token, tokenSecret, profile, done) {
       profile.twitter_token = token;
       profile.twitter_token_secret = tokenSecret;
-      console.log("User profile = ", profile);
+      // console.log("User profile = ", profile);
       UserProvider.upsert({
         profile: profile
       }, function(err) {
+        if(err) console.log(err);
         return done(null, profile);
       });
     }
@@ -122,6 +123,7 @@ exports.serve = function() {
   app.get('/api/readRankingAllCategory', api.readRankingAllCategory);
   app.get('/api/isAuthenticated', api.isAuthenticated);
   app.post('/api/findUserById', api.findUserById);
+  app.post('/api/createFavorite', api.createFavorite);
 
 
   // redirect all others to the index (HTML5 history)

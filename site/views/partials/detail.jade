@@ -15,7 +15,9 @@ div#page-content-wrapper
                   .pict-discription
                     div
                       i.fa.fa-retweet.fa-border.icon-retweet  {{rankPost.retweetNum}}
-                      i.fa.fa-star.fa-border.icon-star  {{rankPost.favNum}}
+                      i.fa.fa-star.fa-border.icon-star(
+                        , data-tweet-id-str='{{rankPost.tweetIdStr}}'
+                        , favoritable)  {{rankPost.favNum}}
                       a(href='https://{{rankPost.tweetUrl}}', target="_blank")
                         .fa.fa-twitter.fa-border.icon-twitter
                       a(href='{{rankPost.sourceOrigUrl}}', download)
@@ -33,7 +35,9 @@ div#page-content-wrapper
                   .pict-discription
                     div
                       i.fa.fa-retweet.fa-border.icon-retweet  {{post.retweetNum}}
-                      i.fa.fa-star.fa-border.icon-star  {{post.favNum}}
+                      i.fa.fa-star.fa-border.icon-star(
+                        , data-tweet-id-str='{{post.tweetIdStr}}'
+                        , favoritable)  {{post.favNum}}
                       a(href='https://{{post.tweetUrl}}', target="_blank")
                         .fa.fa-twitter.fa-border.icon-twitter
                       a(href='{{rankPost.sourceOrigUrl}}', download)

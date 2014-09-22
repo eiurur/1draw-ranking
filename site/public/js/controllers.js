@@ -2,13 +2,15 @@
 
 angular.module('myApp.controllers', [])
   .controller('IndexCtrl', function ($scope, $http) {
-    console.log("IndexCtrl");
+
     $http.get('/api/readRankingAllCategory/').
       success(function(data) {
         $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
       });
+
   })
   .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout) {
+
     var onTimeout
       , timer
       , INTERVAL = 5 * 1000
@@ -19,6 +21,7 @@ angular.module('myApp.controllers', [])
           $scope.posts = data.posts;
           $scope.postWidth = data.postWidth;
       });
+
     $http.get('/api/readRanking/' + $routeParams.name).
       success(function(data) {
         $scope.rankPosts = data.rankPosts;
@@ -35,9 +38,9 @@ angular.module('myApp.controllers', [])
       posts.forEach(function(newData, newDataIndex){
 
           if(target === "ranking") {
-            idx = _.findIndex($scope.rankPosts, {tweetId: newData.tweetId});
+            idx = _.findIndex($scope.rankPosts, {userIdStr: newData.userIdStr});
           } else {
-            idx = _.findIndex($scope.posts, {tweetId: newData.tweetId});
+            idx = _.findIndex($scope.posts, {userIdStr: newData.userIdStr});
           }
 
           // もし、新しい画像があれば
@@ -72,6 +75,7 @@ angular.module('myApp.controllers', [])
               $scope.posts[idx].retweetNum = newData.retweetNum;
             }
           }
+
       });
     }
 
@@ -86,6 +90,7 @@ angular.module('myApp.controllers', [])
 
       $http.get('/api/readRanking/' + $routeParams.name).
         success(function(data) {
+          console.log("new readRanking data", data);
           updateTweetList(data);
         });
 
@@ -100,12 +105,11 @@ angular.module('myApp.controllers', [])
         $timeout.cancel(timer);
       }
     });
+
   })
-  .controller('AdminUserCtrl', function ($scope, $http, $location, $rootScope, $routeParams, AuthenticationService) {
-    console.log("AdminUserCtrl");
+  .controller('AdminUserCtrl', function ($scope, $http, $location, $rootScope, $routeParams, AuthenticationService, FavService) {
 
     $scope.isAuthenticated = AuthenticationService.isAuthenticated;
-
 
     if (!AuthenticationService.isAuthenticated) {
 
@@ -118,6 +122,7 @@ angular.module('myApp.controllers', [])
 
             console.log(data.data);
             $scope.user = data.data;
+            console.log($scope.user._json.id_str);
             $http.post('/api/findUserById', {twitterIdStr: $scope.user._json.id_str})
               .success(function(data) {
                 console.log("findUserById data = ", data);
@@ -127,10 +132,8 @@ angular.module('myApp.controllers', [])
               });
           }
       }).error(function(status, data) {
-
         console.log(status);
         console.log(data);
-
       });
     }
 

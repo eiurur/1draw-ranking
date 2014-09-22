@@ -18,7 +18,9 @@ div#page-content-wrapper
                         .pict-discription
                           div
                             i.fa.fa-retweet.fa-border.icon-retweet  {{rankCategoryPost.retweetNum}}
-                            i.fa.fa-star.fa-border.icon-star  {{rankCategoryPost.favNum}}
+                            i.fa.fa-star.fa-border.icon-star(
+                              , data-tweet-id-str='{{rankCategoryPost.tweetIdStr}}'
+                              , favoritable) {{rankCategoryPost.favNum}}
                             a(href='https://{{rankCategoryPost.tweetUrl}}', target="_blank")
                               .fa.fa-twitter.fa-border.icon-twitter
                             a(href='{{rankCategoryPost.sourceOrigUrl}}', download)
