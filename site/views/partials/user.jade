@@ -1,0 +1,15 @@
+#page-content-wrapper
+  .content-header(ng-show="rankWidth")
+    h1 {{(posts[0].tags.split(","))[2]}}
+  .page-content.inset
+    .row(ng-show="rankWidth")
+      .col-md-12.panel-padding-bottom
+        .panel.panel-default
+          .panel-heading
+            h3.panel-title  リツイートランキング
+          div(style="overflow-x: scroll;")
+            .panel-body(style="width:{{rankWidth}}px;")
+              .box(ng-repeat='rankPost in rankPosts | orderBy : "retweetNum" : "desc" | limitTo : 20')
+                  post(post='rankPost')
+
+    loading(posts-width='rankWidth', posts-length='rankPosts.length')

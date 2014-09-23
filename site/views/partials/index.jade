@@ -1,38 +1,22 @@
-div#page-content-wrapper
-  div.content-header(ng-show="rankAllCategoryPosts.length")
+#page-content-wrapper
+  .content-header(ng-show="rankAllCategoryPosts.length")
     h1 総合ランキング
-  div.page-content.inset
-    div.row(ng-show="rankAllCategoryPosts")
+  .page-content.inset
+    .row(ng-show="rankAllCategoryPosts")
       div(ng-repeat='rankCategoryPosts in rankAllCategoryPosts')
         div(ng-hide="rankCategoryPosts.length == 1")
-          div.col-md-12.panel-padding-bottom
+          .col-md-12
             .panel.panel-default(ng-hide="rankCategoryPosts[$index].rankWidth == 0")
               .panel-heading
                 h3.panel-title {{(rankCategoryPosts[0].tags.split(","))[2]}}
               div(style="overflow-x: scroll;")
                 .panel-body(style="width:{{rankCategoryPosts[rankCategoryPosts.length-1].rankWidth}}px;")
-                  div
-                    .box(ng-repeat='rankCategoryPost in rankCategoryPosts')
+                  .box(ng-repeat='rankCategoryPost in rankCategoryPosts')
                       span(ng-hide="$last")
-                        img.img-responsive.thumb-pict.fade(img-preload, ng-src="{{rankCategoryPost.sourceUrl}}")
-                        .pict-discription
-                          div
-                            i.fa.fa-retweet.fa-border.icon-retweet(
-                              , data-tweet-id-str='{{rankCategoryPost.tweetIdStr}}'
-                              , favoritable)  {{rankCategoryPost.retweetNum}}
-                            i.fa.fa-star.fa-border.icon-star(
-                              , data-tweet-id-str='{{rankCategoryPost.tweetIdStr}}'
-                              , favoritable) {{rankCategoryPost.favNum}}
-                            a(href='https://{{rankCategoryPost.tweetUrl}}', target="_blank")
-                              .fa.fa-twitter.fa-border.icon-twitter
-                            a(href='{{rankCategoryPost.sourceOrigUrl}}', download)
-                              .fa.fa-download.fa-border
+                        post(post='rankCategoryPost')
 
-    div(ng-hide="rankAllCategoryPosts.length")
-      div(ng-hide="rankAllCategoryPosts.length == 0")
-        i.fa.fa-refresh.fa-5x.pull-left.fa-spin
-      div(ng-show="rankAllCategoryPosts.length == 0")
-        span.fa-stack.fa-5x
-          i.fa.fa-picture-o.fa-stack-1x.pull-left
-          i.fa.fa-ban.fa-stack-2x.pull-left.text-danger
-        .fa-5x No data ...
+            .interval-space
+
+    loading(
+      judgement-material-whether-or-not-show-loading='rankAllCategoryPosts.length'
+      judgement-material-whether-or-not-hide-page-content='rankAllCategoryPosts.length')

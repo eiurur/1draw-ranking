@@ -126,6 +126,10 @@ a {
   overflow:hidden;
 }
 
+.interval-space {
+  padding-bottom: 20px;
+}
+
 /**
  * icon
  */
@@ -142,10 +146,6 @@ a {
 .icon-twitter {
   color: #009FE9;
   cursor: pointer;
-}
-
-.panel-padding-bottom {
-  padding-bottom: 20px;
 }
 
 .li-user {
