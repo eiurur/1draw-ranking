@@ -64,17 +64,18 @@ a {
 }
 
 .sidebar-arrow {
-  margin-right: 20px;
+  margin-right: 33px;
+  /*margin-right: 20px;*/
 }
 
 .sidebar-ex-link {
   font-size: 10px;
-  margin-right: 16px;
+  margin-right: 29px;
 }
 
 .sidebar-share {
   font-size: 8px;
-  margin-right: 16px;
+  margin-right: 29px;
 }
 
 .scroll-pict {
@@ -125,16 +126,22 @@ a {
   overflow:hidden;
 }
 
+/**
+ * icon
+ */
 .icon-retweet {
   color: #85B95E;
+  cursor: pointer;
 }
 
 .icon-star {
   color: #FF9B00;
+  cursor: pointer;
 }
 
 .icon-twitter {
   color: #009FE9;
+  cursor: pointer;
 }
 
 .panel-padding-bottom {
@@ -145,6 +152,7 @@ a {
   line-height: 80px !important;
 }
 .icon {
-  border-radius: 8px;
-  padding: 16px 10px 10px 0;
+  /*padding: 16px 10px 10px 0;*/
+  margin: 16px 10px 10px 0;
+  border-radius: 20px;
 }
