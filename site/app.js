@@ -124,6 +124,7 @@ exports.serve = function() {
   app.get('/api/isAuthenticated', api.isAuthenticated);
   app.post('/api/findUserById', api.findUserById);
   app.post('/api/createFavorite', api.createFavorite);
+  app.post('/api/statusesRetweet', api.statusesRetweet);
 
 
   // redirect all others to the index (HTML5 history)

@@ -24,4 +24,17 @@ angular.module('myApp.services', [])
 
     };
 
+  })
+  .service('RetweetService', function($http) {
+    return {
+
+      statusesRetweet: function(tweetIdStr) {
+        return  $http.post('/api/statusesRetweet', {tweetIdStr: tweetIdStr});
+      }
+      // toggleFav: function(postID, userID) {
+      //   return  $http.post('/api/toggleFav', {postID: postID, userID: userID});
+      // }
+
+    };
+
   });

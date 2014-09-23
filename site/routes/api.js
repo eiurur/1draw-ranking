@@ -252,6 +252,30 @@ exports.createFavorite = function(req, res) {
       if (error) {
         // something went wrong
         console.log("twitter.favorites error =  ", error);
+
+        // error = ふぁぼ済み ならあんふぁぼ
+        // ~
+      } else {
+        // data contains the data sent by twitter
+        console.log("twitter.favorites data =  ", data);
+      }
+    }
+  );
+}
+
+exports.statusesRetweet = function(req, res) {
+  settings.twitterAPI.statuses("retweet", {
+      id: req.body.tweetIdStr
+    },
+    req.session.passport.user.twitter_token,
+    req.session.passport.user.twitter_token_secret,
+    function(error, data, response) {
+      if (error) {
+        // something went wrong
+        console.log("twitter.favorites error =  ", error);
+
+        // error = ふぁぼ済み ならあんふぁぼ
+        // ~
       } else {
         // data contains the data sent by twitter
         console.log("twitter.favorites data =  ", data);

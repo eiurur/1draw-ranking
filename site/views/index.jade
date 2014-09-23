@@ -6,6 +6,10 @@ block body
       ul.sidebar-nav
         li.sidebar-brand
           a(href='/') #1draw-Ranking
+        li.li-user(ng-if='isAuthenticated')
+          a.user(href='/user/{{user._json.id_str}}')
+            img.pull-right.icon(ng-src='{{user._json.profile_image_url_https}}')
+            span.username @{{user.username}}
         li
           a(href='/detail/lovelive') # LoveLive!
             span.pull-right.sidebar-arrow
@@ -46,10 +50,6 @@ block body
           a(href='/logout', target='_self', ng-show='isAuthenticated') Logout
             span.pull-right.sidebar-ex-link
               i.fa.fa-sign-out
-        li.li-user(ng-if='isAuthenticated')
-          a.user(href='/user/{{user._json.id_str}}')
-            img.pull-right.icon(ng-src='{{user._json.profile_image_url_https}}')
-            span.username @{{user.username}}
         //- li
         //-   a(href='https://twitter.com/intent/tweet?url=http://ldraw-ranking.herokuapp.com/&text=1draw-Ranking \/ ', target="_blank") twitter
         //-     span.pull-right.sidebar-share

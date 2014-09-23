@@ -30,7 +30,26 @@ angular.module('myApp.directives', [])
           FavService.createFavorite(attrs.tweetIdStr)
             .success(function(data) {
               console.log("createFavoeite data = ", data);
-              // scope.num += (data.action === 'create') ? 1 : -1;
+              scope.num += (data.action === 'create') ? 1 : -1;
+              // element.toggleClass('icon-stared');
+            });
+        });
+      }
+    };
+  }])
+  .directive('retweetable', [ 'RetweetService', function (RetweetService) {
+    return {
+      restrict: 'A',
+      scope: {
+        num: '='
+      },
+      link: function(scope, element, attrs) {
+        element.on('click', function(event) {
+          console.log("attrs  = ", attrs);
+          RetweetService.statusesRetweet(attrs.tweetIdStr)
+            .success(function(data) {
+              console.log("RetweetService data = ", data);
+              scope.num += (data.action === 'create') ? 1 : -1;
               // element.toggleClass('icon-stared');
             });
         });

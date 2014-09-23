@@ -14,7 +14,9 @@ div#page-content-wrapper
                   img.img-responsive.thumb-pict.fade(img-preload, ng-src="{{rankPost.sourceUrl}}")
                   .pict-discription
                     div
-                      i.fa.fa-retweet.fa-border.icon-retweet  {{rankPost.retweetNum}}
+                      i.fa.fa-retweet.fa-border.icon-retweet(
+                        , data-tweet-id-str='{{rankPost.tweetIdStr}}'
+                        , retweetable)  {{rankPost.retweetNum}}
                       i.fa.fa-star.fa-border.icon-star(
                         , data-tweet-id-str='{{rankPost.tweetIdStr}}'
                         , favoritable)  {{rankPost.favNum}}
@@ -34,7 +36,9 @@ div#page-content-wrapper
                   img.img-responsive.thumb-pict.fade(img-preload, ng-src="{{post.sourceUrl}}")
                   .pict-discription
                     div
-                      i.fa.fa-retweet.fa-border.icon-retweet  {{post.retweetNum}}
+                      i.fa.fa-retweet.fa-border.icon-retweet(
+                        , data-tweet-id-str='{{post.tweetIdStr}}'
+                        , favoritable)  {{post.retweetNum}}
                       i.fa.fa-star.fa-border.icon-star(
                         , data-tweet-id-str='{{post.tweetIdStr}}'
                         , favoritable)  {{post.favNum}}
