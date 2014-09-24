@@ -8,7 +8,8 @@
         .col-md-12(ng-hide="rankCategoryPosts.length == 1")
           .panel.panel-default(ng-hide="rankCategoryPosts[$index].rankWidth == 0")
             .panel-heading
-              h3.panel-title {{(rankCategoryPosts[0].tags.split(","))[2]}}
+              h3.panel-title
+                a(href='/detail/{{rankCategoryPosts[0].category}}') {{(rankCategoryPosts[0].tags.split(","))[2]}}
             div(style="overflow-x: scroll;")
               .panel-body(style="width:{{rankCategoryPosts[rankCategoryPosts.length-1].rankWidth}}px;")
                 .box-container(ng-repeat='rankCategoryPost in rankCategoryPosts')

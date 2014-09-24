@@ -17,7 +17,6 @@ angular.module('myApp', [
         templateUrl: 'partials/detail',
         controller: 'DetailCtrl'
       }).
-
       when('/user/:twitterIdStr', {
         templateUrl: 'partials/user',
         controller: 'UserCtrl'

@@ -369,7 +369,7 @@ exports.statusesRetweet = function(req, res) {
       if (error) {
         // something went wrong
         console.log("twitter.retweet error =  ", error);
-        // error = ふぁぼ済み ならあんふぁぼ
+        // error = リツイート済み ならdel
         // ~
       } else {
         console.log("retweet!! user = " + req.session.passport.user.username);
