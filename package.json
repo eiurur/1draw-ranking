@@ -24,6 +24,7 @@
     "lodash": "^2.4.1",
     "method-override": "^1.0.0",
     "moment": "^2.8.1",
+    "mongodb": "^1.4.12",
     "mongoose": "^3.8.15",
     "morgan": "^1.0.0",
     "newrelic": "^1.7.5",
