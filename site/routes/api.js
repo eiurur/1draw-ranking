@@ -44,6 +44,7 @@ exports.readAll = function (req, res) {
         posts.push({
             tweetIdStr: postData.tweetIdStr
           , userName: postData.userName
+          , userScreenName: postData.userScreenName
           , userIdStr: postData.userIdStr
           , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
@@ -99,6 +100,7 @@ exports.readRanking = function (req, res) {
         rankPosts.push({
             tweetIdStr: postData.tweetIdStr
           , userName: postData.userName
+          , userScreenName: postData.userScreenName
           , userIdStr: postData.userIdStr
           , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
@@ -156,6 +158,7 @@ exports.readRankingAllCategory = function (req, res) {
         rankCategoryPosts.push({
             tweetIdStr: postData.tweetIdStr
           , userName: postData.userName
+          , userScreenName: postData.userScreenName
           , userIdStr: postData.userIdStr
           , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
@@ -223,6 +226,7 @@ exports.readUserPosts = function (req, res) {
         userCategoryPosts.push({
             tweetIdStr: postData.tweetIdStr
           , userName: postData.userName
+          , userScreenName: postData.userScreenName
           , userIdStr: postData.userIdStr
           , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
@@ -265,6 +269,18 @@ exports.readUserPosts = function (req, res) {
   });
 };
 
+exports.findUserDataByTwitterIdStr = function(req, res) {
+
+  // TODO: PostProviderじゃなくてUserProviderにしたい。
+  PostProvider.findUserDataByTwitterIdStr({
+    twitterIdStr: req.params.twitterIdStr
+  }, function(error, userData) {
+    console.log("userData = ", userData);
+    res.json({
+      userData: userData
+    });
+  });
+}
 
 
 exports.logout = function(req, res) {
@@ -278,7 +294,7 @@ exports.logout = function(req, res) {
   req.session.destroy();
 
   res.json({
-      data: "ok"
+    data: "ok"
   });
 
 }

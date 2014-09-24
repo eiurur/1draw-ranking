@@ -14,13 +14,18 @@ angular.module('myApp.controllers', [])
 
     $scope.orderProp = "totalNum";
 
+    // ユーザの過去の投稿データを取得
     $http.get('/api/readUserPosts/' + $routeParams.twitterIdStr).
       success(function(data) {
         console.log(data.userAllCategoryPosts)
         $scope.userAllCategoryPosts = data.userAllCategoryPosts;
+      });
 
-        // TODO; 名前の変更
-        $scope.pageTitle = '総合ランキング';
+    // ユーザデータ(screenName, userName, Icon, URL, TWitterId)を取得
+    $http.get('/api/findUserDataByTwitterIdStr/' + $routeParams.twitterIdStr).
+      success(function(data) {
+        console.log("findUserDataByTwitterIdStr data = ", data);
+        $scope.pageTitle = '@' + data.userData.userScreenName || 'NoData';
       });
 
     $scope.toggleOrderBy = function() {

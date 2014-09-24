@@ -122,6 +122,7 @@ exports.serve = function() {
   app.get('/api/readRanking/:name', api.readRanking);
   app.get('/api/readRankingAllCategory', api.readRankingAllCategory);
   app.get('/api/readUserPosts/:twitterIdStr', api.readUserPosts);
+  app.get('/api/findUserDataByTwitterIdStr/:twitterIdStr', api.findUserDataByTwitterIdStr);
   app.get('/api/isAuthenticated', api.isAuthenticated);
   app.post('/api/findUserById', api.findUserById);
   app.post('/api/createFavorite', api.createFavorite);
