@@ -17,14 +17,12 @@ angular.module('myApp.controllers', [])
     // ユーザの過去の投稿データを取得
     $http.get('/api/readUserPosts/' + $routeParams.twitterIdStr).
       success(function(data) {
-        console.log(data.userAllCategoryPosts)
         $scope.userAllCategoryPosts = data.userAllCategoryPosts;
       });
 
     // ユーザデータ(screenName, userName, Icon, URL, TWitterId)を取得
     $http.get('/api/findUserDataByTwitterIdStr/' + $routeParams.twitterIdStr).
       success(function(data) {
-        console.log("findUserDataByTwitterIdStr data = ", data);
         $scope.pageTitle = '@' + data.userData.userScreenName || 'NoData';
       });
 
@@ -116,7 +114,6 @@ angular.module('myApp.controllers', [])
 
       $http.get('/api/readRanking/' + $routeParams.name).
         success(function(data) {
-          console.log("new readRanking data", data);
           updateTweetList(data);
         });
 
@@ -146,12 +143,12 @@ angular.module('myApp.controllers', [])
             AuthenticationService.isAuthenticated = true;
             $scope.isAuthenticated = AuthenticationService.isAuthenticated;
 
-            console.log(data.data);
+            // console.log(data.data);
             $scope.user = data.data;
-            console.log($scope.user._json.id_str);
+            // console.log($scope.user._json.id_str);
             $http.post('/api/findUserById', {twitterIdStr: $scope.user._json.id_str})
               .success(function(data) {
-                console.log("findUserById data = ", data);
+                // console.log("findUserById data = ", data);
 
                // ユーザ個別ページの判定用IDはtwitterIDではなく、ObjectIDで行う。
                 $scope.user.objectId = data.data._id;
