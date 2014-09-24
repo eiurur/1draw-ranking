@@ -1,6 +1,3 @@
 settings.js
 development.js
-node_modules
-node_modules/*
-node_modules/.bin/*
 newrelic_agent.log
