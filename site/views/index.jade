@@ -1,7 +1,7 @@
 extends layout
 
 block body
-  toaster-container
+  toaster-container(toaster-optioins='{"fadeIn": 300, "onFadeIn": undefined, "fadeOut": 1000, "onFadeOut": undefined}')
   div#wrapper(ng-controller='AdminUserCtrl')
     div#sidebar-wrapper
       ul.sidebar-nav

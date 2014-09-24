@@ -327,8 +327,11 @@ exports.findUserById = function(req, res) {
 }
 
 exports.createFavorite = function(req, res) {
-  var message = null;
 
+  // 未ログインなら何もせずバック
+  if(_.isUndefined(req.session.passport.user)) return;
+
+  var message = null;
   settings.twitterAPI.favorites("create", {
       id: req.body.tweetIdStr
     },
@@ -352,8 +355,11 @@ exports.createFavorite = function(req, res) {
 }
 
 exports.statusesRetweet = function(req, res) {
-  var message = null;
 
+  // 未ログインなら何もせずバック
+  if(_.isUndefined(req.session.passport.user)) return;
+
+  var message = null;
   settings.twitterAPI.statuses("retweet", {
       id: req.body.tweetIdStr
     },
