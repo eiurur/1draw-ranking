@@ -1,21 +1,24 @@
 !!!
-html(ng-app="myApp")
+html(ng-app="myApp", ng-cloak)
   head
     meta(charset='utf8')
     base(href='/')
     title #1draw-Ranking
     link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
     link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css')
+    link(rel='stylesheet', href='http://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.4/toaster.css')
     link(rel='stylesheet', href='/css/simple-sidebar.css')
     link(rel='stylesheet', href='/css/app.css')
   body
     block body
-
   script(src='//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js')
   script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
   script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
   script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js')
   script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-route.min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-animate.min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-sanitize.min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.4/toaster.js')
   script(src='/js/analyticstracking.js')
   script(src='/js/app.js')
   script(src='/js/services.js')

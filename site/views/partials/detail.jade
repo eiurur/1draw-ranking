@@ -1,29 +1,27 @@
 #page-content-wrapper
-  .content-header(ng-show="rankWidth")
-    h1 {{(posts[0].tags.split(","))[2]}}
+  page-title(
+    judgement-material-whether-or-not-show-loading='rankWidth',
+    page-title='pageTitle')
+
   .page-content.inset
-    .row(ng-show="rankWidth")
+    .row(ng-if="rankWidth")
       .col-md-12
-        .panel.panel-default
-          .panel-heading
-            h3.panel-title  リツイートランキング
-          div(style="overflow-x: scroll;")
-            .panel-body(style="width:{{rankWidth}}px;")
-              .box(ng-repeat='rankPost in rankPosts | orderBy : "retweetNum" : "desc" | limitTo : 20')
-                  post(post='rankPost')
-
+        panel(
+          panel-title='リツイートランキング',
+          post-width='rankWidth',
+          posts='rankPosts',
+          order-by-expression='retweetNum',
+          order-by-direction='desc',
+          limit-num='20')
         .interval-space
-
-        .panel.panel-default
-          .panel-heading
-            h3.panel-title 新着
-          div(style="overflow-x: scroll;")
-            .panel-body(style="width:{{postWidth}}px;")
-              .box(ng-repeat='post in posts | orderBy:"createdAt": "desc" | limitTo : 10')
-                  post(post='post')
-
-    //- loading(posts-width='rankWidth', posts-length='rankPosts.length')
+        panel(
+          panel-title='新着',
+          post-width='postWidth',
+          posts='posts',
+          order-by-expression='createdAt',
+          order-by-direction='desc',
+          limit-num='10')
     loading(
-      judgement-material-whether-or-not-show-loading='rankWidth'
+      judgement-material-whether-or-not-show-loading='rankWidth',
       judgement-material-whether-or-not-hide-page-content='rankPosts.length')
 

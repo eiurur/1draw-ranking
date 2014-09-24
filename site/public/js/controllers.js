@@ -1,15 +1,34 @@
 'use strict';
 
 angular.module('myApp.controllers', [])
-  .controller('IndexCtrl', function ($scope, $http) {
+  .controller('IndexCtrl', function ($scope, $http, toaster) {
 
     $http.get('/api/readRankingAllCategory/').
       success(function(data) {
         $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
+        $scope.pageTitle = '総合ランキング';
       });
 
   })
-  .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout) {
+  .controller('UserCtrl', function ($scope, $http, $routeParams, toaster) {
+
+    $scope.orderProp = "totalNum";
+
+    $http.get('/api/readUserPosts/' + $routeParams.twitterIdStr).
+      success(function(data) {
+        console.log(data.userAllCategoryPosts)
+        $scope.userAllCategoryPosts = data.userAllCategoryPosts;
+
+        // TODO; 名前の変更
+        $scope.pageTitle = '総合ランキング';
+      });
+
+    $scope.toggleOrderBy = function() {
+      $scope.isNewer = !$scope.isNewer;
+      $scope.orderProp = ($scope.isNewer) ? "createdAt" : "favNum";
+    }
+  })
+  .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout, toaster) {
 
     var onTimeout
       , timer
@@ -26,6 +45,8 @@ angular.module('myApp.controllers', [])
       success(function(data) {
         $scope.rankPosts = data.rankPosts;
         $scope.rankWidth = data.rankWidth;
+
+        $scope.pageTitle = (data.rankPosts[0].tags.split(","))[2];
       });
 
     function updateTweetList(data) {

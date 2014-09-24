@@ -197,6 +197,74 @@ exports.readRankingAllCategory = function (req, res) {
   });
 };
 
+exports.readUserPosts = function (req, res) {
+
+  console.log(req.params);
+
+  var userAllCategoryPosts = [];
+
+  // カテゴリごと
+  async.forEach(settings.CATEGORIES, function (name, cb) {
+    var userCategoryPosts = [];
+    var opt = {
+        name: name
+      , twitterIdStr: req.params.twitterIdStr
+    }
+
+    PostProvider.findByTwitterIdStrAndCategory(opt, function(error, postDatas) {
+
+      // ツイートごとのデータ
+      var userWidth = 0
+        , dataCount = 0
+        , userPosts = []
+        ;
+
+      postDatas.forEach(function (postData) {
+        userCategoryPosts.push({
+            tweetIdStr: postData.tweetIdStr
+          , userName: postData.userName
+          , userIdStr: postData.userIdStr
+          , tweetText: postData.tweetText
+          , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
+          , sourceOrigUrl: postData.sourceUrl
+          , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
+          , tags: postData.tags
+          , category: postData.category
+          , retweetNum: postData.retweetNum
+          , favNum: postData.favNum
+          , totalNum: postData.totalNum
+          , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
+          , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
+          , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
+        });
+
+        if(!_.isUndefined(postData.picWidths[0].height300)) {
+          userWidth += postData.picWidths[0].height300;
+        } else {
+          userWidth += IMAGE_MAX_WIDTH_300;
+        }
+        dataCount++;
+      });
+
+      // CSSの余白分を追加
+      userWidth += dataCount * margin;
+
+      // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
+      userCategoryPosts.push({
+        userWidth: userWidth
+      });
+      userAllCategoryPosts.push(userCategoryPosts);
+
+      // 同期処理
+      cb();
+    });
+  }, function() {
+    res.json({
+      userAllCategoryPosts: userAllCategoryPosts
+    });
+  });
+};
+
 
 
 exports.logout = function(req, res) {
@@ -243,6 +311,8 @@ exports.findUserById = function(req, res) {
 }
 
 exports.createFavorite = function(req, res) {
+  var message = null;
+
   settings.twitterAPI.favorites("create", {
       id: req.body.tweetIdStr
     },
@@ -252,18 +322,22 @@ exports.createFavorite = function(req, res) {
       if (error) {
         // something went wrong
         console.log("twitter.favorites error =  ", error);
-
         // error = ふぁぼ済み ならあんふぁぼ
         // ~
       } else {
-        // data contains the data sent by twitter
-        console.log("twitter.favorites data =  ", data);
+        console.log("Favorite!! user = " + req.session.passport.user.username);
+        message = data;
       }
+      res.json({
+          data: message
+      });
     }
   );
 }
 
 exports.statusesRetweet = function(req, res) {
+  var message = null;
+
   settings.twitterAPI.statuses("retweet", {
       id: req.body.tweetIdStr
     },
@@ -272,14 +346,16 @@ exports.statusesRetweet = function(req, res) {
     function(error, data, response) {
       if (error) {
         // something went wrong
-        console.log("twitter.favorites error =  ", error);
-
+        console.log("twitter.retweet error =  ", error);
         // error = ふぁぼ済み ならあんふぁぼ
         // ~
       } else {
-        // data contains the data sent by twitter
-        console.log("twitter.favorites data =  ", data);
+        console.log("retweet!! user = " + req.session.passport.user.username);
+        message = data;
       }
+      res.json({
+          data: message
+      });
     }
   );
 }

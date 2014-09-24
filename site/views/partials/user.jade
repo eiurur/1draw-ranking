@@ -1,15 +1,22 @@
 #page-content-wrapper
-  .content-header(ng-show="rankWidth")
-    h1 {{(posts[0].tags.split(","))[2]}}
+  page-title(
+    judgement-material-whether-or-not-show-loading='userAllCategoryPosts.length',
+    page-title='pageTitle')
   .page-content.inset
-    .row(ng-show="rankWidth")
-      .col-md-12.panel-padding-bottom
-        .panel.panel-default
-          .panel-heading
-            h3.panel-title  リツイートランキング
-          div(style="overflow-x: scroll;")
-            .panel-body(style="width:{{rankWidth}}px;")
-              .box(ng-repeat='rankPost in rankPosts | orderBy : "retweetNum" : "desc" | limitTo : 20')
-                  post(post='rankPost')
+    .row(ng-if="userAllCategoryPosts")
+      div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
+        .col-md-12(ng-if="userCategoryPosts.length != 1")
+          .panel.panel-default(ng-if="userCategoryPosts[$index].userWidth != 0")
+            .panel-heading
+              h3.panel-title {{(userCategoryPosts[0].tags.split(","))[2]}}
+            div(style="overflow-x: scroll;")
+              .panel-body(style="width:{{userCategoryPosts[userCategoryPosts.length-1].userWidth}}px;")
+                .box-container(ng-repeat='userCategoryPost in userCategoryPosts | orderBy: orderProp: true')
+                  .box(ng-if="!$first")
+                    post(post='userCategoryPost')
 
-    loading(posts-width='rankWidth', posts-length='rankPosts.length')
+          .interval-space
+
+    loading(
+      judgement-material-whether-or-not-show-loading='userAllCategoryPosts.length',
+      judgement-material-whether-or-not-hide-page-content='userAllCategoryPosts.length')

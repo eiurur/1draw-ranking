@@ -96,17 +96,12 @@ a {
   margin: 0px 20px 20px;
 }
 
+/* clearfix */
+
 .box-container {
-  display: block;
-  border: 1px solid #dddddd;
-  background-color: #f9f9f9;
-  /* color:#0000FF; */
-  overflow: auto;
-  /*padding: 2px 2px 2px 2px;*/
-  margin-left: 10px;
+  display: inline-block;
 }
 
-/* clearfix */
 .box-container:before,
 .box-container:after {
     content: "";
@@ -155,4 +150,13 @@ a {
   /*padding: 16px 10px 10px 0;*/
   margin: 16px 10px 10px 0;
   border-radius: 20px;
+}
+
+/**
+ * Notify
+ */
+.notify-success-img {
+  padding-top: 15px;
+  width: 150px;
+  height: auto;
 }

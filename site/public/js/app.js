@@ -1,6 +1,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('myApp', [
     'ngRoute'
+  , 'toaster'
   , 'myApp.filters'
   , 'myApp.services'
   , 'myApp.directives'
@@ -17,7 +18,7 @@ angular.module('myApp', [
         controller: 'DetailCtrl'
       }).
 
-      when('/user/:idStr', {
+      when('/user/:twitterIdStr', {
         templateUrl: 'partials/user',
         controller: 'UserCtrl'
       }).

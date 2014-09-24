@@ -18,26 +18,30 @@ angular.module('myApp.directives', [])
       }
     };
   }])
-  .directive('favoritable', [ 'FavService', function (FavService) {
+  .directive('favoritable', ['toaster', 'FavService', function (toaster, FavService) {
     return {
       restrict: 'A',
-      scope: {
-        num: '='
-      },
       link: function(scope, element, attrs) {
         element.on('click', function(event) {
-          console.log("attrs  = ", attrs);
           FavService.createFavorite(attrs.tweetIdStr)
             .success(function(data) {
-              console.log("createFavoeite data = ", data);
-              scope.num += (data.action === 'create') ? 1 : -1;
-              // element.toggleClass('icon-stared');
+              console.log(data);
+              if(data.data === null) {
+                toaster.pop('warning', "既にお気に入り済みです。");
+              } else {
+                toaster.pop('success', "お気に入りに追加しました。", '<img src="' + data.data.entities.media[0].media_url + '" class="notify-success-img">', 3000, 'trustedHtml');
+              }
+            }).error(function(status, data) {
+
+               console.log(status);
+               console.log(data);
+
             });
         });
       }
     };
   }])
-  .directive('retweetable', [ 'RetweetService', function (RetweetService) {
+  .directive('retweetable', [ 'toaster', 'RetweetService', function (toaster, RetweetService) {
     return {
       restrict: 'A',
       scope: {
@@ -45,17 +49,34 @@ angular.module('myApp.directives', [])
       },
       link: function(scope, element, attrs) {
         element.on('click', function(event) {
-          console.log("attrs  = ", attrs);
+          if(!window.confirm('リツイートしてもよろしいですか？')) return;
           RetweetService.statusesRetweet(attrs.tweetIdStr)
             .success(function(data) {
-              console.log("RetweetService data = ", data);
-              scope.num += (data.action === 'create') ? 1 : -1;
-              // element.toggleClass('icon-stared');
+              if(data.data === null) {
+                toaster.pop('warning', "既にリツイート済みです。");
+              } else {
+                console.log(data.data.entities.media[0].media_url)
+                toaster.pop('success', "リツイートしました。", '<img src="' + data.data.entities.media[0].media_url + '" class="notify-success-img">', 3000, 'trustedHtml');
+              }
             });
         });
       }
     };
   }])
+  .directive('pageTitle', function () {
+    return {
+      restrict: 'E',
+      scope: {
+        judgementMaterialWhetherOrNotShowLoading: '=',
+        pageTitle: '='
+      },
+      template: (function () {/*
+        <div ng-show="judgementMaterialWhetherOrNotShowLoading" class="content-header">
+          <h1>{{pageTitle}}</h1>
+        </div>
+      */}).toString().replace(/(\n)/g, '').split('*')[1]
+    };
+  })
   .directive('post', function () {
     return {
       restrict: 'E',
@@ -68,12 +89,44 @@ angular.module('myApp.directives', [])
           <div>
             <i data-tweet-id-str="{{post.tweetIdStr}}" retweetable="retweetable" class="fa fa-retweet fa-border icon-retweet"> {{post.retweetNum}}</i>
             <i data-tweet-id-str="{{post.tweetIdStr}}" favoritable="favoritable" class="fa fa-star fa-border icon-star"> {{post.favNum}}</i>
+            <a href="user/{{post.userIdStr}}" >
+              <div class="fa fa-user fa-border"></div>
+            </a>
             <a href="https://{{post.tweetUrl}}" target="_blank">
               <div class="fa fa-twitter fa-border icon-twitter"></div>
             </a>
             <a href="{{post.sourceOrigUrl}}" download="download">
               <div class="fa fa-download fa-border"></div>
             </a>
+          </div>
+        </div>
+      */}).toString().replace(/(\n)/g, '').split('*')[1]
+    };
+  })
+  .directive('panel', function () {
+    return {
+      restrict: 'E',
+      scope: {
+        panelTitle: '@',
+        postWidth: '=',
+        posts: '=',
+        orderByExpression: '@',
+        orderByDirection: '@',
+        limitNum: '@'
+      },
+      template: (function () {/*
+        <div class='panel panel-default'>
+          <div class='panel-heading'>
+            <h3 class='panel-title'>{{panelTitle}}
+            </h3>
+          </div>
+          <div style='overflow-x: scroll;'>
+            <div style='width:{{postWidth}}px;' class='panel-body'>
+              <div ng-repeat='post in posts | orderBy: orderByExpression : orderByDirection | limitTo : limitNum' class='box'>
+                <post post='post'>
+                </post>
+              </div>
+            </div>
           </div>
         </div>
       */}).toString().replace(/(\n)/g, '').split('*')[1]
