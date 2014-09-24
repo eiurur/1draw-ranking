@@ -71,6 +71,8 @@ exports.serve = function() {
       "db": process.env.MONGOHQ_NAME || "1draw-ranking",
       "host": process.env.MONGOHQ_HOST || "127.0.0.1",
       "port": process.env.MONGOHQ_PORT || "27017",
+      "username": process.env.MONGOHQ_USER || "",
+      "password": process.env.MONGOHQ_PASSWORD || "",
       "collection": "sessions",
       "clear_interval": 3600,
       "auto_reconnect": true
