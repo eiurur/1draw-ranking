@@ -95,7 +95,7 @@ angular.module('myApp.directives', [])
             <a href="https://{{post.tweetUrl}}" target="_blank">
               <div class="fa fa-twitter fa-border icon-twitter"></div>
             </a>
-            <a href="{{post.sourceOrigUrl}}" download="download">
+            <a href="{{post.sourceOrigUrl}}?.jpg" download="download">
               <div class="fa fa-download fa-border"></div>
             </a>
           </div>
