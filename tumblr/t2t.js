@@ -60,7 +60,7 @@
   };
 
 
-  // for lovelive
+  // for kancolle, aikatsu, yuruyuri, mobamas
   exports.post2Tumblr2200 = function() {
     var nowTime = new Date();
 
@@ -90,7 +90,7 @@
     });
   };
 
-  // for kancolle, aikatsu, yuruyuri, mobamas
+  // for lovelive
   exports.post2Tumblr2330 = function() {
     var nowTime = new Date();
 
