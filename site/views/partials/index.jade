@@ -3,7 +3,7 @@
     judgement-material-whether-or-not-show-loading='rankAllCategoryPosts.length',
     page-title='pageTitle')
   .page-content.inset
-    .row(ng-if="rankAllCategoryPosts.length != 0")
+    .row(ng-if="rankAllCategoryPosts")
       div(ng-repeat='rankCategoryPosts in rankAllCategoryPosts')
         .col-md-12(ng-hide="rankCategoryPosts.length == 1")
           .panel.panel-default(ng-hide="rankCategoryPosts[$index].rankWidth == 0")
@@ -17,7 +17,6 @@
                     post(post='rankCategoryPost')
 
           .interval-space
-
     loading(
-      judgement-material-whether-or-not-show-loading='rankAllCategoryPosts.length',
+      judgement-material-whether-or-not-show-loading='rankAllCategoryPosts',
       judgement-material-whether-or-not-hide-page-content='rankAllCategoryPosts.length')

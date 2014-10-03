@@ -140,7 +140,7 @@ angular.module('myApp.directives', [])
         judgementMaterialWhetherOrNotHidePageContent: '='
       },
       template: (function () {/*
-        <div ng-hide="judgementMaterialWhetherOrNotShowLoading != 0">
+        <div ng-hide="judgementMaterialWhetherOrNotShowLoading">
           <div ng-hide="judgementMaterialWhetherOrNotHidePageContent == 0"><i class="fa fa-refresh fa-5x pull-left fa-spin"></i>
           </div>
           <div ng-show="judgementMaterialWhetherOrNotHidePageContent == 0"><span class="fa-stack fa-5x"><i class="fa fa-picture-o fa-stack-1x pull-left"></i><i class="fa fa-ban fa-stack-2x pull-left text-danger"></i></span>
