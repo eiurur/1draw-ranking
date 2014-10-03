@@ -3,7 +3,7 @@
     judgement-material-whether-or-not-show-loading='rankAllCategoryPosts.length',
     page-title='pageTitle')
   .page-content.inset
-    .row(ng-if="rankAllCategoryPosts")
+    .row(ng-if="rankAllCategoryPosts.length != 0")
       div(ng-repeat='rankCategoryPosts in rankAllCategoryPosts')
         .col-md-12(ng-hide="rankCategoryPosts.length == 1")
           .panel.panel-default(ng-hide="rankCategoryPosts[$index].rankWidth == 0")

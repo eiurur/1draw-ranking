@@ -1,13 +1,18 @@
 'use strict';
 
 angular.module('myApp.controllers', [])
-  .controller('IndexCtrl', function ($scope, $http, toaster) {
+  .controller('IndexCtrl', function ($scope, $http, toaster, PostService) {
 
-    $http.get('/api/readRankingAllCategory/').
-      success(function(data) {
-        $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
-        $scope.pageTitle = '総合ランキング';
-      });
+    $scope.rankAllCategoryPosts = PostService.rankDatas;
+    if(_.isEmpty($scope.rankAllCategoryPosts)) {
+      $http.get('/api/readRankingAllCategory').
+        success(function(data) {
+          $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
+          PostService.rankDatas = $scope.rankAllCategoryPosts;
+        });
+    }
+    $scope.pageTitle = '総合ランキング';
+
 
   })
   .controller('UserCtrl', function ($scope, $http, $routeParams, toaster) {
