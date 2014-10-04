@@ -8,8 +8,10 @@ angular.module('myApp.controllers', [])
     $http.get('/api/readRankingAllCategory').
       success(function(data) {
         $scope.isLoading = false;
-        $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
-        PostService.rankDatas = $scope.rankAllCategoryPosts;
+        if(_.isEmpty(PostService.rankDatas)) {
+          $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
+          PostService.rankDatas = $scope.rankAllCategoryPosts;
+        }
       });
     $scope.pageTitle = '総合ランキング';
 
