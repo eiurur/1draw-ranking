@@ -1,7 +1,8 @@
 #page-content-wrapper
   page-title(
-    judgement-material-whether-or-not-show-loading='userAllCategoryPosts.length',
+    judgement-material-whether-or-not-show-loading='!isLoading',
     page-title='pageTitle')
+
   .page-content.inset
     .row(ng-if="userAllCategoryPosts")
       div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
@@ -14,9 +15,8 @@
                 .box-container(ng-repeat='userCategoryPost in userCategoryPosts | orderBy: orderProp: true')
                   .box(ng-if="!$first")
                     post(post='userCategoryPost')
-
           .interval-space
 
     loading(
-      judgement-material-whether-or-not-show-loading='userAllCategoryPosts.length',
+      judgement-material-whether-or-not-show-loading='isLoading',
       judgement-material-whether-or-not-hide-page-content='userAllCategoryPosts.length')

@@ -3,20 +3,21 @@
 angular.module('myApp.controllers', [])
   .controller('IndexCtrl', function ($scope, $http, toaster, PostService) {
 
+    $scope.isLoading = true;
     $scope.rankAllCategoryPosts = PostService.rankDatas;
-    if(_.isEmpty($scope.rankAllCategoryPosts)) {
-      $http.get('/api/readRankingAllCategory').
-        success(function(data) {
-          $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
-          PostService.rankDatas = $scope.rankAllCategoryPosts;
-        });
-    }
+    $http.get('/api/readRankingAllCategory').
+      success(function(data) {
+        $scope.isLoading = false;
+        $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
+        PostService.rankDatas = $scope.rankAllCategoryPosts;
+      });
     $scope.pageTitle = '総合ランキング';
 
 
   })
   .controller('UserCtrl', function ($scope, $http, $routeParams, toaster) {
 
+    $scope.isLoading = true;
     $scope.orderProp = "totalNum";
 
     // ユーザの過去の投稿データを取得
@@ -28,12 +29,16 @@ angular.module('myApp.controllers', [])
     // ユーザデータ(screenName, userName, Icon, URL, TWitterId)を取得
     $http.get('/api/findUserDataByTwitterIdStr/' + $routeParams.twitterIdStr).
       success(function(data) {
-        $scope.pageTitle = '@' + data.userData.userScreenName || 'NoData';
+        $scope.isLoading = false;
+        $scope.pageTitle = 'NoData';
+        if(_.has(data.userData, 'userScreenName')) {
+          $scope.pageTitle = '@' + data.userData.userScreenName;
+        }
       });
 
     $scope.toggleOrderBy = function() {
       $scope.isNewer = !$scope.isNewer;
-      $scope.orderProp = ($scope.isNewer) ? "createdAt" : "favNum";
+      $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
     }
   })
   .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout, toaster) {
@@ -43,10 +48,12 @@ angular.module('myApp.controllers', [])
       , INTERVAL = 5 * 1000
       ;
 
+    $scope.isLoading = true;
     $http.get('/api/readAll/' + $routeParams.name).
       success(function(data) {
-          $scope.posts = data.posts;
-          $scope.postWidth = data.postWidth;
+        $scope.isLoading = false;
+        $scope.posts = data.posts;
+        $scope.postWidth = data.postWidth;
       });
 
     $http.get('/api/readRanking/' + $routeParams.name).

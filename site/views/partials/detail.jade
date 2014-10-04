@@ -1,6 +1,6 @@
 #page-content-wrapper
   page-title(
-    judgement-material-whether-or-not-show-loading='rankWidth',
+    judgement-material-whether-or-not-show-loading='!isLoading',
     page-title='pageTitle')
 
   .page-content.inset
@@ -21,7 +21,8 @@
           order-by-expression='createdAt',
           order-by-direction='desc',
           limit-num='10')
+
     loading(
-      judgement-material-whether-or-not-show-loading='rankWidth',
+      judgement-material-whether-or-not-show-loading='isLoading',
       judgement-material-whether-or-not-hide-page-content='rankPosts.length')
 

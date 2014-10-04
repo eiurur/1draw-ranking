@@ -71,7 +71,7 @@ angular.module('myApp.directives', [])
         pageTitle: '='
       },
       template: (function () {/*
-        <div ng-show="judgementMaterialWhetherOrNotShowLoading" class="content-header">
+        <div ng-if="judgementMaterialWhetherOrNotShowLoading" class="content-header">
           <h1>{{pageTitle}}</h1>
         </div>
       */}).toString().replace(/(\n)/g, '').split('*')[1]
@@ -140,11 +140,17 @@ angular.module('myApp.directives', [])
         judgementMaterialWhetherOrNotHidePageContent: '='
       },
       template: (function () {/*
-        <div ng-hide="judgementMaterialWhetherOrNotShowLoading">
-          <div ng-hide="judgementMaterialWhetherOrNotHidePageContent == 0"><i class="fa fa-refresh fa-5x pull-left fa-spin"></i>
+        <div ng-if="judgementMaterialWhetherOrNotShowLoading">
+          <div class="fa-5x">
+            <i class="fa fa-refresh pull-left fa-spin"></i>
+            読み込み中 ...
           </div>
-          <div ng-show="judgementMaterialWhetherOrNotHidePageContent == 0"><span class="fa-stack fa-5x"><i class="fa fa-picture-o fa-stack-1x pull-left"></i><i class="fa fa-ban fa-stack-2x pull-left text-danger"></i></span>
-            <div class="fa-5x">No data ...
+        </div>
+        <div ng-if="!judgementMaterialWhetherOrNotShowLoading">
+          <div ng-if="judgementMaterialWhetherOrNotHidePageContent == 0">
+            <div class="fa-5x">
+              <span class="fa-stack"><i class="fa fa-picture-o fa-stack-1x pull-left"></i><i class="fa fa-ban fa-stack-2x pull-left text-danger"></i></span>
+              No data ...
             </div>
           </div>
         </div>
