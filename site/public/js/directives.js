@@ -141,12 +141,9 @@ angular.module('myApp.directives', [])
       },
       template: (function () {/*
         <div ng-if="judgementMaterialWhetherOrNotShowLoading">
-
-          <div ng-if="judgementMaterialWhetherOrNotHidePageContent != 0">
           <div class="fa-5x">
             <i class="fa fa-refresh pull-left fa-spin"></i>
             読み込み中 ...
-          </div>
           </div>
         </div>
         <div ng-if="!judgementMaterialWhetherOrNotShowLoading">
