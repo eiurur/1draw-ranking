@@ -143,7 +143,6 @@ angular.module('myApp.directives', [])
         <div ng-if="judgementMaterialWhetherOrNotShowLoading">
           <div class="fa-5x">
             <i class="fa fa-refresh pull-left fa-spin"></i>
-            読み込み中 ...
           </div>
         </div>
         <div ng-if="!judgementMaterialWhetherOrNotShowLoading">
