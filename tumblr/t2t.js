@@ -72,7 +72,8 @@
         ;
 
       // 21:59
-      if(name === 'lovelive' || name === 'gf') return;
+      // Kancolle, Yuruyuri, Aikatsu!
+      if(name === 'lovelive') return;
 
       if(name === 'kancolle') {
         numShow = 20;
@@ -103,31 +104,6 @@
       // 23:30
       // LoveLive!
       if(name !== 'lovelive') return;
-
-      console.log("---------------------------");
-      console.log("カテゴリ : " + name);
-      postText2tumblr({
-          name: name
-        , correspondDate: correspondDate
-        , numShow: numShow
-      });
-    });
-  };
-
-  // for GF
-  exports.post2Tumblr2230 = function() {
-    var nowTime = new Date();
-
-    console.log("post2Tumblr2230");
-
-    settings.CATEGORIES.forEach(function (name) {
-      var numShow = 10
-        , correspondDate = cd.getCorrespondDate(name)
-        ;
-
-      // 23:30
-      // LoveLive!
-      if(name !== 'gf') return;
 
       console.log("---------------------------");
       console.log("カテゴリ : " + name);

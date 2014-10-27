@@ -141,26 +141,6 @@
         // 開始時刻(UNIXTIME) - 締め切り(UNIXTIME) > 0 => 集計時間外
         // 締め切りが過ぎている投稿は換算しない
         if((nowUnixTime - endUnixTimeL) > 0)　throw new exception.deadlinePassed();
-      } else if(category === 'gf') {
-
-        // 22:30 スタート
-        if(hour + ":" + minute < "22:30") {
-
-          // 日を跨いだ投稿 == dayが締め切りの日
-          endUnixTimeL = my.formatX(year + "-" + month + "-" + day + " 22:30:00");
-          correspondDate = m.add('days', -1).format("YYYY-MM-DD");
-          correspondTime = momentCreateAt.format("YYYY-MM-DD HH:mm");
-        } else {
-
-          // => dayの次の日の23:30が締め切り
-          endUnixTimeL = my.formatX(year + "-" + month + "-" + day + " 22:30:00") + 24 * 60 * 60;
-          correspondDate = m.format("YYYY-MM-DD");
-          correspondTime = momentCreateAt.format("YYYY-MM-DD HH:mm");
-        }
-
-        // 開始時刻(UNIXTIME) - 締め切り(UNIXTIME) > 0 => 集計時間外
-        // 締め切りが過ぎている投稿は換算しない
-        if((nowUnixTime - endUnixTimeL) > 0)　throw new exception.deadlinePassed();
       } else {
 
         // 22:00 スタート
@@ -265,9 +245,9 @@
         isUnofficialRT = rt_exclude_pattern.test(data.retweeted_status.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
 
-        my.cl("RT数  " + data.retweeted_status.retweet_count);
-        my.cl("fav数 " + data.retweeted_status.favorite_count);
-        my.cl("RT元  " + data.retweeted_status.user.screen_name);
+        // my.cl("RT数  " + data.retweeted_status.retweet_count);
+        // my.cl("fav数 " + data.retweeted_status.favorite_count);
+        // my.cl("RT元  " + data.retweeted_status.user.screen_name);
 
         // 日時データを要素分解
         tweetTime = data.retweeted_status.created_at.split(" ");
