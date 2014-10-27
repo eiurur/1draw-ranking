@@ -265,9 +265,9 @@
         isUnofficialRT = rt_exclude_pattern.test(data.retweeted_status.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
 
-        // my.cl("RT数  " + data.retweeted_status.retweet_count);
-        // my.cl("fav数 " + data.retweeted_status.favorite_count);
-        // my.cl("RT元  " + data.retweeted_status.user.screen_name);
+        my.cl("RT数  " + data.retweeted_status.retweet_count);
+        my.cl("fav数 " + data.retweeted_status.favorite_count);
+        my.cl("RT元  " + data.retweeted_status.user.screen_name);
 
         // 日時データを要素分解
         tweetTime = data.retweeted_status.created_at.split(" ");
