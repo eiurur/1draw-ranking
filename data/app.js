@@ -14,8 +14,10 @@
      * 新規ツイート保存処理
      */
     settings.twitter.stream('statuses/filter', {'track': settings.KEYWORDS}, function(stream) {
+      console.log(stream);
 
       stream.on('data', function(data){
+        console.log(data);
         aggregate.aggregate(data);
       });
 
