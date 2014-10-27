@@ -143,15 +143,6 @@ angular.module('myApp.directives', [])
         <div ng-if="judgementMaterialWhetherOrNotShowLoading">
           <div class="fa-5x">
             <i class="fa fa-refresh pull-left fa-spin"></i>
-            読み込み中 ...
-          </div>
-        </div>
-        <div ng-if="!judgementMaterialWhetherOrNotShowLoading">
-          <div ng-if="judgementMaterialWhetherOrNotHidePageContent == 0">
-            <div class="fa-5x">
-              <span class="fa-stack"><i class="fa fa-picture-o fa-stack-1x pull-left"></i><i class="fa fa-ban fa-stack-2x pull-left text-danger"></i></span>
-              No data ...
-            </div>
           </div>
         </div>
       */}).toString().replace(/(\n)/g, '').split('*')[1]

@@ -2,8 +2,9 @@
 
 angular.module('myApp.controllers', [])
   .controller('IndexCtrl', function ($scope, $http, toaster, PostService) {
-
+    // $scope.isLoading = (_.isEmpty(PostService.rankDatas)) ? true : false;
     $scope.isLoading = true;
+
     $scope.rankAllCategoryPosts = PostService.rankDatas;
     $http.get('/api/readRankingAllCategory').
       success(function(data) {
