@@ -16,5 +16,6 @@ exports.logout = function(req, res){
 
 exports.partials = function (req, res) {
   var name = req.params.name;
+  res.header('Expires', Date.now());
   res.render('partials/' + name);
 };

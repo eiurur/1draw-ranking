@@ -1,3 +1,8 @@
 settings.js
 development.js
 newrelic_agent.log
+assets/*
+deploy/*
+node_modules/*
+bower_components/*
+gulpfile*

@@ -10,6 +10,7 @@ exports.serve = function() {
     , morgan          = require('morgan')
     , cookieParser    = require('cookie-parser')
     , session         = require('express-session')
+    , cacheManifest   = require('connect-cache-manifest')
     , MongoStore      = require('connect-mongo')(session)
     , passport        = require('passport')
     , TwitterStrategy = require('passport-twitter').Strategy
@@ -75,12 +76,36 @@ exports.serve = function() {
     })
   };
 
+  var cacheOptions = {
+    dotfiles: 'ignore',
+    etag: false,
+    extensions: ['htm', 'html', 'css', 'js'],
+    index: false,
+    maxAge: 86400000,
+    redirect: false,
+    // "Cache-Control": "no-cache, must-revalidate",
+    setHeaders: function (res, path, stat) {
+      res.set('x-timestamp', Date.now());
+    }
+  };
+
+  // cache-manifest
+  app.use(cacheManifest({
+    manifestPath: '/application.manifest',
+    files: [{
+      dir: 'site/public',
+      prefix: '/'
+    }],
+    networks: ['*'],
+    fallbacks: []
+  }));
+
   /**
    * Configuration
    */
   // all environments
   app.disable('x-powered-by');
-  app.set('port', process.env.PORT || 9000);
+  app.set('port', process.env.PORT || 9009);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(morgan('dev'));
@@ -93,7 +118,7 @@ exports.serve = function() {
   app.use(session(options));
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(__dirname, 'public'), cacheOptions));
 
 
   /**
