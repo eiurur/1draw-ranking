@@ -1,17 +1,15 @@
 CACHE MANIFEST
 
-# Revision: 20141030-1830
+# Revision: 20141117-1600
 
 ############################################################
 
 ## キャッシュ対象のコンテンツ
 CACHE:
-
 css/lib/fonts/fontawesome-webfont.woff?v=4.2.0
 css/lib/lib.min.css
 css/app.css
 css/simple-sidebar.css
-
 js/lib/lib.min.js
 js/lib/angular-lib.min.js
 js/app.js
@@ -19,11 +17,13 @@ js/services.js
 js/controllers.js
 js/filters.js
 js/directives.js
+http://pbs.twimg.com/media/*
 
 ############################################################
 
 ## 必ずサーバーを見るコンテンツ
 NETWORK:
+*
 
 # 大雑把にルートの諸々
 /favicon.ico
