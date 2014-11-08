@@ -14,9 +14,7 @@
     function(callback) {
 
       console.log("■ Server task start");
-
       serve(null, "Create Server");
-
       setTimeout((function(){
         return callback(null, "Create! Server\n");
       }), 0);
@@ -24,9 +22,7 @@
     }, function(callback) {
 
       console.log("■ Cron task start");
-
       manageCron(null, "Start up Cron");
-
       setTimeout((function(){
         return callback(null, "Ok! Cron\n");
       }), 0);
@@ -34,9 +30,7 @@
     }, function(callback) {
 
       console.log("■ Twitter task start");
-
       getTweetFromTwitter(null, "Getting Tweet");
-
       setTimeout((function(){
         return callback(null, "Go! Twitter\n");
       }), 0);
