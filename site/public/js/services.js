@@ -25,4 +25,15 @@ angular.module('myApp.services', [])
   })
   .service('PostService', function() {
     this.rankDatas = [];
+
+    //
+    // userPostDatas = [
+    //  {
+    //    'twitterIdStr': 111
+    //    'profile': {}
+    //    'data': {}
+    //  }
+    // ]
+    this.userPostDatas = [];
+    this.detailPostDatas = [];
   });

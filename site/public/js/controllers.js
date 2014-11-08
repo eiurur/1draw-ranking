@@ -23,6 +23,10 @@ angular.module('myApp.controllers', [])
     $scope.isLoading = true;
     $scope.orderProp = "totalNum";
 
+    //
+    // _.
+    // $scope.userAllCategoryPosts = PostService.userPostDatas.ranking;
+
     // ユーザの過去の投稿データを取得
     $http.get('/api/readUserPosts/' + $routeParams.twitterIdStr).
       success(function(data) {
@@ -44,28 +48,91 @@ angular.module('myApp.controllers', [])
       $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
     }
   })
-  .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout, toaster) {
+  .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout, PostService, toaster) {
 
-    var onTimeout
+    var idx
+      , onTimeout
       , timer
       , INTERVAL = 5 * 1000
       ;
 
-    $scope.isLoading = true;
-    $http.get('/api/readAll/' + $routeParams.name).
-      success(function(data) {
-        $scope.isLoading = false;
-        $scope.posts = data.posts;
-        $scope.postWidth = data.postWidth;
-      });
 
-    $http.get('/api/readRanking/' + $routeParams.name).
-      success(function(data) {
-        $scope.rankPosts = data.rankPosts;
-        $scope.rankWidth = data.rankWidth;
+    $scope.isLoading = false
 
-        $scope.pageTitle = (data.rankPosts[0].tags.split(","))[2];
-      });
+    idx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+    console.log('idx = ' + idx);
+
+    if(idx !== -1) {
+
+      // 体感速度を向上するため、キャッシュ(Service)からデータを取得。
+      $scope.name = PostService.detailPostDatas[idx].name;
+      $scope.posts = PostService.detailPostDatas[idx].posts;
+      $scope.postWidth = PostService.detailPostDatas[idx].postWidth;
+      $scope.rankPosts = PostService.detailPostDatas[idx].rankPosts;
+      $scope.rankWidth = PostService.detailPostDatas[idx].rankWidth;
+      $scope.pageTitle = PostService.detailPostDatas[idx].pageTitle;
+    } else {
+
+      // 初回
+      $scope.isLoading = true;
+      $http.get('/api/readAll/' + $routeParams.name).
+        success(function(data) {
+          $scope.isLoading = false;
+          $scope.posts = data.posts;
+          $scope.postWidth = data.postWidth;
+          cacheNew(data);
+        });
+
+      $http.get('/api/readRanking/' + $routeParams.name).
+        success(function(data) {
+          $scope.rankPosts = data.rankPosts;
+          $scope.rankWidth = data.rankWidth;
+          $scope.pageTitle = (data.rankPosts[0].tags.split(","))[2];
+          cacheRank(data);
+        });
+
+    }
+
+    function cacheRank(data){
+      var newData = {
+          'name': $routeParams.name
+        , 'rankPosts': data.rankPosts
+        , 'rankWidth': data.rankWidth
+        , 'pageTitle': (data.rankPosts[0].tags.split(","))[2]
+      };
+      var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+
+      console.log('新規、追加。 readRankingIdx = ' + readRankingIdx);
+
+      if(readRankingIdx === -1) {
+        PostService.detailPostDatas.push(newData);
+        console.log('-1 PostService.detailPostDatas = ', PostService.detailPostDatas);
+        return;
+      }
+      PostService.detailPostDatas[readRankingIdx] = _.merge(newData, PostService.detailPostDatas[readRankingIdx]);
+      console.log('PostService.detailPostDatas = ', PostService.detailPostDatas);
+    }
+
+    function cacheNew(data){
+      var newData = {
+          'name': $routeParams.name
+        , 'posts': data.posts
+        , 'postWidth': data.postWidth
+      };
+      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+
+      console.log('新規、追加。 readAllIdx = ' + readAllIdx);
+
+      if(readAllIdx === -1) {
+        PostService.detailPostDatas.push(newData);
+        console.log('-1 PostService.detailPostDatas = ', PostService.detailPostDatas);
+        return;
+      }
+      PostService.detailPostDatas[readAllIdx] = _.merge(newData, PostService.detailPostDatas[readAllIdx]);
+      console.log('PostService.detailPostDatas = ', PostService.detailPostDatas);
+    }
+
+
 
     function updateTweetList(data) {
       var idx
