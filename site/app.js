@@ -14,6 +14,7 @@ exports.serve = function() {
     , MongoStore      = require('connect-mongo')(session)
     , passport        = require('passport')
     , TwitterStrategy = require('passport-twitter').Strategy
+    , moment          = require('moment')
     , routes          = require('./routes')
     , api             = require('./routes/api')
     , http            = require('http')
@@ -81,9 +82,8 @@ exports.serve = function() {
     etag: false,
     extensions: ['htm', 'html', 'css', 'js'],
     index: false,
-    maxAge: 86400000,
+    maxAge: 0,
     redirect: false,
-    // "Cache-Control": "no-cache, must-revalidate",
     setHeaders: function (res, path, stat) {
       res.set('x-timestamp', Date.now());
     }

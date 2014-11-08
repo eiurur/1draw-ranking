@@ -23,10 +23,6 @@ angular.module('myApp.controllers', [])
     $scope.isLoading = true;
     $scope.orderProp = "totalNum";
 
-    //
-    // _.
-    // $scope.userAllCategoryPosts = PostService.userPostDatas.ranking;
-
     // ユーザの過去の投稿データを取得
     $http.get('/api/readUserPosts/' + $routeParams.twitterIdStr).
       success(function(data) {
@@ -51,24 +47,28 @@ angular.module('myApp.controllers', [])
   .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout, PostService, toaster) {
 
     var idx
+      , isCached
+      , isExistData
       , onTimeout
       , timer
       , INTERVAL = 5 * 1000
       ;
 
-
     $scope.isLoading = false
 
     idx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
-    console.log('idx = ' + idx);
+    isCached = (idx !== -1);
+    isExistData = (_.isUndefined(PostService.detailPostDatas[idx]) || PostService.detailPostDatas[idx].postWidth !== 0);
 
-    if(idx !== -1) {
+    // detailページを開いたら即座にPostServiceへキャッシュを保存する。
+    // PosrServiceがキャッシュを所有している !== ツイートデータを所有している
+    if(isCached && isExistData) {
 
       // 体感速度を向上するため、キャッシュ(Service)からデータを取得。
       $scope.name = PostService.detailPostDatas[idx].name;
-      $scope.posts = PostService.detailPostDatas[idx].posts;
+      $scope.posts = [].concat(PostService.detailPostDatas[idx].posts);
       $scope.postWidth = PostService.detailPostDatas[idx].postWidth;
-      $scope.rankPosts = PostService.detailPostDatas[idx].rankPosts;
+      $scope.rankPosts = [].concat(PostService.detailPostDatas[idx].rankPosts);
       $scope.rankWidth = PostService.detailPostDatas[idx].rankWidth;
       $scope.pageTitle = PostService.detailPostDatas[idx].pageTitle;
     } else {
@@ -94,7 +94,7 @@ angular.module('myApp.controllers', [])
     }
 
     function cacheRank(data){
-      var newData = {
+      var properties = {
           'name': $routeParams.name
         , 'rankPosts': data.rankPosts
         , 'rankWidth': data.rankWidth
@@ -102,37 +102,80 @@ angular.module('myApp.controllers', [])
       };
       var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
 
-      console.log('新規、追加。 readRankingIdx = ' + readRankingIdx);
+      // console.log('新規、追加。 readRankingIdx = ' + readRankingIdx);
 
       if(readRankingIdx === -1) {
-        PostService.detailPostDatas.push(newData);
-        console.log('-1 PostService.detailPostDatas = ', PostService.detailPostDatas);
+        PostService.detailPostDatas.push(properties);
+        // console.log('-1 PostService.detailPostDatas = ', PostService.detailPostDatas);
         return;
       }
-      PostService.detailPostDatas[readRankingIdx] = _.merge(newData, PostService.detailPostDatas[readRankingIdx]);
-      console.log('PostService.detailPostDatas = ', PostService.detailPostDatas);
+      PostService.detailPostDatas[readRankingIdx] = _.merge(properties, PostService.detailPostDatas[readRankingIdx]);
+      // console.log('PostService.detailPostDatas = ', PostService.detailPostDatas);
+    }
+
+    function replaceCachedRank(data){
+      var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+      PostService.detailPostDatas[readRankingIdx].rankPosts = data.rankPosts;
+      PostService.detailPostDatas[readRankingIdx].rankWidth = data.rankWidth;
+      // console.log('repaced Ranki = ', PostService.detailPostDatas);
     }
 
     function cacheNew(data){
-      var newData = {
+      var properties = {
           'name': $routeParams.name
         , 'posts': data.posts
         , 'postWidth': data.postWidth
       };
       var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
 
-      console.log('新規、追加。 readAllIdx = ' + readAllIdx);
+      // console.log('新規、追加。 readAllIdx = ' + readAllIdx);
 
       if(readAllIdx === -1) {
-        PostService.detailPostDatas.push(newData);
-        console.log('-1 PostService.detailPostDatas = ', PostService.detailPostDatas);
+        PostService.detailPostDatas.push(properties);
+        // console.log('-1 PostService.detailPostDatas = ', PostService.detailPostDatas);
         return;
       }
-      PostService.detailPostDatas[readAllIdx] = _.merge(newData, PostService.detailPostDatas[readAllIdx]);
-      console.log('PostService.detailPostDatas = ', PostService.detailPostDatas);
+      PostService.detailPostDatas[readAllIdx] = _.merge(properties, PostService.detailPostDatas[readAllIdx]);
+      // console.log('PostService.detailPostDatas = ', PostService.detailPostDatas);
+    }
+
+    function replaceCachedNew(data){
+      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+      PostService.detailPostDatas[readAllIdx].posts = data.posts;
+      PostService.detailPostDatas[readAllIdx].postWidth = data.postWidth;
+      // console.log('repaced New = ', PostService.detailPostDatas);
     }
 
 
+    // v1.0.7には$intervalが未実装であるため
+    // $timeoutを再帰的に呼び出して擬似的な処理で賄う
+    onTimeout = function() {
+
+      $http.get('/api/readAll/' + $routeParams.name).
+        success(function(data) {
+          updateTweetList(data);
+          replaceCachedNew(data);
+          // console.log('$scope', $scope.postWidth);
+        });
+
+      $http.get('/api/readRanking/' + $routeParams.name).
+        success(function(data) {
+          updateTweetList(data);
+          replaceCachedRank(data);
+          // console.log('$scope', $scope.rankWidth);
+        });
+
+      timer = $timeout(onTimeout, INTERVAL);
+
+    };
+
+    timer = $timeout(onTimeout, INTERVAL);
+
+    $scope.$on("$destroy", function() {
+      if (timer) {
+        $timeout.cancel(timer);
+      }
+    });
 
     function updateTweetList(data) {
       var idx
@@ -183,33 +226,8 @@ angular.module('myApp.controllers', [])
           }
 
       });
+
     }
-
-    // v1.0.7には$intervalが未実装であるため
-    // $timeoutを再帰的に呼び出して擬似的な処理で賄う
-    onTimeout = function() {
-
-      $http.get('/api/readAll/' + $routeParams.name).
-        success(function(data) {
-          updateTweetList(data);
-        });
-
-      $http.get('/api/readRanking/' + $routeParams.name).
-        success(function(data) {
-          updateTweetList(data);
-        });
-
-      timer = $timeout(onTimeout, INTERVAL);
-
-    };
-
-    timer = $timeout(onTimeout, INTERVAL);
-
-    $scope.$on("$destroy", function() {
-      if (timer) {
-        $timeout.cancel(timer);
-      }
-    });
 
   })
   .controller('AdminUserCtrl', function ($scope, $http, $location, $rootScope, $routeParams, AuthenticationService, FavService) {
