@@ -3,7 +3,10 @@
  * GET home page.
  */
 
+var moment = require('moment');
+
 exports.index = function(req, res){
+  // res.setHeader('Last-Modified', moment().format('YYYY-MM-DD HH:mm:ss'));
   res.render('index');
 };
 
