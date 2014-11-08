@@ -188,10 +188,11 @@ angular.module('myApp.controllers', [])
       posts.forEach(function(newData, newDataIndex){
 
           if(target === "ranking") {
-            idx = _.findIndex($scope.rankPosts, {userIdStr: newData.userIdStr});
+            idx = _.findIndex($scope.rankPosts, {tweetIdStr: newData.tweetIdStr});
           } else {
-            idx = _.findIndex($scope.posts, {userIdStr: newData.userIdStr});
+            idx = _.findIndex($scope.posts, {tweetIdStr: newData.tweetIdStr});
           }
+
 
           // もし、新しい画像があれば
           if(idx === -1) {
@@ -208,6 +209,11 @@ angular.module('myApp.controllers', [])
 
             return;
           }
+
+          // 2014/11/08
+          // 突然$scope,rankPosts[idx]がundefindeを返すようになった。
+          // 原因不明につき応急処置
+          if(_.isUndefined($scope.rankPosts[idx])) return;
 
           // リツイート数、ふぁぼ数に変化があれば更新
           if($scope.rankPosts[idx].favNum !== newData.favNum) {
