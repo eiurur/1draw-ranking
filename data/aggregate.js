@@ -226,13 +226,26 @@
       PostProvider.findOneDuplicatedTweetWithImage({
         sourceUrl: sourceUrl
       }, function(error, doc) {
+        try {
+          // 新規ツイート
+          if(_.isUndefined(doc[0])) return false;
 
-        // 新規ツイート
-        if(_.isUndefined(doc[0])) return;
-
-        // 転載ツイート
-        if(doc[0].userIdStr !== userIdStr) throw new exception.DuplicatedTweet(userIdStr, sourceUrl);
-      })
+          // 転載ツイート
+          if(doc[0].userIdStr !== userIdStr) {
+            console.log("=\n==========\n");
+            console.log("userIdStr = " + userIdStr);
+            console.log("sourceUrl = " + sourceUrl);
+            throw new exception.DuplicatedTweetWithImage();
+          }
+        } catch (e) {
+          if(_.has(e, "message")) {
+            console.log(e.message);
+            console.log(e.errorHappendAt.toString());
+          } else {
+            my.dump(e);
+          }
+        }
+      });
     };
 
     /**
