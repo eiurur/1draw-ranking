@@ -220,6 +220,21 @@
       });
     };
 
+    // 直リン天転載画像ツイートは除外
+    var excludeDuplicatedTweetWithImage = function(userIdStr) {
+
+      PostProvider.findOneDuplicatedTweetWithImage({
+        sourceUrl: sourceUrl
+      }, function(error, doc) {
+
+        // 新規ツイート
+        if(_.isUndefined(doc[0])) return;
+
+        // 転載ツイート
+        if(doc[0].userIdStr !== userIdStr) throw new exception.DuplicatedTweet(userIdStr, sourceUrl);
+      })
+    };
+
     /**
      * Main
      */
@@ -232,7 +247,6 @@
       if(_.isNull(linkUrl)) throw new exception.TextOnlyTweetException();
 
 
-
       assingHashtag();
       assingCategoryAndTags();
       assingPictAndSourceUrl();
@@ -242,19 +256,21 @@
         // ブラックリスト入りのユーザは除外
         excludeNGUser(data.retweeted_status.user.screen_name);
 
+        excludeDuplicatedTweetWithImage(data.retweeted_status.user.id_str);
+
         isUnofficialRT = rt_exclude_pattern.test(data.retweeted_status.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
 
         // my.cl("RT数  " + data.retweeted_status.retweet_count);
         // my.cl("fav数 " + data.retweeted_status.favorite_count);
         // my.cl("RT元  " + data.retweeted_status.user.screen_name);
+        // my.cl('\n' + data.retweeted_status.text + '\n');
 
         // 日時データを要素分解
         tweetTime = data.retweeted_status.created_at.split(" ");
 
         // 元ツイートの投稿時刻と締め切り時刻を取得し、変数に代入
         assingDateAndTime();
-
         // 重複の確認
         PostProvider.countDuplicatedPic({
           tweetIdStr: data.retweeted_status.id_str
@@ -295,6 +311,8 @@
 
         // ブラックリスト入りのユーザは除外
         excludeNGUser(data.user.screen_name);
+
+        excludeDuplicatedTweetWithImage(data.user.id_str);
 
         // 非公式RTは除外
         isUnofficialRT = rt_exclude_pattern.test(data.text);
