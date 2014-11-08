@@ -87,6 +87,7 @@ angular.module('myApp.controllers', [])
         success(function(data) {
           $scope.rankPosts = data.rankPosts;
           $scope.rankWidth = data.rankWidth;
+          if(_.isUndefined(data.rankPosts[0])) return;
           $scope.pageTitle = (data.rankPosts[0].tags.split(","))[2];
           cacheRank(data);
         });
