@@ -1,22 +1,19 @@
-var dir      = '../../lib/'
-  , moment   = require('moment')
-  , _        = require('lodash')
-  , async    = require('async')
-  , cd       = require(dir + 'corresponddate')
-  , my       = require(dir + 'my')
+var dir          = '../../lib/'
+  , moment       = require('moment')
+  , _            = require('lodash')
+  , async        = require('async')
+  , cd           = require(dir + 'corresponddate')
+  , my           = require(dir + 'my')
   , UserProvider = require(dir + 'model').UserProvider
-  , settings = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
+  , PostProvider = require(dir + 'model').PostProvider
+  , settings     = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
   ;
-
-//====== Mongoose object =======//
-var PostProvider = require(dir + 'model').PostProvider;
 
 var margin = 40
   , IMAGE_MAX_WIDTH_300 = 300
   ;
 
 exports.readAll = function (req, res) {
-    var name = req.params.name;
 
     // 現在時刻から表示したい開催日(correspondDate)を算出する
     // アイカツ！、ゆるゆり、艦これの場合
@@ -26,18 +23,14 @@ exports.readAll = function (req, res) {
     // ラブライブ！の場合
     // 4/7 22:12 -> 表示は 4/6 23:30 からの分
     // 4/8 12:32 -> 表示は 4/7 23:30 からの分
-    var correspondDate = cd.getCorrespondDate(name)
-      ,  numShow       = 10
-      ;
+    var opt = {
+        name: req.params.name
+      , correspondDate: cd.getCorrespondDate(req.params.name)
+      , numShow: 10
+    };
 
-    // 該当日(correspondDate)の中から、投稿日が新しい順に10件だけ取得
-    PostProvider.findNew({
-        name: name
-      , correspondDate: correspondDate
-      , numShow: numShow
-    }, function(error, postDatas) {
-      var postWidth = 0
-        , dataCount = 0
+    PostProvider.findNew(opt, function(error, postDatas) {
+      var dataCount = 0
         , posts     = []
         ;
       postDatas.forEach(function (postData) {
@@ -54,30 +47,14 @@ exports.readAll = function (req, res) {
           , category: postData.category
           , retweetNum: postData.retweetNum
           , favNum: postData.favNum
-          , picWidths: postData.picWidths
           , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
           , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
           , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
         });
-
-        // 公式以外の画像ポストは postData.picWidths[0] をオブジェクトとして持っていても、
-        // postData.picWidths[0].height300　は undefinedなので下の条件でないと文字と数字を足すことになり、NaNになる。
-        if(!_.isUndefined(postData.picWidths[0].height300)) {
-          postWidth += postData.picWidths[0].height300;
-        } else {
-          postWidth += IMAGE_MAX_WIDTH_300;
-        }
-        dataCount++;
       });
-
-      // CSSの余白分を追加
-      postWidth += dataCount * margin;
-
-      // console.log("posts = ", posts);
 
       res.json({
           posts: posts
-        , postWidth: postWidth
       });
     });
 };
@@ -91,8 +68,7 @@ exports.readRanking = function (req, res) {
     };
 
     PostProvider.findDescRetweet(opt, function(error, postDatas) {
-      var rankWidth = 0
-        , dataCount = 0
+      var dataCount = 0
         , rankPosts = []
         ;
 
@@ -115,21 +91,11 @@ exports.readRanking = function (req, res) {
           , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
         });
 
-        if(!_.isUndefined(postData.picWidths[0].height300)) {
-          rankWidth += postData.picWidths[0].height300;
-        } else {
-          rankWidth += IMAGE_MAX_WIDTH_300;
-        }
-        dataCount++;
       });
-
-      // CSSの余白分を追加
-      rankWidth += dataCount * margin;
 
       // 値をCotrollerに渡す
       res.json({
-          rankPosts: rankPosts
-        , rankWidth: rankWidth
+        rankPosts: rankPosts
       });
     });
 };
@@ -149,8 +115,7 @@ exports.readRankingAllCategory = function (req, res) {
     PostProvider.findDescTotalPoint(opt, function(error, postDatas) {
 
       // ツイートごとのデータ
-      var rankWidth = 0
-        , dataCount = 0
+      var dataCount = 0
         , rankPosts = []
         ;
 
@@ -172,21 +137,6 @@ exports.readRankingAllCategory = function (req, res) {
           , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
           , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
         });
-
-        if(!_.isUndefined(postData.picWidths[0].height300)) {
-          rankWidth += postData.picWidths[0].height300;
-        } else {
-          rankWidth += IMAGE_MAX_WIDTH_300;
-        }
-        dataCount++;
-      });
-
-      // CSSの余白分を追加
-      rankWidth += dataCount * margin;
-
-      // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
-      rankCategoryPosts.push({
-        rankWidth: rankWidth
       });
       rankAllCategoryPosts.push(rankCategoryPosts);
 
@@ -217,8 +167,7 @@ exports.readUserPosts = function (req, res) {
     PostProvider.findByTwitterIdStrAndCategory(opt, function(error, postDatas) {
 
       // ツイートごとのデータ
-      var userWidth = 0
-        , dataCount = 0
+      var dataCount = 0
         , userPosts = []
         ;
 
@@ -241,22 +190,8 @@ exports.readUserPosts = function (req, res) {
           , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
           , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
         });
-
-        if(!_.isUndefined(postData.picWidths[0].height300)) {
-          userWidth += postData.picWidths[0].height300;
-        } else {
-          userWidth += IMAGE_MAX_WIDTH_300;
-        }
-        dataCount++;
       });
 
-      // CSSの余白分を追加
-      userWidth += dataCount * margin;
-
-      // ツイートデータを持つオブジェクトの末尾にPanelの横幅を追加
-      userCategoryPosts.push({
-        userWidth: userWidth
-      });
       userAllCategoryPosts.push(userCategoryPosts);
 
       // 同期処理
