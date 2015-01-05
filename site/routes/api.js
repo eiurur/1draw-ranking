@@ -151,60 +151,6 @@ exports.readUserPosts = function (req, res) {
   });
 };
 
-// exports.readUserPosts = function (req, res) {
-
-//   console.log(req.params);
-
-//   console.time("tasks.go");
-//   var userAllCategoryPosts = [];
-
-//   // カテゴリごと
-//   async.forEach(settings.CATEGORIES, function (name, cb) {
-//     var userCategoryPosts = [];
-//     var opt = {
-//         name: name
-//       , twitterIdStr: req.params.twitterIdStr
-//     }
-
-//     PostProvider.findByTwitterIdStrAndCategory(opt, function(error, postDatas) {
-
-//       // ツイートごとのデータ
-//       var dataCount = 0
-//         , userPosts = []
-//         ;
-
-//       postDatas.forEach(function (postData) {
-//         userCategoryPosts.push({
-//             tweetIdStr: postData.tweetIdStr
-//           , userName: postData.userName
-//           , userScreenName: postData.userScreenName
-//           , userIdStr: postData.userIdStr
-//           , tweetText: postData.tweetText
-//           , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
-//           , sourceOrigUrl: postData.sourceUrl
-//           , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
-//           , tags: postData.tags
-//           , category: postData.category
-//           , retweetNum: postData.retweetNum
-//           , favNum: postData.favNum
-//           , totalNum: postData.totalNum
-//           , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
-//           , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
-//           , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
-//         });
-//       });
-
-//       userAllCategoryPosts.push(userCategoryPosts);
-
-//       // 同期処理
-//       cb();
-//     });
-//   }, function() {
-//     res.json({
-//       userAllCategoryPosts: userAllCategoryPosts
-//     });
-//   });
-// };
 
 exports.findUserDataByTwitterIdStr = function(req, res) {
 
