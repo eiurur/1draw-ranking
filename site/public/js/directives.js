@@ -120,8 +120,8 @@ angular.module('myApp.directives', [])
             <h3 class='panel-title'>{{panelTitle}}
             </h3>
           </div>
-          <div style='overflow-x: scroll;'>
-            <div style='width:{{postWidth}}px;' class='panel-body'>
+          <div style='overflow-x: scroll; white-space: nowrap;'>
+            <div class='panel-body'>
               <div ng-repeat='post in posts | orderBy: orderByExpression : orderByDirection | limitTo : limitNum' class='box'>
                 <post post='post'>
                 </post>

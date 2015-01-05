@@ -6,14 +6,14 @@
   .page-content.inset
     .row(ng-if="userAllCategoryPosts")
       div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
-        .col-md-12(ng-if="userCategoryPosts.length != 1")
-          .panel.panel-default(ng-if="userCategoryPosts[$index].userWidth != 0")
+        .col-md-12(ng-if="userCategoryPosts.length != 0")
+          .panel.panel-default(ng-hide="userCategoryPosts[$index] | isEmpty")
             .panel-heading
               h3.panel-title {{(userCategoryPosts[0].tags.split(","))[2]}}
-            div(style="overflow-x: scroll;")
-              .panel-body(style="width:{{userCategoryPosts[userCategoryPosts.length-1].userWidth}}px;")
+            div(style="overflow-x: scroll; white-space: nowrap;")
+              .panel-body
                 .box-container(ng-repeat='userCategoryPost in userCategoryPosts | orderBy: orderProp: true')
-                  .box(ng-if="!$first")
+                  .box
                     post(post='userCategoryPost')
           .interval-space
 

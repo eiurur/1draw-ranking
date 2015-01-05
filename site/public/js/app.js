@@ -1,5 +1,8 @@
 angular.module('myApp', [
     'ngRoute'
+  , 'ngAnimate'
+  , 'ngSanitize'
+  // , 'bootstrapLightbox'
   , 'toaster'
   , 'myApp.filters'
   , 'myApp.services'
@@ -23,7 +26,9 @@ angular.module('myApp', [
       when('/logout', {
         redirectTo: '/'
       }).
-      // when('http://127.0.0.1:9000/auth/twitter/callback', {
+      when('http://127.0.0.1:9000/auth/twitter/callback', {
+        redirectTo: '/'
+      }).
       when('http://ldraw-ranking.herokuapp.com/auth/twitter/callback', {
         redirectTo: '/'
       });

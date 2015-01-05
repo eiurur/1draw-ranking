@@ -6,13 +6,13 @@
   .page-content.inset
     .row(ng-if="rankAllCategoryPosts.length != 0")
       div(ng-repeat='rankCategoryPosts in rankAllCategoryPosts')
-        .col-md-12(ng-hide="rankCategoryPosts.length == 1")
-          .panel.panel-default(ng-hide="rankCategoryPosts[$index].rankWidth == 0")
+        .col-md-12(ng-if="rankCategoryPosts.length != 0")
+          .panel.panel-default(ng-hide="rankCategoryPosts[$index] | isEmpty")
             .panel-heading
               h3.panel-title
                 a(href='/detail/{{rankCategoryPosts[0].category}}') {{(rankCategoryPosts[0].tags.split(","))[2]}}
-            div(style="overflow-x: scroll;")
-              .panel-body(style="width:{{rankCategoryPosts[rankCategoryPosts.length-1].rankWidth}}px;")
+            div(style="overflow-x: scroll; white-space: nowrap;")
+              .panel-body
                 .box-container(ng-repeat='rankCategoryPost in rankCategoryPosts')
                   .box(ng-if="!$last")
                     post(post='rankCategoryPost')

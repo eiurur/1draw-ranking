@@ -3,8 +3,14 @@
 /* Filters */
 
 angular.module('myApp.filters', []).
-  filter('interpolate', function (version) {
-    return function (text) {
-      return String(text).replace(/\%VERSION\%/mg, version);
+  filter('isEmpty', function () {
+    var item;
+    return function (obj) {
+      for (item in obj) {
+        if (obj.hasOwnProperty(item)) {
+          return false;
+        }
+      }
+      return true;
     };
   });

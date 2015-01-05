@@ -4,11 +4,10 @@
     page-title='pageTitle')
 
   .page-content.inset
-    .row(ng-if="rankWidth")
+    .row(ng-if="rankPosts.length > 0")
       .col-md-12
         panel(
           panel-title='リツイートランキング',
-          post-width='rankWidth',
           posts='rankPosts',
           order-by-expression='retweetNum',
           order-by-direction='desc',
@@ -16,7 +15,6 @@
         .interval-space
         panel(
           panel-title='新着',
-          post-width='postWidth',
           posts='posts',
           order-by-expression='createdAt',
           order-by-direction='desc',

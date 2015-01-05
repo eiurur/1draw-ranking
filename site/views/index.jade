@@ -2,8 +2,8 @@ extends layout
 
 block body
   toaster-container
-  div#wrapper(ng-controller='AdminUserCtrl')
-    div#sidebar-wrapper
+  #wrapper(ng-controller='AdminUserCtrl')
+    #sidebar-wrapper
       ul.sidebar-nav
         li.sidebar-brand
           a(href='/') #1draw-Ranking
@@ -17,10 +17,6 @@ block body
               i.fa.fa-angle-right
         li
           a(href='/detail/aikatsu') # Aikatsu!
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/yuruyuri') # Yuruyuri
             span.pull-right.sidebar-arrow
               i.fa.fa-angle-right
         li
@@ -63,9 +59,6 @@ block body
           a(href='/logout', target='_self', ng-show='isAuthenticated') Logout
             span.pull-right.sidebar-ex-link
               i.fa.fa-sign-out
-        //- li
-        //-   a(href='https://twitter.com/intent/tweet?url=http://ldraw-ranking.herokuapp.com/&text=1draw-Ranking \/ ', target="_blank") twitter
-        //-     span.pull-right.sidebar-share
-        //-       i.fa.fa-share
 
+    //- span(ng-controller='IllustLightBoxCtrl')
     div(ng-view)
