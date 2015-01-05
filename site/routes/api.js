@@ -2,6 +2,7 @@ var dir          = '../../lib/'
   , moment       = require('moment')
   , _            = require('lodash')
   , async        = require('async')
+  , Promise      = require('es6-promise').Promise
   , cd           = require(dir + 'corresponddate')
   , my           = require(dir + 'my')
   , UserProvider = require(dir + 'model').UserProvider
@@ -13,166 +14,17 @@ var margin = 40
   , IMAGE_MAX_WIDTH_300 = 300
   ;
 
-exports.readAll = function (req, res) {
+var getPostDatas = function(params) {
+  return new Promise(function(resolve, reject) {
 
-    // 現在時刻から表示したい開催日(correspondDate)を算出する
-    // アイカツ！、ゆるゆり、艦これの場合
-    // 4/7 21:00 -> 表示は 4/6 22:00 からの分
-    // 4/7 22:12 -> 表示は 4/7 22:00　からの分
-    //
-    // ラブライブ！の場合
-    // 4/7 22:12 -> 表示は 4/6 23:30 からの分
-    // 4/8 12:32 -> 表示は 4/7 23:30 からの分
-    var opt = {
-        name: req.params.name
-      , correspondDate: cd.getCorrespondDate(req.params.name)
-      , numShow: 10
-    };
-
-    PostProvider.findNew(opt, function(error, postDatas) {
-      var dataCount = 0
+    PostProvider[params.query](params.opt, function(error, postDatas) {
+      var postWidth = 0
+        , dataCount = 0
         , posts     = []
         ;
+
       postDatas.forEach(function (postData) {
         posts.push({
-            tweetIdStr: postData.tweetIdStr
-          , userName: postData.userName
-          , userScreenName: postData.userScreenName
-          , userIdStr: postData.userIdStr
-          , tweetText: postData.tweetText
-          , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
-          , sourceOrigUrl: postData.sourceUrl
-          , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
-          , tags: postData.tags
-          , category: postData.category
-          , retweetNum: postData.retweetNum
-          , favNum: postData.favNum
-          , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
-          , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
-          , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
-        });
-      });
-
-      res.json({
-          posts: posts
-      });
-    });
-};
-
-exports.readRanking = function (req, res) {
-
-    var opt = {
-        name: req.params.name
-      , correspondDate: cd.getCorrespondDate(req.params.name)
-      , numShow: 20
-    };
-
-    PostProvider.findDescRetweet(opt, function(error, postDatas) {
-      var dataCount = 0
-        , rankPosts = []
-        ;
-
-      postDatas.forEach(function (postData) {
-        rankPosts.push({
-            tweetIdStr: postData.tweetIdStr
-          , userName: postData.userName
-          , userScreenName: postData.userScreenName
-          , userIdStr: postData.userIdStr
-          , tweetText: postData.tweetText
-          , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
-          , sourceOrigUrl: postData.sourceUrl
-          , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
-          , tags: postData.tags
-          , category: postData.category
-          , retweetNum: postData.retweetNum
-          , favNum: postData.favNum
-          , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
-          , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
-          , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
-        });
-
-      });
-
-      // 値をCotrollerに渡す
-      res.json({
-        rankPosts: rankPosts
-      });
-    });
-};
-
-exports.readRankingAllCategory = function (req, res) {
-  var rankAllCategoryPosts = [];
-
-  // カテゴリごと
-  async.forEach(settings.CATEGORIES, function (name, cb) {
-    var rankCategoryPosts = [];
-    var opt = {
-        name: name
-      , correspondDate: cd.getCorrespondDate(name)
-      , numShow: 10
-    }
-
-    PostProvider.findDescTotalPoint(opt, function(error, postDatas) {
-
-      // ツイートごとのデータ
-      var dataCount = 0
-        , rankPosts = []
-        ;
-
-      postDatas.forEach(function (postData) {
-        rankCategoryPosts.push({
-            tweetIdStr: postData.tweetIdStr
-          , userName: postData.userName
-          , userScreenName: postData.userScreenName
-          , userIdStr: postData.userIdStr
-          , tweetText: postData.tweetText
-          , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
-          , sourceOrigUrl: postData.sourceUrl
-          , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
-          , tags: postData.tags
-          , category: postData.category
-          , retweetNum: postData.retweetNum
-          , favNum: postData.favNum
-          , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
-          , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
-          , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
-        });
-      });
-      rankAllCategoryPosts.push(rankCategoryPosts);
-
-      // 同期処理
-      cb();
-    });
-  }, function() {
-    res.json({
-      rankAllCategoryPosts: rankAllCategoryPosts
-    });
-  });
-};
-
-exports.readUserPosts = function (req, res) {
-
-  console.log(req.params);
-
-  var userAllCategoryPosts = [];
-
-  // カテゴリごと
-  async.forEach(settings.CATEGORIES, function (name, cb) {
-    var userCategoryPosts = [];
-    var opt = {
-        name: name
-      , twitterIdStr: req.params.twitterIdStr
-    }
-
-    PostProvider.findByTwitterIdStrAndCategory(opt, function(error, postDatas) {
-
-      // ツイートごとのデータ
-      var dataCount = 0
-        , userPosts = []
-        ;
-
-      postDatas.forEach(function (postData) {
-        userCategoryPosts.push({
             tweetIdStr: postData.tweetIdStr
           , userName: postData.userName
           , userScreenName: postData.userScreenName
@@ -192,17 +44,167 @@ exports.readUserPosts = function (req, res) {
         });
       });
 
-      userAllCategoryPosts.push(userCategoryPosts);
-
-      // 同期処理
-      cb();
+      return resolve(posts);
     });
-  }, function() {
+  });
+};
+
+exports.readAll = function (req, res) {
+
+  var opt = {
+      name: req.params.name
+    , correspondDate: cd.getCorrespondDate(req.params.name)
+    , numShow: 10
+  };
+
+  getPostDatas({
+      opt: opt
+    , query: 'findNew'
+  })
+  .then(function(posts) {
+    res.json({
+      posts: posts
+    });
+  });
+};
+
+exports.readRanking = function (req, res) {
+
+  var opt = {
+      name: req.params.name
+    , correspondDate: cd.getCorrespondDate(req.params.name)
+    , numShow: 20
+  };
+
+  getPostDatas({
+      opt: opt
+    , query: 'findDescRetweet'
+  })
+  .then(function(rankPosts) {
+    res.json({
+      rankPosts: rankPosts
+    });
+  });
+};
+
+exports.readRankingAllCategory = function (req, res) {
+
+  var tasks = [];
+
+  _.each(settings.CATEGORIES, function(name){
+    var opt = {
+        name: name
+      , correspondDate: cd.getCorrespondDate(name)
+      , numShow: 10
+    }
+
+    tasks.push(
+      new Promise(function(resolve, reject) {
+        getPostDatas({
+            opt: opt
+          , query: 'findDescTotalPoint'
+        })
+        .then(function(rankCategoryPosts) {
+          return resolve(rankCategoryPosts);
+        });
+      })
+    );
+  });
+
+  Promise.all(tasks)
+  .then(function(rankAllCategoryPosts) {
+    res.json({
+      rankAllCategoryPosts: rankAllCategoryPosts
+    });
+  });
+};
+
+exports.readUserPosts = function (req, res) {
+
+  var tasks = [];
+
+  _.each(settings.CATEGORIES, function(name){
+    var opt = {
+        name: name
+      , twitterIdStr: req.params.twitterIdStr
+    }
+
+    tasks.push(
+      new Promise(function(resolve, reject) {
+        getPostDatas({
+            opt: opt
+          , query: 'findByTwitterIdStrAndCategory'
+        })
+        .then(function(userAllCategoryPosts) {
+          return resolve(userAllCategoryPosts);
+        });
+      })
+    );
+  });
+
+  Promise.all(tasks)
+  .then(function(userAllCategoryPosts) {
+    console.log(userAllCategoryPosts);
     res.json({
       userAllCategoryPosts: userAllCategoryPosts
     });
   });
 };
+
+// exports.readUserPosts = function (req, res) {
+
+//   console.log(req.params);
+
+//   console.time("tasks.go");
+//   var userAllCategoryPosts = [];
+
+//   // カテゴリごと
+//   async.forEach(settings.CATEGORIES, function (name, cb) {
+//     var userCategoryPosts = [];
+//     var opt = {
+//         name: name
+//       , twitterIdStr: req.params.twitterIdStr
+//     }
+
+//     PostProvider.findByTwitterIdStrAndCategory(opt, function(error, postDatas) {
+
+//       // ツイートごとのデータ
+//       var dataCount = 0
+//         , userPosts = []
+//         ;
+
+//       postDatas.forEach(function (postData) {
+//         userCategoryPosts.push({
+//             tweetIdStr: postData.tweetIdStr
+//           , userName: postData.userName
+//           , userScreenName: postData.userScreenName
+//           , userIdStr: postData.userIdStr
+//           , tweetText: postData.tweetText
+//           , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
+//           , sourceOrigUrl: postData.sourceUrl
+//           , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
+//           , tags: postData.tags
+//           , category: postData.category
+//           , retweetNum: postData.retweetNum
+//           , favNum: postData.favNum
+//           , totalNum: postData.totalNum
+//           , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
+//           , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
+//           , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
+//         });
+//       });
+
+//       userAllCategoryPosts.push(userCategoryPosts);
+
+//       // 同期処理
+//       cb();
+//     });
+//   }, function() {
+//     res.json({
+//       userAllCategoryPosts: userAllCategoryPosts
+//     });
+//   });
+// };
 
 exports.findUserDataByTwitterIdStr = function(req, res) {
 

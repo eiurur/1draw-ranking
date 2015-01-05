@@ -4,10 +4,10 @@
     page-title='pageTitle')
 
   .page-content.inset
-    .row(ng-if="userAllCategoryPosts")
+    .row(ng-if="userAllCategoryPosts.length != 0")
       div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
-        .col-md-12(ng-if="userCategoryPosts.length != 0")
-          .panel.panel-default(ng-hide="userCategoryPosts[$index] | isEmpty")
+        .col-md-12(ng-if="userCategoryPosts.length > 0")
+          .panel.panel-default
             .panel-heading
               h3.panel-title {{(userCategoryPosts[0].tags.split(","))[2]}}
             div(style="overflow-x: scroll; white-space: nowrap;")
