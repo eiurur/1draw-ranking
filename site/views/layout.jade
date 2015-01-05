@@ -12,16 +12,7 @@ html(ng-app="myApp", ng-cloak)
     base(href='/')
     title #1draw-Ranking
     link(rel='shortcut icon', href='/images/favicon.ico')
-    link(rel='stylesheet', href='/css/lib/lib.min.css')
-    link(rel='stylesheet', href='/css/simple-sidebar.css')
-    link(rel='stylesheet', href='/css/app.css')
+    include _styles
   body
     block body
-  script(src='/js/lib/lib.min.js')
-  script(src='/js/lib/angular-lib.min.js')
-  script(src='/js/lib/analyticstracking.js')
-  script(src='/js/app.js')
-  script(src='/js/services.js')
-  script(src='/js/controllers.js')
-  script(src='/js/filters.js')
-  script(src='/js/directives.js')
+  include _scripts
