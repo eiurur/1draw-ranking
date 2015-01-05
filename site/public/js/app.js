@@ -26,7 +26,7 @@ angular.module('myApp', [
       when('/logout', {
         redirectTo: '/'
       }).
-      when('http://127.0.0.1:9000/auth/twitter/callback', {
+      when('http://127.0.0.1:9001/auth/twitter/callback', {
         redirectTo: '/'
       }).
       when('http://ldraw-ranking.herokuapp.com/auth/twitter/callback', {

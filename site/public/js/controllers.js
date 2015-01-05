@@ -185,6 +185,8 @@ angular.module('myApp.controllers', [])
         , target = data.rankPosts !== undefined ? "ranking" : "new"
         ;
 
+      // console.log(data);
+
       posts.forEach(function(newData, newDataIndex){
 
           if(target === "ranking") {
