@@ -10,10 +10,8 @@
           .panel.panel-default
             .panel-heading
               h3.panel-title {{(userCategoryPosts[0].tags.split(","))[2]}}:
-                a.dl-link(ng-click="downloadZip(userCategoryPosts)")
-                  span.pull-right {{userCategoryPosts.length}}
-                  span.pull-right.zip
-                    i.fa.fa-file-archive-o
+                i.fa.fa-file-archive-o.pull-right.zip.dl-link(data-posts="{{userCategoryPosts}}", download-zip='download-zip')  {{userCategoryPosts.length}}
+
             div(style="overflow-x: scroll; white-space: nowrap;")
               .panel-body
                 .box-container(ng-repeat='userCategoryPost in userCategoryPosts | orderBy: orderProp: true')

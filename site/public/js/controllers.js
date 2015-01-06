@@ -43,22 +43,6 @@ angular.module('myApp.controllers', [])
       $scope.isNewer = !$scope.isNewer;
       $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
     }
-
-    $scope.downloadZip = function(posts) {
-
-      // TODO: DL開始のtoaster
-      $http.post('/api/downloadZip', {posts: posts})
-        .success(function(data) {
-          var zip = new JSZip();
-          _.each(data.data, function(file){
-            zip.file(file.name + '.jpg', file.image, {base64: true});
-          });
-          var content = zip.generate({type:"blob"});
-          saveAs(content, "example.zip");
-
-          // TODO: DL終了のtoaster
-        });
-    }
   })
   .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout, PostService, toaster) {
 

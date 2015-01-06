@@ -63,6 +63,35 @@ angular.module('myApp.directives', [])
       }
     };
   }])
+  .directive('downloadZip', [ 'toaster', 'DownloadService', function (toaster, DownloadService) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        element.on('click', function(event) {
+
+          // postデータは文字列として渡されるからオブジェクト？配列？の形式に直す。
+          var postsParsed = JSON.parse(attrs.posts);
+          var tag = (postsParsed[0].tags.split(","))[2];
+          var userName = postsParsed[0].userName;
+          var userScreenName = postsParsed[0].userScreenName;
+          var zipFolderName = "【" + tag + "】 " + userName + " 【@" + userScreenName + "】.zip";
+
+          toaster.pop('wait', "Now Zip Downloading ...", '', 3000, 'trustedHtml');
+
+          DownloadService.zip(postsParsed)
+            .success(function(data) {
+              var zip = new JSZip();
+              _.each(data.data, function(file){
+                zip.file(file.name + '.jpg', file.image, {base64: true});
+              });
+              var content = zip.generate({type:"blob"});
+              saveAs(content, zipFolderName);
+              toaster.pop('success', "Finished Download", '', 3000, 'trustedHtml');
+            });
+        });
+      }
+    };
+  }])
   .directive('pageTitle', function () {
     return {
       restrict: 'E',

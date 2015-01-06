@@ -23,6 +23,13 @@ angular.module('myApp.services', [])
       }
     };
   })
+  .service('DownloadService', function($http) {
+    return {
+      zip: function(posts) {
+        return  $http.post('/api/downloadZip', {posts: posts});
+      }
+    };
+  })
   .service('PostService', function() {
     this.rankDatas = [];
 

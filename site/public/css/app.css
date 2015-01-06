@@ -96,6 +96,19 @@ a {
   margin: 0px 20px 20px;
 }
 
+/**
+ * zip
+ */
+.dl-link {
+  cursor: pointer;
+}
+.dl-link:hover {
+  color: #03A9F5;
+}
+.zip {
+  margin-right: 5px;
+}
+
 /* clearfix */
 
 .box-container {
