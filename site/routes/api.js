@@ -2,6 +2,8 @@ var dir          = '../../lib/'
   , moment       = require('moment')
   , _            = require('lodash')
   , async        = require('async')
+  , JSZip        = require("jszip")
+  , request      = require('request')
   , Promise      = require('es6-promise').Promise
   , cd           = require(dir + 'corresponddate')
   , my           = require(dir + 'my')
@@ -263,4 +265,53 @@ exports.statusesRetweet = function(req, res) {
       });
     }
   );
+}
+
+exports.downloadZip = function(req, res) {
+
+  var loadBase64Image = function (url) {
+    return new Promise(function(resolve, reject) {
+      request({
+          url: url
+        , encoding: null
+      }, function (err, res, body) {
+        if (!err && res.statusCode == 200) {
+          var base64prefix = 'data:' + res.headers['content-type'] + ';base64,';
+          var image = body.toString('base64');
+          return resolve(image + base64prefix);
+        } else {
+          return reject(err);
+          throw new Error('Can not download image');
+        }
+      });
+    });
+  };
+
+  var tasks = [];
+  _.each(req.body.posts, function(post){
+    tasks.push(
+      new Promise(function(resolve, reject) {
+        loadBase64Image(post.sourceOrigUrl + '?.jpg')
+        .then(function(imageBase64) {
+          console.log('in task post  = ' + post.sourceOrigUrl + '?.jpg');
+          return resolve({
+              image: imageBase64
+            , name: post.tweetIdStr
+          });
+        })
+        .catch(function(error) {
+          return resolve('');
+        });
+      })
+    );
+  });
+
+  Promise.all(tasks)
+  .then(function(base64Array) {
+    console.log('base64Array', _.pluck(base64Array, 'name'));
+    base64ArrayCompacted = _.pick(base64Array, _.identity);
+    res.json({
+      data: base64ArrayCompacted
+    });
+  });
 }

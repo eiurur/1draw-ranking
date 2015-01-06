@@ -3,7 +3,6 @@ exports.serve = function() {
   /**
    * Module dependencies
    */
-
   var express         = require('express')
     , bodyParser      = require('body-parser')
     , methodOverride  = require('method-override')
@@ -90,22 +89,22 @@ exports.serve = function() {
   };
 
   // cache-manifest
-  app.use(cacheManifest({
-    manifestPath: '/application.manifest',
-    files: [{
-      dir: 'site/public',
-      prefix: '/'
-    }],
-    networks: ['*'],
-    fallbacks: []
-  }));
+  // app.use(cacheManifest({
+  //   manifestPath: '/application.manifest',
+  //   files: [{
+  //     dir: 'site/public',
+  //     prefix: '/'
+  //   }],
+  //   networks: ['*'],
+  //   fallbacks: []
+  // }));
 
   /**
    * Configuration
    */
   // all environments
   app.disable('x-powered-by');
-  app.set('port', process.env.PORT || 9009);
+  app.set('port', process.env.PORT || 9001);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(morgan('dev'));
@@ -150,6 +149,7 @@ exports.serve = function() {
   app.post('/api/findUserById', api.findUserById);
   app.post('/api/createFavorite', api.createFavorite);
   app.post('/api/statusesRetweet', api.statusesRetweet);
+  app.post('/api/downloadZip', api.downloadZip);
 
 
   // redirect all others to the index (HTML5 history)
@@ -159,7 +159,6 @@ exports.serve = function() {
   /**
    * Start Server
    */
-
   http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
   });
