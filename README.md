@@ -11,6 +11,15 @@ Summary of the day is posted to the following tumblog.
 
 <a href="http://eiua-1dr.tumblr.com/" target="_blank">#1draw-Ranking - tumblr</a>
 
+TODO
+------
+
+- Twitter Login
+- Retweet
+- Favorite
+- Zip Download
+- [ ] LightBox
+
 License
 ------
 
