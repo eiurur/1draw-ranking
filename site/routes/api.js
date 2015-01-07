@@ -291,9 +291,8 @@ exports.downloadZip = function(req, res) {
   _.each(req.body.posts, function(post){
     tasks.push(
       new Promise(function(resolve, reject) {
-        loadBase64Image(post.sourceOrigUrl + '?.jpg')
+        loadBase64Image(post.sourceOrigUrl)
         .then(function(imageBase64) {
-          console.log('in task post  = ' + post.sourceOrigUrl + '?.jpg');
           return resolve({
               image: imageBase64
             , name: post.tweetIdStr
@@ -308,7 +307,6 @@ exports.downloadZip = function(req, res) {
 
   Promise.all(tasks)
   .then(function(base64Array) {
-    console.log('base64Array', _.pluck(base64Array, 'name'));
     base64ArrayCompacted = _.pick(base64Array, _.identity);
     res.json({
       data: base64ArrayCompacted
