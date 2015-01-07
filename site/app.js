@@ -9,7 +9,7 @@ exports.serve = function() {
     , morgan          = require('morgan')
     , cookieParser    = require('cookie-parser')
     , session         = require('express-session')
-    , cacheManifest   = require('connect-cache-manifest')
+    // , cacheManifest   = require('connect-cache-manifest')
     , MongoStore      = require('connect-mongo')(session)
     , passport        = require('passport')
     , TwitterStrategy = require('passport-twitter').Strategy
@@ -90,7 +90,7 @@ exports.serve = function() {
 
   // cache-manifest
   // app.use(cacheManifest({
-  //   manifestPath: '/application.manifest',
+  //   manifestPath: 'application.mf',
   //   files: [{
   //     dir: 'site/public',
   //     prefix: '/'
@@ -104,7 +104,7 @@ exports.serve = function() {
    */
   // all environments
   app.disable('x-powered-by');
-  app.set('port', process.env.PORT || 9001);
+  app.set('port', process.env.PORT || 9000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(morgan('dev'));
