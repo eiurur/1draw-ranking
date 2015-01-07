@@ -1,11 +1,17 @@
 'use strict';
 
 angular.module('myApp.controllers', [])
-  .controller('IndexCtrl', function ($scope, $http, toaster, PostService) {
-    // $scope.isLoading = (_.isEmpty(PostService.rankDatas)) ? true : false;
+  .controller('IndexCtrl', function ($scope, $http, PostService) {
     $scope.isLoading = true;
+    $scope.pageTitle = '総合ランキング';
 
-    $scope.rankAllCategoryPosts = PostService.rankDatas;
+    var isLoaded = (_.isEmpty(PostService.rankDatas)) ? false : true;
+    if(isLoaded) {
+      $scope.rankAllCategoryPosts = PostService.rankDatas;
+      $scope.isLoading = false;
+      return;
+    }
+
     $http.get('/api/readRankingAllCategory').
       success(function(data) {
         $scope.isLoading = false;
@@ -14,11 +20,10 @@ angular.module('myApp.controllers', [])
           PostService.rankDatas = $scope.rankAllCategoryPosts;
         }
       });
-    $scope.pageTitle = '総合ランキング';
 
 
   })
-  .controller('UserCtrl', function ($scope, $http, $routeParams, toaster) {
+  .controller('UserCtrl', function ($scope, $http, $routeParams) {
 
     $scope.isLoading = true;
     $scope.orderProp = "totalNum";
@@ -44,7 +49,7 @@ angular.module('myApp.controllers', [])
       $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
     }
   })
-  .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout, PostService, toaster) {
+  .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout, PostService) {
 
     var idx
       , isCached
@@ -98,21 +103,16 @@ angular.module('myApp.controllers', [])
       };
       var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
 
-      // console.log('新規、追加。 readRankingIdx = ' + readRankingIdx);
-
       if(readRankingIdx === -1) {
         PostService.detailPostDatas.push(properties);
-        // console.log('-1 PostService.detailPostDatas = ', PostService.detailPostDatas);
         return;
       }
       PostService.detailPostDatas[readRankingIdx] = _.merge(properties, PostService.detailPostDatas[readRankingIdx]);
-      // console.log('PostService.detailPostDatas = ', PostService.detailPostDatas);
     }
 
     function replaceCachedRank(data){
       var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
       PostService.detailPostDatas[readRankingIdx].rankPosts = data.rankPosts;
-      // console.log('repaced Ranki = ', PostService.detailPostDatas);
     }
 
     function cacheNew(data){
@@ -122,21 +122,16 @@ angular.module('myApp.controllers', [])
       };
       var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
 
-      // console.log('新規、追加。 readAllIdx = ' + readAllIdx);
-
       if(readAllIdx === -1) {
         PostService.detailPostDatas.push(properties);
-        // console.log('-1 PostService.detailPostDatas = ', PostService.detailPostDatas);
         return;
       }
       PostService.detailPostDatas[readAllIdx] = _.merge(properties, PostService.detailPostDatas[readAllIdx]);
-      // console.log('PostService.detailPostDatas = ', PostService.detailPostDatas);
     }
 
     function replaceCachedNew(data){
       var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
       PostService.detailPostDatas[readAllIdx].posts = data.posts;
-      // console.log('repaced New = ', PostService.detailPostDatas);
     }
 
 
@@ -175,8 +170,6 @@ angular.module('myApp.controllers', [])
         , posts  = data.rankPosts || data.posts
         , target = data.rankPosts !== undefined ? "ranking" : "new"
         ;
-
-      // console.log(data);
 
       posts.forEach(function(newData, newDataIndex){
 
@@ -228,7 +221,7 @@ angular.module('myApp.controllers', [])
     }
 
   })
-  .controller('AdminUserCtrl', function ($scope, $http, $location, $rootScope, $routeParams, AuthenticationService, FavService) {
+  .controller('AdminUserCtrl', function ($scope, $http, $location, $rootScope, $routeParams, AuthenticationService) {
 
     $scope.isAuthenticated = AuthenticationService.isAuthenticated;
 
@@ -240,13 +233,9 @@ angular.module('myApp.controllers', [])
           if(!_.isNull(data.data)) {
             AuthenticationService.isAuthenticated = true;
             $scope.isAuthenticated = AuthenticationService.isAuthenticated;
-
-            // console.log(data.data);
             $scope.user = data.data;
-            // console.log($scope.user._json.id_str);
             $http.post('/api/findUserById', {posts: $scope.user._json.id_str})
               .success(function(data) {
-                // console.log("findUserById data = ", data);
 
                // ユーザ個別ページの判定用IDはtwitterIDではなく、ObjectIDで行う。
                 $scope.user.objectId = data.data._id;
@@ -257,5 +246,4 @@ angular.module('myApp.controllers', [])
         console.log(data);
       });
     }
-
   });
