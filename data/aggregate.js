@@ -232,7 +232,7 @@
 
           // 転載ツイート
           if(doc[0].userIdStr !== userIdStr) {
-            console.log("=\n==========\n");
+            console.log("\n==========\n");
             console.log("userIdStr = " + userIdStr);
             console.log("sourceUrl = " + sourceUrl);
             throw new exception.DuplicatedTweetWithImage();

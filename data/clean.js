@@ -11,7 +11,6 @@
   //====== Mongoose object =======//
   var PostProvider = require(dir + 'model').PostProvider;
 
-
   exports.cleanOldDataFronDB2200 = function() {
 
     settings.CATEGORIES.forEach(function (category) {

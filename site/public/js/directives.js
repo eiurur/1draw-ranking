@@ -70,13 +70,13 @@ angular.module('myApp.directives', [])
         element.on('click', function(event) {
 
           // postデータは文字列として渡されるからオブジェクト？配列？の形式に直す。
+          // TODO: zipFolderNameの定義は外部で行う。
           var postsParsed = JSON.parse(attrs.posts);
           var tag = (postsParsed[0].tags.split(","))[2];
           var userName = postsParsed[0].userName;
           var userScreenName = postsParsed[0].userScreenName;
           var zipFolderName = "【" + tag + "】 " + userName + " 【@" + userScreenName + "】.zip";
 
-          // Downloadが終わるまで表示
           toaster.pop('wait', "Now Zip Downloading ...", '', 0, 'trustedHtml');
 
           DownloadService.zip(postsParsed)
@@ -87,6 +87,8 @@ angular.module('myApp.directives', [])
               });
               var content = zip.generate({type:"blob"});
               saveAs(content, zipFolderName);
+
+              // Fix: 複数DL中に一つ終えると全部のtoasterが消える。
               toaster.clear();
               toaster.pop('success', "Finished Download", '', 3000, 'trustedHtml');
             });
