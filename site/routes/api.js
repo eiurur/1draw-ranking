@@ -12,10 +12,6 @@ var dir          = '../../lib/'
   , settings     = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
   ;
 
-var margin = 40
-  , IMAGE_MAX_WIDTH_300 = 300
-  ;
-
 var getPostDatas = function(params) {
   return new Promise(function(resolve, reject) {
 
@@ -31,8 +27,7 @@ var getPostDatas = function(params) {
           , userName: postData.userName
           , userScreenName: postData.userScreenName
           , userIdStr: postData.userIdStr
-          , tweetText: postData.tweetText
-          , tweetUrl: postData.tweetUrl.replace(/http:\/\//g, '')
+          , tweetUrl: postData.tweetUrl
           , sourceOrigUrl: postData.sourceUrl
           , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
           , tags: postData.tags
@@ -40,9 +35,7 @@ var getPostDatas = function(params) {
           , retweetNum: postData.retweetNum
           , favNum: postData.favNum
           , totalNum: postData.totalNum
-          , createdAt: moment(postData.createdAt).format("YYYY-MM-DD HH:mm")
-          , correspondDate: moment(postData.correspondDate).format("YYYY-MM-DD HH:mm")
-          , correspondTime: moment(postData.correspondTime).format("YYYY-MM-DD HH:mm")
+          , createdAt: postData.createdAt
         });
       });
 
@@ -146,7 +139,6 @@ exports.readUserPosts = function (req, res) {
 
   Promise.all(tasks)
   .then(function(userAllCategoryPosts) {
-    console.log(userAllCategoryPosts);
     res.json({
       userAllCategoryPosts: userAllCategoryPosts
     });
@@ -170,25 +162,15 @@ exports.findUserDataByTwitterIdStr = function(req, res) {
 
 exports.logout = function(req, res) {
 
-  console.log("!_.has前 API sign out req.session = ", req.session);
-
   if(!_.has(req.session, 'id')) return;
 
-  console.log("API signOut req.session.id = " + req.session.id);
-
   req.session.destroy();
-
   res.json({
     data: "ok"
   });
-
 }
 
 exports.isAuthenticated = function(req, res) {
-
-  console.log("isAuthenticated req.session = ", req.session.passport);
-  console.log("isAuthenticated req.session.id = " + req.session.id);
-  console.log("isAuthenticated _.isUndefined(req.session.passport.user) = ", _.isUndefined(req.session.passport.user));
 
   var sessionUserData = null;
 
@@ -204,7 +186,6 @@ exports.findUserById = function(req, res) {
   UserProvider.findUserById({
     twitterIdStr: req.body.twitterIdStr
   }, function(err, data) {
-    console.log("findUserById", data);
     res.json({
       data: data
     });
