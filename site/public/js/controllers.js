@@ -67,9 +67,7 @@ angular.module('myApp.controllers', [])
       // 体感速度を向上するため、キャッシュ(Service)からデータを取得。
       $scope.name = PostService.detailPostDatas[idx].name;
       $scope.posts = [].concat(PostService.detailPostDatas[idx].posts);
-      $scope.postWidth = PostService.detailPostDatas[idx].postWidth;
       $scope.rankPosts = [].concat(PostService.detailPostDatas[idx].rankPosts);
-      $scope.rankWidth = PostService.detailPostDatas[idx].rankWidth;
       $scope.pageTitle = PostService.detailPostDatas[idx].pageTitle;
     } else {
 
@@ -79,14 +77,12 @@ angular.module('myApp.controllers', [])
         success(function(data) {
           $scope.isLoading = false;
           $scope.posts = data.posts;
-          $scope.postWidth = data.postWidth;
           cacheNew(data);
         });
 
       $http.get('/api/readRanking/' + $routeParams.name).
         success(function(data) {
           $scope.rankPosts = data.rankPosts;
-          $scope.rankWidth = data.rankWidth;
           if(_.isUndefined(data.rankPosts[0])) return;
           $scope.pageTitle = (data.rankPosts[0].tags.split(","))[2];
           cacheRank(data);
@@ -98,7 +94,6 @@ angular.module('myApp.controllers', [])
       var properties = {
           'name': $routeParams.name
         , 'rankPosts': data.rankPosts
-        , 'rankWidth': data.rankWidth
         , 'pageTitle': (data.rankPosts[0].tags.split(","))[2]
       };
       var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
@@ -117,7 +112,6 @@ angular.module('myApp.controllers', [])
     function replaceCachedRank(data){
       var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
       PostService.detailPostDatas[readRankingIdx].rankPosts = data.rankPosts;
-      PostService.detailPostDatas[readRankingIdx].rankWidth = data.rankWidth;
       // console.log('repaced Ranki = ', PostService.detailPostDatas);
     }
 
@@ -125,7 +119,6 @@ angular.module('myApp.controllers', [])
       var properties = {
           'name': $routeParams.name
         , 'posts': data.posts
-        , 'postWidth': data.postWidth
       };
       var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
 
@@ -143,7 +136,6 @@ angular.module('myApp.controllers', [])
     function replaceCachedNew(data){
       var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
       PostService.detailPostDatas[readAllIdx].posts = data.posts;
-      PostService.detailPostDatas[readAllIdx].postWidth = data.postWidth;
       // console.log('repaced New = ', PostService.detailPostDatas);
     }
 
@@ -181,7 +173,6 @@ angular.module('myApp.controllers', [])
     function updateTweetList(data) {
       var idx
         , posts  = data.rankPosts || data.posts
-        , width  = data.rankWidth || data.postWidth
         , target = data.rankPosts !== undefined ? "ranking" : "new"
         ;
 
@@ -203,10 +194,8 @@ angular.module('myApp.controllers', [])
 
             if(target === "ranking") {
               $scope.rankPosts.push(posts[newDataIndex]);
-              $scope.rankWidth　= width;
             } else {
               $scope.posts.push(posts[newDataIndex]);
-              $scope.postWidth = width;
             }
 
             return;
