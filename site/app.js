@@ -90,7 +90,7 @@ exports.serve = function() {
 
   // cache-manifest
   app.use(cacheManifest({
-    manifestPath: '/application.manifest',
+    manifestPath: 'https://www.dropbox.com/s/x8s4xkmji62stu6/application.mf',
     files: [{
       dir: 'site/public',
       prefix: '/'
