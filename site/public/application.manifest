@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Revision: 20150107-1040
+# Revision: 20150107-1730
 
 ############################################################
 
@@ -16,8 +16,6 @@ js/services.js
 js/controllers.js
 js/filters.js
 js/directives.js
-http://pbs.twimg.com/media/*
-https://pbs.twimg.com/media/*
 
 ############################################################
 
