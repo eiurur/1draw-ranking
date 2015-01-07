@@ -76,7 +76,8 @@ angular.module('myApp.directives', [])
           var userScreenName = postsParsed[0].userScreenName;
           var zipFolderName = "【" + tag + "】 " + userName + " 【@" + userScreenName + "】.zip";
 
-          toaster.pop('wait', "Now Zip Downloading ...", '', 3000, 'trustedHtml');
+          // Downloadが終わるまで表示
+          toaster.pop('wait', "Now Zip Downloading ...", '', 0, 'trustedHtml');
 
           DownloadService.zip(postsParsed)
             .success(function(data) {
@@ -86,6 +87,7 @@ angular.module('myApp.directives', [])
               });
               var content = zip.generate({type:"blob"});
               saveAs(content, zipFolderName);
+              toaster.clear();
               toaster.pop('success', "Finished Download", '', 3000, 'trustedHtml');
             });
         });
