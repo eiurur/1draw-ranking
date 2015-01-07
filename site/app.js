@@ -89,22 +89,22 @@ exports.serve = function() {
   };
 
   // cache-manifest
-  // app.use(cacheManifest({
-  //   manifestPath: '/application.manifest',
-  //   files: [{
-  //     dir: 'site/public',
-  //     prefix: '/'
-  //   }],
-  //   networks: ['*'],
-  //   fallbacks: []
-  // }));
+  app.use(cacheManifest({
+    manifestPath: '/application.manifest',
+    files: [{
+      dir: 'site/public',
+      prefix: '/'
+    }],
+    networks: ['*'],
+    fallbacks: []
+  }));
 
   /**
    * Configuration
    */
   // all environments
   app.disable('x-powered-by');
-  app.set('port', process.env.PORT || 9001);
+  app.set('port', process.env.PORT || 9000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(morgan('dev'));
