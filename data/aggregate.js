@@ -1,27 +1,22 @@
 (function() {
-  var dir       = '../lib/'
-    , my        = require(dir + 'my')
-    , exception = require(dir + 'exception')
-    , _         = require('lodash')
-    , moment    = require('moment')
-    , cd        = require(dir + 'corresponddate')
-    , settings  = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
+  var dir          = '../lib/'
+    , my           = require(dir + 'my')
+    , exception    = require(dir + 'exception')
+    , _            = require('lodash')
+    , moment       = require('moment')
+    , cd           = require(dir + 'corresponddate')
+    , PostProvider = require(dir + 'model').PostProvider
+    , settings     = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
     ;
-
-  //====== Mongoose object =======//
-  var PostProvider = require(dir + 'model').PostProvider;
 
   exports.aggregate = function (data) {
 
     // my.dump(data);
 
     /**
-     * マジックナンバー
+     * init
      */
-    var numRTOfPost2Tumblr = 15
-      , oneDayUnixTime     = 24 * 60 * 60
-      , displaySizeHeight  = 300
-      ;
+    var tweetUrl, sourceUrl, caption, tags, category, isUnofficialRT, hashtag, linkUrl, startUnixTime, nowUnixTime, correspondDate, correspondTime, created_at, tweetTime, mc;
 
     /**
      * 正規表現
@@ -34,15 +29,10 @@
       ;
 
     /**
-     * init
-     */
-    var tweetUrl, sourceUrl, caption, tags, category, isUnofficialRT, hashtag, linkUrl, startUnixTime, nowUnixTime, correspondDate, correspondTime, created_at, tweetTime, mc;
-
-    /**
      * Method list
      */
     var assingHashtag = function() {
-      data.entities.hashtags.forEach(function(val){
+      _.each(data.entities.hashtags, function(val){
         var idx = _.indexOf(settings.KEYWORDS, "#"+val.text);
         if(idx === -1) return; // is equivalent a continue of for or while
         hashtag = settings.KEYWORDS[idx];
@@ -168,28 +158,6 @@
 
     var insertDB = function(params){
 
-      // 公式画像のみサイズを取得して、横サイズの比率ごとの縦サイズを保存する。
-      // twitpicなどの外部サービスを利用した投稿画像は取得できないので分岐。
-      // picWidthが空なら600に自動で補完する処理をapi.jsで行うため、こちらで書く必要はない。
-      var picWidth = {};
-
-      // 外部サービスはmediaプロパティがない
-      if(_.has(params['entities'], 'media')) {
-
-        // twitter公式
-        if(_.has(params['entities'].media[0], "sizes")) {
-
-          var mW = params['entities'].media[0].sizes.medium.w
-            , mH = params['entities'].media[0].sizes.medium.h
-            ;
-          picWidth.height150 = Math.ceil(mW * (150 / mH));
-          picWidth.height200 = Math.ceil(mW * (200 / mH));
-          picWidth.height250 = Math.ceil(mW * (250 / mH));
-          picWidth.height300 = Math.ceil(mW * (300 / mH));
-          picWidth.height350 = Math.ceil(mW * (350 / mH));
-          picWidth.height400 = Math.ceil(mW * (400 / mH));
-        }
-      }
       PostProvider.save({
           tweetIdStr: params['tweetIdStr']
         , userIdStr: params['userIdStr']
@@ -203,7 +171,6 @@
         , retweetNum: params['retweetNum']
         , favNum: params['favNum']
         , totalNum: params['totalNum']
-        , picWidths: picWidth
         , createdAt: mc
         , correspondDate: params['correspondDate']
         , correspondTime: params['correspondTime']
@@ -222,7 +189,6 @@
 
     // 直リン天転載画像ツイートは除外
     var excludeDuplicatedTweetWithImage = function(userIdStr) {
-
       PostProvider.findOneDuplicatedTweetWithImage({
         sourceUrl: sourceUrl
       }, function(error, doc) {
@@ -255,10 +221,8 @@
       if(!_.has(data, 'text')) throw new exception.NoTextTweetException();
       if(!_.has(data.entities, 'hashtags')) throw new exception.NoHashtagsTweetException();
 
-
       linkUrl = data.text.match(twitter_short_url_pattern);
       if(_.isNull(linkUrl)) throw new exception.TextOnlyTweetException();
-
 
       assingHashtag();
       assingCategoryAndTags();
@@ -266,7 +230,6 @@
 
       if(_.has(data, 'retweeted_status')) {
 
-        // ブラックリスト入りのユーザは除外
         excludeNGUser(data.retweeted_status.user.screen_name);
 
         excludeDuplicatedTweetWithImage(data.retweeted_status.user.id_str);
@@ -284,6 +247,7 @@
 
         // 元ツイートの投稿時刻と締め切り時刻を取得し、変数に代入
         assingDateAndTime();
+
         // 重複の確認
         PostProvider.countDuplicatedPic({
           tweetIdStr: data.retweeted_status.id_str
@@ -322,12 +286,10 @@
         });
       } else {
 
-        // ブラックリスト入りのユーザは除外
         excludeNGUser(data.user.screen_name);
 
         excludeDuplicatedTweetWithImage(data.user.id_str);
 
-        // 非公式RTは除外
         isUnofficialRT = rt_exclude_pattern.test(data.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
 
