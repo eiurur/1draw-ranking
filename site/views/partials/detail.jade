@@ -4,7 +4,7 @@
     page-title='pageTitle')
 
   .page-content.inset
-    .row(ng-if="rankPosts.length > 0")
+    .row(ng-if="posts.length > 0")
       .col-md-12
         panel(
           panel-title='リツイートランキング',
@@ -22,5 +22,5 @@
 
     loading(
       judgement-material-whether-or-not-show-loading='isLoading',
-      judgement-material-whether-or-not-hide-page-content='rankPosts.length')
+      judgement-material-whether-or-not-hide-page-content='posts.length')
 
