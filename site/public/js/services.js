@@ -30,17 +30,31 @@ angular.module('myApp.services', [])
       }
     };
   })
-  .service('PostService', function() {
-    this.rankDatas = [];
-
-    //
-    // userPostDatas = [
-    //  {
-    //    'twitterIdStr': 111
-    //    'profile': {}
-    //    'data': {}
-    //  }
-    // ]
-    this.userPostDatas = [];
-    this.detailPostDatas = [];
+  .service('PostService', function($http) {
+    var post = {
+        rankDatas: []
+      , userPostDatas: []
+      , detailPostDatas: []
+      , readAll: function(name) {
+        return $http.get('/api/readAll/' + name)
+      }
+      , readRanking: function(name) {
+        return $http.get('/api/readRanking/' + name)
+      }
+      , readRankingAllCategory: function() {
+        return $http.get('/api/readRankingAllCategory')
+      }
+      , readUserPosts: function(tweetIdStr) {
+        return $http.get('/api/readUserPosts/' + tweetIdStr)
+      }
+    }
+    return post;
+  })
+  .service('UserService', function($http) {
+    var user = {
+      findUserDataByTwitterIdStr: function(twitterIdStr) {
+        return $http.get('/api/findUserDataByTwitterIdStr/' + twitterIdStr)
+      }
+    }
+    return user;
   });

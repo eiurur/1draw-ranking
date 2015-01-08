@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp.controllers', [])
-  .controller('IndexCtrl', function ($scope, $http, PostService) {
+  .controller('IndexCtrl', function ($scope, PostService) {
     $scope.isLoading = true;
     $scope.pageTitle = '総合ランキング';
 
@@ -12,36 +12,27 @@ angular.module('myApp.controllers', [])
       return;
     }
 
-    $http.get('/api/readRankingAllCategory').
+    PostService.readRankingAllCategory().
       success(function(data) {
         $scope.isLoading = false;
-        if(_.isEmpty(PostService.rankDatas)) {
-          $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
-          PostService.rankDatas = $scope.rankAllCategoryPosts;
-        }
+        $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
+        PostService.rankDatas = $scope.rankAllCategoryPosts;
       });
-
-
   })
-  .controller('UserCtrl', function ($scope, $http, $routeParams) {
+  .controller('UserCtrl', function ($scope, $routeParams, PostService, UserService) {
 
     $scope.isLoading = true;
     $scope.orderProp = "totalNum";
 
-    // ユーザの過去の投稿データを取得
-    $http.get('/api/readUserPosts/' + $routeParams.twitterIdStr).
+    PostService.readUserPosts($routeParams.twitterIdStr).
       success(function(data) {
         $scope.userAllCategoryPosts = data.userAllCategoryPosts;
       });
 
-    // ユーザデータ(screenName, userName, Icon, URL, TWitterId)を取得
-    $http.get('/api/findUserDataByTwitterIdStr/' + $routeParams.twitterIdStr).
+    UserService.findUserDataByTwitterIdStr($routeParams.twitterIdStr).
       success(function(data) {
         $scope.isLoading = false;
-        $scope.pageTitle = 'NoData';
-        if(_.has(data.userData, 'userScreenName')) {
-          $scope.pageTitle = '@' + data.userData.userScreenName;
-        }
+        $scope.pageTitle = (_.has(data.userData, 'userScreenName')) ? '@' + data.userData.userScreenName : 'NoData';
       });
 
     $scope.toggleOrderBy = function() {
@@ -49,19 +40,19 @@ angular.module('myApp.controllers', [])
       $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
     }
   })
-  .controller('DetailCtrl', function ($scope, $http, $location, $rootScope, $routeParams, $timeout, PostService) {
+  .controller('DetailCtrl', function ($scope, $routeParams, $interval, PostService) {
 
     var idx
       , isCached
       , isExistData
-      , onTimeout
+      , checkUpdates
       , timer
       , INTERVAL = 5 * 1000
       ;
 
     $scope.isLoading = false
 
-    idx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+    idx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
     isCached = (idx !== -1);
     isExistData = (_.isUndefined(PostService.detailPostDatas[idx]) || PostService.detailPostDatas[idx].postWidth !== 0);
 
@@ -78,14 +69,14 @@ angular.module('myApp.controllers', [])
 
       // 初回
       $scope.isLoading = true;
-      $http.get('/api/readAll/' + $routeParams.name).
+      PostService.readAll($routeParams.name).
         success(function(data) {
           $scope.isLoading = false;
           $scope.posts = data.posts;
           cacheNew(data);
         });
 
-      $http.get('/api/readRanking/' + $routeParams.name).
+      PostService.readRanking($routeParams.name).
         success(function(data) {
           $scope.rankPosts = data.rankPosts;
           if(_.isUndefined(data.rankPosts[0])) return;
@@ -95,13 +86,30 @@ angular.module('myApp.controllers', [])
 
     }
 
+    checkUpdates = function() {
+      PostService.readAll($routeParams.name).
+        success(function(data) {
+          updateTweetList(data);
+          replaceCachedNew(data);
+        });
+      PostService.readRanking($routeParams.name).
+        success(function(data) {
+          updateTweetList(data);
+          replaceCachedRank(data);
+        });
+    };
+    timer = $interval(checkUpdates, INTERVAL);
+    $scope.$on("$destroy", function() {
+      if (timer) { $interval.cancel(timer); }
+    });
+
     function cacheRank(data){
       var properties = {
           'name': $routeParams.name
         , 'rankPosts': data.rankPosts
         , 'pageTitle': (data.rankPosts[0].tags.split(","))[2]
       };
-      var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+      var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
 
       if(readRankingIdx === -1) {
         PostService.detailPostDatas.push(properties);
@@ -111,7 +119,7 @@ angular.module('myApp.controllers', [])
     }
 
     function replaceCachedRank(data){
-      var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+      var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
       PostService.detailPostDatas[readRankingIdx].rankPosts = data.rankPosts;
     }
 
@@ -120,7 +128,7 @@ angular.module('myApp.controllers', [])
           'name': $routeParams.name
         , 'posts': data.posts
       };
-      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
 
       if(readAllIdx === -1) {
         PostService.detailPostDatas.push(properties);
@@ -130,40 +138,9 @@ angular.module('myApp.controllers', [])
     }
 
     function replaceCachedNew(data){
-      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name':$routeParams.name});
+      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
       PostService.detailPostDatas[readAllIdx].posts = data.posts;
     }
-
-
-    // v1.0.7には$intervalが未実装であるため
-    // $timeoutを再帰的に呼び出して擬似的な処理で賄う
-    onTimeout = function() {
-
-      $http.get('/api/readAll/' + $routeParams.name).
-        success(function(data) {
-          updateTweetList(data);
-          replaceCachedNew(data);
-          // console.log('$scope', $scope.postWidth);
-        });
-
-      $http.get('/api/readRanking/' + $routeParams.name).
-        success(function(data) {
-          updateTweetList(data);
-          replaceCachedRank(data);
-          // console.log('$scope', $scope.rankWidth);
-        });
-
-      timer = $timeout(onTimeout, INTERVAL);
-
-    };
-
-    timer = $timeout(onTimeout, INTERVAL);
-
-    $scope.$on("$destroy", function() {
-      if (timer) {
-        $timeout.cancel(timer);
-      }
-    });
 
     function updateTweetList(data) {
       var idx
@@ -179,18 +156,14 @@ angular.module('myApp.controllers', [])
             idx = _.findIndex($scope.posts, {tweetIdStr: newData.tweetIdStr});
           }
 
-
           // もし、新しい画像があれば
           if(idx === -1) {
-
             console.log("追加します！！");
-
             if(target === "ranking") {
               $scope.rankPosts.push(posts[newDataIndex]);
             } else {
               $scope.posts.push(posts[newDataIndex]);
             }
-
             return;
           }
 
@@ -215,13 +188,10 @@ angular.module('myApp.controllers', [])
               $scope.posts[idx].retweetNum = newData.retweetNum;
             }
           }
-
       });
-
     }
-
   })
-  .controller('AdminUserCtrl', function ($scope, $http, $location, $rootScope, $routeParams, AuthenticationService) {
+  .controller('AdminUserCtrl', function ($scope, $http, AuthenticationService) {
 
     $scope.isAuthenticated = AuthenticationService.isAuthenticated;
 
