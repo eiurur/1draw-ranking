@@ -38,7 +38,6 @@ var getPostDatas = function(params) {
           , createdAt: postData.createdAt
         });
       });
-
       return resolve(posts);
     });
   });
@@ -65,6 +64,7 @@ exports.readAll = function (req, res) {
 
 exports.readRanking = function (req, res) {
 
+  console.time("readRanking");
   var opt = {
       name: req.params.name
     , correspondDate: cd.getCorrespondDate(req.params.name)
@@ -76,6 +76,7 @@ exports.readRanking = function (req, res) {
     , query: 'findDescRetweet'
   })
   .then(function(rankPosts) {
+    console.timeEnd("readRanking");
     res.json({
       rankPosts: rankPosts
     });
@@ -84,6 +85,7 @@ exports.readRanking = function (req, res) {
 
 exports.readRankingAllCategory = function (req, res) {
 
+  console.time("readRankingAllCategory");
   var tasks = [];
 
   _.each(settings.CATEGORIES, function(name){
@@ -108,6 +110,7 @@ exports.readRankingAllCategory = function (req, res) {
 
   Promise.all(tasks)
   .then(function(rankAllCategoryPosts) {
+    console.timeEnd("readRankingAllCategory");
     res.json({
       rankAllCategoryPosts: rankAllCategoryPosts
     });
