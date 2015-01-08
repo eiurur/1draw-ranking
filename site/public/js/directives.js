@@ -117,7 +117,9 @@ angular.module('myApp.directives', [])
         post: '='
       },
       template: (function () {/*
-        <img img-preload="img-preload" ng-src="{{post.sourceUrl}}" class="img-responsive thumb-pict fade"/>
+        <a href="{{post.sourceOrigUrl}}" target="_blank">
+          <img img-preload="img-preload" ng-src="{{post.sourceUrl}}" class="img-responsive thumb-pict fade"/>
+        </a>
         <div class="pict-discription">
           <div>
             <i data-tweet-id-str="{{post.tweetIdStr}}" retweetable="retweetable" class="fa fa-retweet fa-border icon-retweet"> {{post.retweetNum}}</i>
