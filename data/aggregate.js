@@ -16,7 +16,7 @@
     /**
      * init
      */
-    var tweetUrl, sourceUrl, caption, tags, category, isUnofficialRT, hashtag, linkUrl, startUnixTime, nowUnixTime, correspondDate, correspondTime, created_at, tweetTime, mc;
+    var tweetUrl, sourceUrl, caption, tags, category, isUnofficialRT, hashtag, linkUrl, correspondDate, correspondTime, mc;
 
     /**
      * 正規表現
@@ -31,6 +31,7 @@
     /**
      * Method list
      */
+    // TODO: Assignから、getに変更
     var assingHashtag = function() {
       _.each(data.entities.hashtags, function(val){
         var idx = _.indexOf(settings.KEYWORDS, "#"+val.text);
@@ -39,6 +40,8 @@
       });
     };
 
+    // TODO: getCategory と getTagsに分割。・
+    // TODO: idxを取得する関数を別に作って、mainの部分で取得しておき、引数として渡す。
     var assingCategoryAndTags = function() {
       // Tumblrに投稿するためのタグと、index.jadeに表示するカラムの判定用のカテゴリをここで決定する。
       var idx  = _.indexOf(settings.KEYWORDS, hashtag);
@@ -74,85 +77,54 @@
       }
     };
 
-    var assingDateAndTime = function() {
-      var post_date, date, year, day, hour, minute;
+    var assingDateAndTime = function(created_at) {
+      var endUnixTime;
+      var createdHm = moment(created_at).format("HH:mm");
+      var createdYMD = moment(created_at).format("YYYY-MM-DD");
+      var createdYMDHm = moment(created_at).format("YYYY-MM-DD HH:mm");
+      var nowUnixTime = ~~(new Date/1000);
+      mc = moment(created_at).format("YYYY-MM-DD HH:mm:ss");
 
-      // 投稿日時変換 "Mon Dec 01 14:24:26 +0000 2008" -> "Dec 01, 2008 14:24:26"
-      post_date  = tweetTime[1] + " "
-                 + tweetTime[2] + ", "
-                 + tweetTime[5] + " "
-                 + tweetTime[3];
-
-      // 日時データ処理
-      date   = new Date(post_date);       // 日付文字列 -> オブジェクト変換
-      date.setHours(date.getHours() + 9); // UTC -> JST (+9時間)
-      year   = date.getFullYear();
-
-      // 0詰めにしないと時刻の比較でバグる
-      // (ex)
-      // console.log("05:23" < "23:30"); => true
-      // console.log("5:23" < "23:30");  => false
-      month  = ("0"+(date.getMonth() + 1)).slice(-2);
-      day    = ("0"+date.getDate()).slice(-2);
-      hour   = ("0"+date.getHours()).slice(-2);
-      minute = ("0"+date.getMinutes()).slice(-2);
-
-      // ツイート投稿日時のオブジェクトを作成し、
-      var m = moment(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-
-      // 複製する。複製せず、単一のオブジェクトで該当日(correspondDate)とツイート投稿日時用にそれぞれ加工しても
-      // 参照は同じものであるため、加工処理が両方に加わり、期待の結果を得ることができない。なので複製。
-      var momentCreateAt = m.clone();
-      mc = momentCreateAt.format("YYYY-MM-DD HH:mm");
-
-      nowUnixTime = ~~(new Date/1000);
-
+      // TODO  ひとつにしたい。
+      // TODO: correspondDate, correspondTime、mcをオブジェクトの形でreturnする関数にしたい。
+      // TODO: 関数名もassignDateAndTimeから、get~に変更
+      // TODO: 例外チェック部分は別の関数に分割する。
       if(category === 'lovelive') {
-
-        // 23:30 スタート
-        if(hour + ":" + minute < "23:30") {
+        if(createdHm < "23:30") {
 
           // 日を跨いだ投稿 == dayが締め切りの日
-          endUnixTimeL = my.formatX(year + "-" + month + "-" + day + " 23:30:00");
-
-          // 別のオブジェクトをそれぞれ使用しないと全く同じ値が代入される。
-          // たとえ、addをする順番を変えてもそれは変わらない。
-          // MongoDBにcreateed_atを渡してもになぜ保存されないので、created_atの代わりにcorrespondTimeを使用する。
-          correspondDate = m.add('days', -1).format("YYYY-MM-DD");
-          correspondTime = momentCreateAt.format("YYYY-MM-DD HH:mm");
+          endUnixTime = my.formatX(createdYMD + " 23:30:00");
+          correspondDate = moment(createdYMDHm).add('days', -1).format("YYYY-MM-DD");
+          correspondTime = createdYMDHm;
         } else {
 
           // => dayの次の日の23:30が締め切り
-          endUnixTimeL = my.formatX(year + "-" + month + "-" + day + " 23:30:00") + 24 * 60 * 60;
-          correspondDate = m.format("YYYY-MM-DD");
-          correspondTime = momentCreateAt.format("YYYY-MM-DD HH:mm");
+          endUnixTime = my.formatX(createdYMD + " 23:30:00") + 24 * 60 * 60;
+          correspondDate = createdYMD;
+          correspondTime = createdYMDHm;
         }
 
         // 開始時刻(UNIXTIME) - 締め切り(UNIXTIME) > 0 => 集計時間外
         // 締め切りが過ぎている投稿は換算しない
-        if((nowUnixTime - endUnixTimeL) > 0)　throw new exception.deadlinePassed();
+        if((nowUnixTime - endUnixTime) > 0)　throw new exception.deadlinePassed();
       } else {
-
-        // 22:00 スタート
-        if(hour < 22) {
+        if(createdHm < "22:00") {
 
           // 日を跨いだ投稿 == dayが締め切りの日
-          endUnixTimeKYA = my.formatX(year + "-" + month + "-" + day + " 22:00:00");
-          var m = moment(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-          correspondDate = m.add('days', -1).format("YYYY-MM-DD");
-          correspondTime = momentCreateAt.format("YYYY-MM-DD HH:mm");
+          endUnixTime = my.formatX(createdYMD + " 22:00:00");
+          correspondDate = moment(createdYMDHm).add('days', -1).format("YYYY-MM-DD");
+          correspondTime = createdYMDHm;
         } else {
 
           // => dayの次の日の22:00が締め切り
-          endUnixTimeKYA = my.formatX(year + "-" + month + "-" + day + " 22:00:00") + 24 * 60 * 60;
-          var m = moment(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-          correspondDate = m.format("YYYY-MM-DD");
-          correspondTime = momentCreateAt.format("YYYY-MM-DD HH:mm");
+          endUnixTime = my.formatX(createdYMD + " 22:00:00") + 24 * 60 * 60;
+          correspondDate = createdYMD;
+          correspondTime = createdYMDHm;
         }
 
         // 開始時刻(UNIXTIME) - 締め切り(UNIXTIME) > 0 => 集計時間外
         // 締め切りが過ぎている投稿は換算しない
-        if((nowUnixTime - endUnixTimeKYA) > 0) throw new exception.deadlinePassed();
+        if((nowUnixTime - endUnixTime) > 0) throw new exception.deadlinePassed();
       }
     }
 
@@ -228,6 +200,8 @@
       assingCategoryAndTags();
       assingPictAndSourceUrl();
 
+
+      // TODO: retweetStatusと新規ツイートを一緒たくにする関数をmy.jsに書く。(flflのあれを　参考にして)
       if(_.has(data, 'retweeted_status')) {
 
         excludeNGUser(data.retweeted_status.user.screen_name);
@@ -237,16 +211,8 @@
         isUnofficialRT = rt_exclude_pattern.test(data.retweeted_status.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
 
-        // my.cl("RT数  " + data.retweeted_status.retweet_count);
-        // my.cl("fav数 " + data.retweeted_status.favorite_count);
-        // my.cl("RT元  " + data.retweeted_status.user.screen_name);
-        // my.cl('\n' + data.retweeted_status.text + '\n');
-
-        // 日時データを要素分解
-        tweetTime = data.retweeted_status.created_at.split(" ");
-
         // 元ツイートの投稿時刻と締め切り時刻を取得し、変数に代入
-        assingDateAndTime();
+        assingDateAndTime(data.retweeted_status.created_at);
 
         // 重複の確認
         PostProvider.countDuplicatedPic({
@@ -293,9 +259,7 @@
         isUnofficialRT = rt_exclude_pattern.test(data.text);
         if(isUnofficialRT) throw new exception.isUnofficialRTException();
 
-        tweetTime = data.created_at.split(" ");
-
-        assingDateAndTime();
+        assingDateAndTime(data.created_at);
 
         console.log("\nTW者: " + data.user.screen_name + "  -  カテゴリ:  " + category + "\n");
 
