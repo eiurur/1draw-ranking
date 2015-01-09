@@ -11,7 +11,7 @@ Summary of the day is posted to the following tumblog.
 
 <a href="http://eiua-1dr.tumblr.com/" target="_blank">#1draw-Ranking - tumblr</a>
 
-Correspoing tags
+Corresponding tags
 -------
 
 - ラブライブ版深夜の真剣お絵描き60分一本勝負
