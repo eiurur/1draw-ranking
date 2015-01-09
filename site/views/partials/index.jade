@@ -7,14 +7,14 @@
     .row(ng-if="rankAllCategoryPosts.length != 0")
       div(ng-repeat='rankCategoryPosts in rankAllCategoryPosts')
         .col-md-12(ng-if="rankCategoryPosts.length != 0")
-          .panel.panel-default(ng-hide="rankCategoryPosts[$index] | isEmpty")
+          .panel.panel-default
             .panel-heading
               h3.panel-title
                 a(href='/detail/{{rankCategoryPosts[0].category}}') {{(rankCategoryPosts[0].tags.split(","))[2]}}
             div(style="overflow-x: scroll; white-space: nowrap;")
               .panel-body
                 .box-container(ng-repeat='rankCategoryPost in rankCategoryPosts')
-                  .box(ng-if="!$last")
+                  .box
                     post(post='rankCategoryPost')
 
           .interval-space
