@@ -193,27 +193,26 @@ angular.module('myApp.controllers', [])
   })
   .controller('AdminUserCtrl', function ($scope, $http, AuthenticationService) {
 
-    $scope.isAuthenticated = AuthenticationService.isAuthenticated;
-
-    if (!AuthenticationService.isAuthenticated) {
-
-      // セッションを問い合わせ
-      $http.get('/api/isAuthenticated')
-        .success(function(data) {
-          if(!_.isNull(data.data)) {
-            AuthenticationService.isAuthenticated = true;
-            $scope.isAuthenticated = AuthenticationService.isAuthenticated;
-            $scope.user = data.data;
-            $http.post('/api/findUserById', {posts: $scope.user._json.id_str})
-              .success(function(data) {
-
-               // ユーザ個別ページの判定用IDはtwitterIDではなく、ObjectIDで行う。
-                $scope.user.objectId = data.data._id;
-              });
-          }
-      }).error(function(status, data) {
-        console.log(status);
-        console.log(data);
-      });
+    if (AuthenticationService.isAuthenticated) {
+      $scope.isAuthenticated = AuthenticationService.isAuthenticated;
+      return;
     }
+
+    $http.get('/api/isAuthenticated')
+      .success(function(data) {
+        if(!_.isNull(data.data)) {
+          AuthenticationService.isAuthenticated = true;
+          $scope.isAuthenticated = AuthenticationService.isAuthenticated;
+          $scope.user = data.data;
+          $http.post('/api/findUserById', {twitterIdStr: $scope.user._json.id_str})
+            .success(function(data) {
+
+             // ユーザ個別ページの判定用IDはtwitterIDではなく、ObjectIDで行う。
+              $scope.user.objectId = data.data._id;
+            });
+        }
+    }).error(function(status, data) {
+      console.log(status);
+      console.log(data);
+    });
   });
