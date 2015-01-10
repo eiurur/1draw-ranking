@@ -25,7 +25,6 @@ angular.module('myApp.directives', [])
         element.on('click', function(event) {
           FavService.createFavorite(attrs.tweetIdStr)
             .success(function(data) {
-              console.log(data);
               if(data.data === null) {
                 toaster.pop('warning', "既にお気に入り済みです。");
               } else {

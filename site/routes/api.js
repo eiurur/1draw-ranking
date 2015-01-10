@@ -45,6 +45,7 @@ var getPostDatas = function(params) {
 
 exports.readAll = function (req, res) {
 
+  console.time("readAll");
   var opt = {
       name: req.params.name
     , correspondDate: cd.getCorrespondDate(req.params.name)
@@ -56,6 +57,7 @@ exports.readAll = function (req, res) {
     , query: 'findNew'
   })
   .then(function(posts) {
+    console.timeEnd("readAll");
     res.json({
       posts: posts
     });
@@ -208,7 +210,6 @@ exports.createFavorite = function(req, res) {
     req.session.passport.user.twitter_token_secret,
     function(error, data, response) {
       if (error) {
-        // something went wrong
         console.log("twitter.favorites error =  ", error);
         // error = ふぁぼ済み ならあんふぁぼ
         // ~
@@ -236,7 +237,6 @@ exports.statusesRetweet = function(req, res) {
     req.session.passport.user.twitter_token_secret,
     function(error, data, response) {
       if (error) {
-        // something went wrong
         console.log("twitter.retweet error =  ", error);
         // error = リツイート済み ならdel
         // ~
