@@ -30,7 +30,7 @@
       hashtag: function(hashtagTweeted) {
         return _(hashtagTweeted)
           .pluck('text')
-          .map(function(hashtag){ return '#'+hashtag; })
+          .map(function(hashtag){ return '#' + hashtag; })
           .filter(function(hashtag) {
             return _.contains(settings.KEYWORDS, hashtag);
           })
@@ -38,6 +38,10 @@
       }
       , hashtagIdx: function(hashtag) {
         return _.indexOf(settings.KEYWORDS, hashtag);
+      }
+      , deadline: function(category) {
+        deadline = _.find(settings.DEADLINES, {'category': category});
+        return (_.isUndefined(deadline)) ? '22:00' : deadline.time;
       }
     };
 
@@ -52,63 +56,30 @@
 
         // 画像ファイルの種類を判定(media === pic.twitter(公式). urls === twitpic, twipple, other)
         if(_.has(entities, 'media')) return entities.media[0].display_url;
-        if(twitpic_pict_pattern.test(entities.urls[0].display_url) || twipple_pict_pattern.test(entities.urls[0].display_url)) return entities.urls[0].expanded_url;
+        if(twitpic_pict_pattern.test(entities.urls[0].display_url) || twipple_pict_pattern.test(entities.urls[0].display_url)) {
+          return entities.urls[0].expanded_url;
+        }
         throw new exception.UrlException();
       }
       , sourceUrl: function(entities) {
         if(_.has(entities, 'media')) return entities.media[0].media_url + ':orig';
-        if(twitpic_pict_pattern.test(entities.urls[0].display_url)) return entities.urls[0].expanded_url.replace('twitpic.com/', 'twitpic.com/show/full/');
-        if(twipple_pict_pattern.test(entities.urls[0].display_url)) return entities.urls[0].expanded_url.replace('twipple.jp/','twipple.jp/show/large/');
+        if(twitpic_pict_pattern.test(entities.urls[0].display_url)) {
+          return entities.urls[0].expanded_url.replace('twitpic.com/', 'twitpic.com/show/full/');
+        }
+        if(twipple_pict_pattern.test(entities.urls[0].display_url)) {
+          return entities.urls[0].expanded_url.replace('twipple.jp/','twipple.jp/show/large/');
+        }
         throw new exception.UrlException();
       }
       , postTime: function(category, created_at) {
-        var endUnixTime;
-        var createdHm = moment(created_at).format("HH:mm");
-        var createdYMD = moment(created_at).format("YYYY-MM-DD");
-        var createdYMDHm = moment(created_at).format("YYYY-MM-DD HH:mm");
-        var nowUnixTime = ~~(new Date/1000);
-        var createdAt = moment(created_at).format("YYYY-MM-DD HH:mm:ss");
+        var createdHm      = my.formatHm(created_at);
+        var createdYMD     = my.formatYMD(created_at);
+        var createdYMDHm   = my.formatYMDHm(created_at);
+        var deadline       = get.deadline(category);
 
-        // TODO  ひとつにしたい。
-        // TODO: 例外チェック部分は別の関数に分割する。
-        if(category === 'lovelive') {
-          if(createdHm < "23:30") {
-
-            // 日を跨いだ投稿 == dayが締め切りの日
-            endUnixTime = my.formatX(createdYMD + " 23:30:00");
-            correspondDate = moment(createdYMDHm).add('days', -1).format("YYYY-MM-DD");
-            correspondTime = createdYMDHm;
-          } else {
-
-            // => dayの次の日の23:30が締め切り
-            endUnixTime = my.formatX(createdYMD + " 23:30:00") + 24 * 60 * 60;
-            correspondDate = createdYMD;
-            correspondTime = createdYMDHm;
-          }
-
-          // 開始時刻(UNIXTIME) - 締め切り(UNIXTIME) > 0 => 集計時間外
-          // 締め切りが過ぎている投稿は換算しない
-          if((nowUnixTime - endUnixTime) > 0)　throw new exception.deadlinePassed();
-        } else {
-          if(createdHm < "22:00") {
-
-            // 日を跨いだ投稿 == dayが締め切りの日
-            endUnixTime = my.formatX(createdYMD + " 22:00:00");
-            correspondDate = moment(createdYMDHm).add('days', -1).format("YYYY-MM-DD");
-            correspondTime = createdYMDHm;
-          } else {
-
-            // => dayの次の日の22:00が締め切り
-            endUnixTime = my.formatX(createdYMD + " 22:00:00") + 24 * 60 * 60;
-            correspondDate = createdYMD;
-            correspondTime = createdYMDHm;
-          }
-
-          // 開始時刻(UNIXTIME) - 締め切り(UNIXTIME) > 0 => 集計時間外
-          // 締め切りが過ぎている投稿は換算しない
-          if((nowUnixTime - endUnixTime) > 0) throw new exception.deadlinePassed();
-        }
-
+        var createdAt      = my.formatYMDHms;
+        var correspondDate = (createdHm < deadline) ? moment(createdYMDHm).add('days', -1).format("YYYY-MM-DD") : createdYMD;
+        var correspondTime = createdYMDHm;
         return {
             createdAt: createdAt
           , correspondDate: correspondDate
@@ -125,7 +96,7 @@
       if(_.isNull(linkUrl)) throw new exception.TextOnlyTweetException();
 
       excludeNGUser(my.getTweetData(data, 'screen_name', isRT));
-      excludeDuplicatedTweetWithImage(my.getTweetData(data, 'user.id_str', isRT), normalize.sourceUrl(my.getTweetData(data, 'entities', isRT)));
+      // excludeDuplicatedTweetWithImage(my.getTweetData(data, 'user.id_str', isRT), normalize.sourceUrl(my.getTweetData(data, 'entities', isRT)));
 
       isUnofficialRT = rt_exclude_pattern.test(my.getTweetData(data, 'text', isRT));
       if(isUnofficialRT) throw new exception.isUnofficialRTException();
@@ -195,7 +166,8 @@
           // 転載ツイート
           if(doc[0].userIdStr !== userIdStr) {
             console.log("\n==========\n");
-            console.log("userIdStr = " + userIdStr);
+            console.log("転載元 userIdStr = " + doc[0].userIdStr);
+            console.log("転載者 userIdStr = " + userIdStr);
             console.log("sourceUrl = " + sourceUrl);
             throw new exception.DuplicatedTweetWithImage();
           }
@@ -214,6 +186,8 @@
      * Main
      */
     try {
+      console.time("aggregate");
+
       var isRT, tweetData, tweetDataForUpdate;
       isRT = (_.has(data, 'retweeted_status'));
 
@@ -221,9 +195,14 @@
 
       tweetData = assign(isRT);
 
+      console.log('\n=======> ', tweetData.category);
+      console.log(tweetData.correspondDate);
+      console.log(tweetData.correspondTime);
+
       if(!isRT) {
         console.log("\nTW者: " + data.user.screen_name + "  -  カテゴリ:  " + tweetData.category + "\n");
         insertDB(tweetData);
+        console.timeEnd("aggregate");
         return;
       }
 
@@ -236,10 +215,12 @@
         }
         tweetDataForUpdate = _.pick(tweetData, 'tweetIdStr', 'retweetNum', 'favNum', 'totalNum');
         PostProvider.update(tweetDataForUpdate, function(error, docs) {});
+        console.timeEnd("aggregate");
+
       });
     } catch(e) {
       if(_.isEmpty(e)){
-        console.log("=====> throw 以外の予期せぬエラー :: ", e);
+        console.log("=====> throw 以外の予期せぬエラー :: ");
       } else if(_.has(e, "message")) {
         console.log(e.message);
         console.log(e.errorHappendAt.toString());
