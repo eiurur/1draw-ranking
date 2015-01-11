@@ -9,7 +9,7 @@ exports.serve = function() {
     , morgan          = require('morgan')
     , cookieParser    = require('cookie-parser')
     , session         = require('express-session')
-    // , cacheManifest   = require('connect-cache-manifest')
+    , compression     = require('compression')
     , MongoStore      = require('connect-mongo')(session)
     , passport        = require('passport')
     , TwitterStrategy = require('passport-twitter').Strategy
@@ -84,20 +84,12 @@ exports.serve = function() {
     maxAge: 0,
     redirect: false,
     setHeaders: function (res, path, stat) {
-      res.set('x-timestamp', Date.now());
+      res.set({
+        'x-timestamp': Date.now()
+      });
     }
   };
 
-  // cache-manifest
-  // app.use(cacheManifest({
-  //   manifestPath: 'application.mf',
-  //   files: [{
-  //     dir: 'site/public',
-  //     prefix: '/'
-  //   }],
-  //   networks: ['*'],
-  //   fallbacks: []
-  // }));
 
   /**
    * Configuration
@@ -117,6 +109,9 @@ exports.serve = function() {
   app.use(session(options));
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // gzip
+  app.use(compression())
   app.use(express.static(path.join(__dirname, 'public'), cacheOptions));
 
 
