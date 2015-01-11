@@ -9,6 +9,7 @@ exports.serve = function() {
     , morgan          = require('morgan')
     , cookieParser    = require('cookie-parser')
     , session         = require('express-session')
+    , compression     = require('compression')
     // , cacheManifest   = require('connect-cache-manifest')
     , MongoStore      = require('connect-mongo')(session)
     , passport        = require('passport')
@@ -117,6 +118,9 @@ exports.serve = function() {
   app.use(session(options));
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // gzip
+  app.use(compression())
   app.use(express.static(path.join(__dirname, 'public'), cacheOptions));
 
 
