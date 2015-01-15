@@ -24,6 +24,11 @@
             .user-profile-text_url(ng-show="userData.url.length > 0")
               i.fa.fa-link
                 a.profile_url(href="{{userData.url}}", target="_blank") {{userData.url}}
+        .toggle-order-mode.pull-right
+          input(type="checkbox", ng-model="isNewer", ng-change="toggleOrderBy()")
+        .toggle-show-mode.pull-right
+          input(type="checkbox", ng-model="isAllShow", ng-change="toggleShowMode()")
+
 
     .row(ng-if="userAllCategoryPosts.length != 0")
       div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
@@ -39,3 +44,8 @@
                   .box
                     post(post='userCategoryPost')
           .interval-space
+
+    .row(ng-if="userAllPict.length != 0")
+      .col-md-12
+        .box-container(ng-repeat='userPict in userAllPict | orderBy: orderProp: true')
+          .cover(style="background-image: url('{{userPict.extended_entities.media[0].media_url_https}}:small')")

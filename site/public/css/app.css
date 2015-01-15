@@ -36,11 +36,13 @@ a {
 .dummy {
     margin-top: 100%;
 }
+
 .thumbnail {
     position: absolute;
     text-align:center;
     margin: 5px;
 }
+
 .thumb-pict {
   border: 1px solid #ddd;;
   border-radius: 4px;
@@ -91,9 +93,11 @@ a {
 .dl-link {
   cursor: pointer;
 }
+
 .dl-link:hover {
   color: #03A9F5;
 }
+
 .zip {
   margin-right: 5px;
 }
@@ -214,6 +218,7 @@ a {
   vertical-align: middle;
   color: #B3B3B1;
 }
+
 .profile_url {
   margin-left: 5px;
 }
@@ -223,4 +228,19 @@ a {
  */
 .loading {
   padding-bottom: 93px;
+}
+
+/**
+ * image clop in user.jade
+ */
+.cover {
+  display: inline-block;
+  background-color: #ccc;
+  background-position: center center;
+  background-repeat: no-repeat;
+  margin: 5px;
+  width: 200px;
+  height: 200px;
+  border: 1px solid #ccc;
+  background-size: cover;
 }

@@ -269,6 +269,41 @@ exports.getTweeterData = function(req, res) {
   );
 }
 
+exports.getTweeterTweet = function(req, res) {
+
+
+  // 未ログインなら何もせずバック
+  if(_.isUndefined(req.session.passport.user)) return;
+  console.log(req.params.twitterIdStr);
+  console.log(req.params.nextCursorId);
+
+  opts = {
+      user_id: req.params.twitterIdStr
+    , count: 200
+    , include_entities: true
+    , include_rts: false
+    ,
+  };
+
+  if(req.params.nextCursorId !== '0') {
+    opts.max_id = req.params.nextCursorId;
+  }
+
+  console.log(opts);
+
+  var message = null;
+  settings.twitterAPI.getTimeline("user_timeline",
+    opts,
+    req.session.passport.user.twitter_token,
+    req.session.passport.user.twitter_token_secret,
+    function(error, data, response) {
+      res.json({
+          data: data
+      });
+    }
+  );
+}
+
 exports.downloadZip = function(req, res) {
 
   var loadBase64Image = function (url) {

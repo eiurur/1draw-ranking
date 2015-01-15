@@ -58,6 +58,9 @@ angular.module('myApp.services', [])
       , getTweeterData: function(twitterIdStr) {
         return $http.get('/api/getTweeterData/' + twitterIdStr)
       }
+      , getTweeterTweet: function(twitterIdStr, nextCursorId) {
+        return $http.get('/api/getTweeterTweet/' + twitterIdStr + '/' + nextCursorId)
+      }
     }
     return user;
   })

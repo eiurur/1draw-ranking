@@ -20,9 +20,7 @@ angular.module('myApp.controllers', [])
       });
   })
   .controller('UserCtrl', function ($scope, $routeParams, PostService, TweetService, UserService) {
-
     $scope.isLoading = true;
-    $scope.orderProp = "totalNum";
 
     // ユーザがワンドロタグで投稿した画像を取得
     PostService.readUserPosts($routeParams.twitterIdStr).
@@ -30,8 +28,30 @@ angular.module('myApp.controllers', [])
         $scope.userAllCategoryPosts = data.userAllCategoryPosts;
       });
 
+    // ユーザがツイッターに投稿した画像を取得
+    // HACK: ツイッターに投稿された画像をすべて表示するビューに切り替えるかのBooleanだけど、命名が悪すぎる。。。
+    $scope.isAllShow = false;
+    $scope.userAllPict = [];
+    var nextCursorId = nextCursorId || 0;
+    $scope.toggleShowMode = function() {
+      if(!$scope.isAllShow) return;
+      UserService.getTweeterTweet($routeParams.twitterIdStr, nextCursorId).
+        success(function(data) {
+          nextCursorId = data.data[data.data.length-1].id_str;
+
+          // 画像付きツイートだけを抽出
+          var tweetListIncludePict = _.filter(data.data, function(tweet) {
+            var hasPict = (_.has(tweet, 'extended_entities') && !_.isEmpty(tweet.extended_entities.media));
+            return hasPict;
+          });
+
+          $scope.userAllPict = $scope.userAllPict.concat(tweetListIncludePict);
+        });
+    }
+
     // ユーザデータをTwitterAPIを通して取得
-    // xxx: 遅い、API制限の恐れがある
+    // xxx: 遅い
+    // xxx: API制限の恐れがある
     // TODO: aggregate.jsで投稿データをpostsテーブルに格納すると同時に、ユーザの情報をTweeterテーブルに格納？
     UserService.getTweeterData($routeParams.twitterIdStr).
       success(function(data) {
@@ -52,8 +72,10 @@ angular.module('myApp.controllers', [])
         $scope.isLoading = false;
       });
 
+    // 画像の並びを投稿順と人気順で切り替えるロジック
+    $scope.isNewer = false;
+    $scope.orderProp = "totalNum";
     $scope.toggleOrderBy = function() {
-      $scope.isNewer = !$scope.isNewer;
       $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
     }
   })
