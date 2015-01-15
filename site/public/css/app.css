@@ -1,8 +1,5 @@
 /* app css stylesheet */
 
-/*body {
-  overflow-y : hidden;
-}*/
 a {
   text-decoration: none;
 }
@@ -16,7 +13,7 @@ a {
 
 .menu:before {
   content: "[";
-}20px;
+}
 
 .menu:after {
   content: "]";
@@ -41,15 +38,8 @@ a {
 }
 .thumbnail {
     position: absolute;
-    /*
-    top: 15px;
-    bottom: 0;
-    left: 15px;
-    right: 0;
-    */
     text-align:center;
     margin: 5px;
-    /*padding-top:calc(50% - 30px); */
 }
 .thumb-pict {
   border: 1px solid #ddd;;
@@ -65,7 +55,6 @@ a {
 
 .sidebar-arrow {
   margin-right: 33px;
-  /*margin-right: 20px;*/
 }
 
 .sidebar-ex-link {
@@ -109,8 +98,9 @@ a {
   margin-right: 5px;
 }
 
-/* clearfix */
-
+/**
+ * clearfix
+ */
 .box-container {
   display: inline-block;
 }
@@ -159,14 +149,14 @@ a {
 .li-user {
   line-height: 80px !important;
 }
+
 .icon {
-  /*padding: 16px 10px 10px 0;*/
   margin: 16px 10px 10px 0;
   border-radius: 100%;
 }
 
 /**
- * Notify
+ * Notify(toadter)
  */
 .notify-success-img {
   padding-top: 15px;
@@ -181,6 +171,7 @@ a {
   min-height: 73px;
   margin-bottom: 20px;
 }
+
 .user-profile_icon {
   display: inline-block;
   border: 1px solid #ddd;;
@@ -189,6 +180,7 @@ a {
   -webkit-border-radius: 8px 8px;
   border-radius: 8px / 8px;
 }
+
 .user-profile_text {
   padding-left: 8px;
   overflow: hidden;
@@ -196,19 +188,23 @@ a {
   font-size: 1.2em;
   line-height: 1.6
 }
+
 .user-profile-text_name {
   vertical-align: top;
   display: inline-block;
   font-weight: bold;
 }
+
 .user-profile-text_screen_name {
   margin-left: 8px;
   color: #B3B3B1;
 }
+
 .user-profile-text_description {
   font-size: 0.8em;
   max-width: 480px;
 }
+
 .user-profile-text_url {
   padding-top: 4px;
 }
@@ -223,57 +219,8 @@ a {
 }
 
 /**
- *
+ *  for Loading icon in user.jade
  */
 .loading {
   padding-bottom: 93px;
 }
-/*i {
-  font-size: 130%;
-  margin-right: 5px;
-}*/
-/*.thumbnail {
-  -moz-border-radius: 4px / 4px;
-  -webkit-border-radius: 4px 4px;
-  border-radius: 4px / 4px;
-  padding: 0px;
-  border: 0px;
-}
-.thumbnail img {
-  -moz-border-radius: 4px 4px 0 0 / 4px 4px 0 0;
-  -webkit-border-radius: 4px 4px;
-  border-radius: 4px 4px 0 0 / 4px 4px 0 0;
-  width: 100%;
-}
-
-.media .thumbnail-img {
-  max-width: 64px;
-  height: auto;
-  border-radius: 4px;
-}
-.media .user-icon {
-  position: relative;
-}
-.media .retweet-user-icon {
-  position: absolute;
-  top: 48px;
-  left: 44px;
-  z-index: 5;
-}
-.media .retweet-user-icon .icon-img {
-  max-width: 24px;
-  height: auto;
-  border-radius: 4px;
-}
-.media .media-heading .name {
-  font-size: 0.8em;
-  font-weight: bold;
-}
-.media .media-heading .screen-name {
-  margin-left: 8px;
-  font-size: 0.8em;
-  color: #B3B3B1;
-}
-.media .media-body {
-  font-size: 16px;
-}*/
