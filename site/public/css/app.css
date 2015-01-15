@@ -173,3 +173,107 @@ a {
   width: 150px;
   height: auto;
 }
+
+/**
+ * User profile in user.jade
+ */
+.user-profile {
+  min-height: 73px;
+  margin-bottom: 20px;
+}
+.user-profile_icon {
+  display: inline-block;
+  border: 1px solid #ddd;;
+  max-height: 73px;
+  -moz-border-radius: 8px / 8px;
+  -webkit-border-radius: 8px 8px;
+  border-radius: 8px / 8px;
+}
+.user-profile_text {
+  padding-left: 8px;
+  overflow: hidden;
+  zoom: 1;
+  font-size: 1.2em;
+  line-height: 1.6
+}
+.user-profile-text_name {
+  vertical-align: top;
+  display: inline-block;
+  font-weight: bold;
+}
+.user-profile-text_screen_name {
+  margin-left: 8px;
+  color: #B3B3B1;
+}
+.user-profile-text_description {
+  font-size: 0.8em;
+  max-width: 480px;
+}
+.user-profile-text_url {
+  padding-top: 4px;
+}
+
+.fa-link {
+  font-size: 0.8em;
+  vertical-align: middle;
+  color: #B3B3B1;
+}
+.profile_url {
+  margin-left: 5px;
+}
+
+/**
+ *
+ */
+.loading {
+  padding-bottom: 93px;
+}
+/*i {
+  font-size: 130%;
+  margin-right: 5px;
+}*/
+/*.thumbnail {
+  -moz-border-radius: 4px / 4px;
+  -webkit-border-radius: 4px 4px;
+  border-radius: 4px / 4px;
+  padding: 0px;
+  border: 0px;
+}
+.thumbnail img {
+  -moz-border-radius: 4px 4px 0 0 / 4px 4px 0 0;
+  -webkit-border-radius: 4px 4px;
+  border-radius: 4px 4px 0 0 / 4px 4px 0 0;
+  width: 100%;
+}
+
+.media .thumbnail-img {
+  max-width: 64px;
+  height: auto;
+  border-radius: 4px;
+}
+.media .user-icon {
+  position: relative;
+}
+.media .retweet-user-icon {
+  position: absolute;
+  top: 48px;
+  left: 44px;
+  z-index: 5;
+}
+.media .retweet-user-icon .icon-img {
+  max-width: 24px;
+  height: auto;
+  border-radius: 4px;
+}
+.media .media-heading .name {
+  font-size: 0.8em;
+  font-weight: bold;
+}
+.media .media-heading .screen-name {
+  margin-left: 8px;
+  font-size: 0.8em;
+  color: #B3B3B1;
+}
+.media .media-body {
+  font-size: 16px;
+}*/

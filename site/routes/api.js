@@ -251,6 +251,24 @@ exports.statusesRetweet = function(req, res) {
   );
 }
 
+exports.getTweeterData = function(req, res) {
+
+  var message = null;
+  settings.twitterAPI.users("show", {
+        user_id: req.params.twitterIdStr
+      , include_entities: true
+    },
+    settings.TW_ACCESS_TOKEN_KEY,
+    settings.TW_ACCESS_TOKEN_SECRET,
+    function(error, data, response) {
+      console.log("getTweeterData data = ", data);
+      res.json({
+          data: data
+      });
+    }
+  );
+}
+
 exports.downloadZip = function(req, res) {
 
   var loadBase64Image = function (url) {

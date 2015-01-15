@@ -141,6 +141,7 @@ exports.serve = function() {
   app.get('/api/readUserPosts/:twitterIdStr', api.readUserPosts);
   app.get('/api/findUserDataByTwitterIdStr/:twitterIdStr', api.findUserDataByTwitterIdStr);
   app.get('/api/isAuthenticated', api.isAuthenticated);
+  app.get('/api/getTweeterData/:twitterIdStr', api.getTweeterData);
   app.post('/api/findUserById', api.findUserById);
   app.post('/api/createFavorite', api.createFavorite);
   app.post('/api/statusesRetweet', api.statusesRetweet);

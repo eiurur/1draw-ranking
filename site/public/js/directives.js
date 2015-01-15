@@ -109,6 +109,22 @@ angular.module('myApp.directives', [])
       */}).toString().replace(/(\n)/g, '').split('*')[1]
     };
   })
+  .directive('userProfile', function () {
+    return {
+      restrict: 'E',
+      scope: {
+        judgementMaterialWhetherOrNotShowLoading: '=',
+        userData: '='
+      },
+      template: (function () {/*
+        <div ng-if="judgementMaterialWhetherOrNotShowLoading" class="content-header">
+          <img class="user-profile_icon" ng-src="{{userData.profile_image_url_https}}" />
+          <div class="user-profile_name">{{userData.name}}</div>
+          <span class="user-profile_screen_name">@{{userData.screen_name}}</span>
+        </div>
+      */}).toString().replace(/(\n)/g, '').split('*')[1]
+    };
+  })
   .directive('post', function () {
     return {
       restrict: 'E',
@@ -174,7 +190,7 @@ angular.module('myApp.directives', [])
         judgementMaterialWhetherOrNotHidePageContent: '='
       },
       template: (function () {/*
-        <div ng-if="judgementMaterialWhetherOrNotShowLoading">
+        <div class="loading" ng-if="judgementMaterialWhetherOrNotShowLoading">
           <div class="fa-5x">
             <i class="fa fa-refresh pull-left fa-spin"></i>
           </div>

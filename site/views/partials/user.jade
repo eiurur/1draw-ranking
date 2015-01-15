@@ -1,9 +1,30 @@
 #page-content-wrapper
-  page-title(
-    judgement-material-whether-or-not-show-loading='!isLoading',
-    page-title='pageTitle')
+  //- user-profile(
+  //-   judgement-material-whether-or-not-show-loading='!isLoading',
+  //-   user-data='userData')
+  //- page-title(
+  //-   judgement-material-whether-or-not-show-loading='!isLoading',
+  //-   page-title='pageTitle')
 
   .page-content.inset
+
+    loading(
+      judgement-material-whether-or-not-show-loading='isLoading',
+      judgement-material-whether-or-not-hide-page-content='userAllCategoryPosts.length')
+
+    .row
+      .col-md-12
+        .user-profile(ng-if='!isLoading')
+          a(href="https://twitter.com/{{userData.screen_name}}", target="_blank")
+            img.user-profile_icon.pull-left(ng-src='{{userData.profile_image_url_https}}')
+          .user-profile_text
+            .user-profile-text_name {{userData.name}}
+            span.user-profile-text_screen_name @{{userData.screen_name}}
+            .user-profile-text_description(ng-bind-html='userData.description | newlines')
+            .user-profile-text_url(ng-show="userData.url.length > 0")
+              i.fa.fa-link
+                a.profile_url(href="{{userData.url}}", target="_blank") {{userData.url}}
+
     .row(ng-if="userAllCategoryPosts.length != 0")
       div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
         .col-md-12(ng-if="userCategoryPosts.length > 0")
@@ -18,7 +39,3 @@
                   .box
                     post(post='userCategoryPost')
           .interval-space
-
-    loading(
-      judgement-material-whether-or-not-show-loading='isLoading',
-      judgement-material-whether-or-not-hide-page-content='userAllCategoryPosts.length')

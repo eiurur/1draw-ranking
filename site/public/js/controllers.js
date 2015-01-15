@@ -19,20 +19,37 @@ angular.module('myApp.controllers', [])
         PostService.rankDatas = $scope.rankAllCategoryPosts;
       });
   })
-  .controller('UserCtrl', function ($scope, $routeParams, PostService, UserService) {
+  .controller('UserCtrl', function ($scope, $routeParams, PostService, TweetService, UserService) {
 
     $scope.isLoading = true;
     $scope.orderProp = "totalNum";
 
+    // ユーザがワンドロタグで投稿した画像を取得
     PostService.readUserPosts($routeParams.twitterIdStr).
       success(function(data) {
         $scope.userAllCategoryPosts = data.userAllCategoryPosts;
       });
 
-    UserService.findUserDataByTwitterIdStr($routeParams.twitterIdStr).
+    // ユーザデータをTwitterAPIを通して取得
+    // xxx: 遅い、API制限の恐れがある
+    // TODO: aggregate.jsで投稿データをpostsテーブルに格納すると同時に、ユーザの情報をTweeterテーブルに格納？
+    UserService.getTweeterData($routeParams.twitterIdStr).
       success(function(data) {
+        var expandedUrlListInDescription = TweetService.getExpandedURLFromDescription(data.data.entities);
+        var expandedUrlListInUrl = TweetService.getExpandedURLFromURL(data.data.entities);
+
+        _.each(expandedUrlListInDescription, function(urls) {
+          data.data.description = data.data.description.replace(urls.url, urls.expanded_url);
+        });
+        _.each(expandedUrlListInUrl, function(urls) {
+          data.data.url = data.data.url.replace(urls.url, urls.expanded_url);
+        });
+
+        data.data.profile_image_url_https = TweetService.iconBigger(data.data.profile_image_url_https);
+        data.data.description = TweetService.activateLink(data.data.description);
+
+        $scope.userData = data.data;
         $scope.isLoading = false;
-        $scope.pageTitle = (_.has(data.userData, 'userScreenName')) ? '@' + data.userData.userScreenName : 'NoData';
       });
 
     $scope.toggleOrderBy = function() {
@@ -71,9 +88,9 @@ angular.module('myApp.controllers', [])
       $scope.isLoading = true;
       PostService.readAll($routeParams.name).
         success(function(data) {
-          $scope.isLoading = false;
           $scope.posts = data.posts;
           cacheNew(data);
+          $scope.isLoading = false;
         });
 
       PostService.readRanking($routeParams.name).
