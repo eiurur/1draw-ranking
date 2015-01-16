@@ -38,6 +38,10 @@ TODO
 - [ ] LightBox
 - [ ] Tag individual settings
 - [ ] Responsive
+- [ ] Slideshow in detail page
+- [ ] Infinite scroll
+- [ ] Toggle orderBy in user page
+- [ ] Watch list(not twitter follow)
 
 License
 ------
