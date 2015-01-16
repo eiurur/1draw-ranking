@@ -14,10 +14,39 @@ angular.module('myApp.controllers', [])
 
     PostService.readRankingAllCategory().
       success(function(data) {
-        $scope.isLoading = false;
         $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
         PostService.rankDatas = $scope.rankAllCategoryPosts;
+        $scope.isLoading = false;
       });
+  })
+  .controller('MeCtrl', function ($scope, $routeParams, PostService, UserService) {
+
+  })
+  .controller('MePostCtrl', function ($scope, $routeParams, PostService, MeService) {
+
+    $scope.isLoading = true;
+    $scope.orderProp = "totalNum";
+
+    PostService.readUserPosts($routeParams.twitterIdStr).
+      success(function(data) {
+        $scope.userAllCategoryPosts = data.userAllCategoryPosts;
+      });
+
+    MeService.findUserDataByTwitterIdStr($routeParams.twitterIdStr).
+      success(function(data) {
+        $scope.isLoading = false;
+        $scope.pageTitle = (_.has(data.userData, 'userScreenName')) ? '' : 'NoData';
+      });
+
+    $scope.toggleOrderBy = function() {
+      $scope.isNewer = !$scope.isNewer;
+      $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
+    }
+  })
+  .controller('MeTagCtrl', function ($scope, $routeParams, PostService, MeService) {
+
+    $scope.isLoading = true;
+
   })
   .controller('UserCtrl', function ($scope, $routeParams, PostService, TweetService, UserService) {
     $scope.isLoading = true;

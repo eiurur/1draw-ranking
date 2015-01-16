@@ -271,7 +271,6 @@ exports.getTweeterData = function(req, res) {
 
 exports.getTweeterTweet = function(req, res) {
 
-
   // 未ログインなら何もせずバック
   if(_.isUndefined(req.session.passport.user)) return;
   console.log(req.params.twitterIdStr);

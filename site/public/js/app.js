@@ -19,6 +19,19 @@ angular.module('myApp', [
         templateUrl: 'partials/detail',
         controller: 'DetailCtrl'
       }).
+      when('/me', {
+        templateUrl: 'partials/me',
+        controller: 'MeCtrl'
+      }).
+      when('/me/post/:twitterIdStr', {
+        templateUrl: 'partials/me_post',
+        controller: 'MePostCtrl'
+      }).
+      when('/me/setting/tag', {
+        templateUrl: 'partials/me_tag',
+        controller: 'MeTagCtrl'
+      }).
+      // ここに/me/setting/watchlist　くる
       when('/user/:twitterIdStr', {
         templateUrl: 'partials/user',
         controller: 'UserCtrl'

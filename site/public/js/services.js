@@ -50,12 +50,17 @@ angular.module('myApp.services', [])
     }
     return post;
   })
-  .service('UserService', function($http) {
-    var user = {
-        findUserDataByTwitterIdStr: function(twitterIdStr) {
+  .service('MeService', function($http) {
+    var me = {
+      findUserDataByTwitterIdStr: function(twitterIdStr) {
         return $http.get('/api/findUserDataByTwitterIdStr/' + twitterIdStr)
       }
-      , getTweeterData: function(twitterIdStr) {
+    }
+    return me;
+  })
+  .service('UserService', function($http) {
+    var user = {
+        getTweeterData: function(twitterIdStr) {
         return $http.get('/api/getTweeterData/' + twitterIdStr)
       }
       , getTweeterTweet: function(twitterIdStr, nextCursorId) {
