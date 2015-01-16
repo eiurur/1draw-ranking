@@ -8,7 +8,7 @@ block body
         li.sidebar-brand
           a(href='/') #1draw-Ranking
         li.li-user(ng-if='isAuthenticated')
-          a.user(href='/me')
+          a.user(href='/my')
             img.pull-right.icon(ng-src='{{user._json.profile_image_url_https}}')
             span.username @{{user.username}}
         li

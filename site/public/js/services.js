@@ -50,7 +50,7 @@ angular.module('myApp.services', [])
     }
     return post;
   })
-  .service('MeService', function($http) {
+  .service('MyService', function($http) {
     var me = {
       findUserDataByTwitterIdStr: function(twitterIdStr) {
         return $http.get('/api/findUserDataByTwitterIdStr/' + twitterIdStr)

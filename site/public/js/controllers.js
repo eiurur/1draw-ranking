@@ -19,10 +19,10 @@ angular.module('myApp.controllers', [])
         $scope.isLoading = false;
       });
   })
-  .controller('MeCtrl', function ($scope, $routeParams, PostService, UserService) {
+  .controller('MyCtrl', function ($scope, $routeParams, PostService, UserService) {
 
   })
-  .controller('MePostCtrl', function ($scope, $routeParams, PostService, MeService) {
+  .controller('MyPostCtrl', function ($scope, $routeParams, PostService, MyService) {
 
     $scope.isLoading = true;
     $scope.orderProp = "totalNum";
@@ -32,7 +32,7 @@ angular.module('myApp.controllers', [])
         $scope.userAllCategoryPosts = data.userAllCategoryPosts;
       });
 
-    MeService.findUserDataByTwitterIdStr($routeParams.twitterIdStr).
+    MyService.findUserDataByTwitterIdStr($routeParams.twitterIdStr).
       success(function(data) {
         $scope.isLoading = false;
         $scope.pageTitle = (_.has(data.userData, 'userScreenName')) ? '' : 'NoData';
@@ -43,7 +43,7 @@ angular.module('myApp.controllers', [])
       $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
     }
   })
-  .controller('MeTagCtrl', function ($scope, $routeParams, PostService, MeService) {
+  .controller('MyTagCtrl', function ($scope, $routeParams, PostService, MyService) {
 
     $scope.isLoading = true;
 
