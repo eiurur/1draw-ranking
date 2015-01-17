@@ -2,7 +2,6 @@ angular.module('myApp', [
     'ngRoute'
   , 'ngAnimate'
   , 'ngSanitize'
-  // , 'bootstrapLightbox'
   , 'toaster'
   , 'myApp.filters'
   , 'myApp.services'

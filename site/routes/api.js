@@ -12,6 +12,8 @@ var dir          = '../../lib/'
   , settings     = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
   ;
 
+var NUM_GET_TWEETER_TWEET = 100;
+
 var getPostDatas = function(params) {
   return new Promise(function(resolve, reject) {
 
@@ -252,14 +254,19 @@ exports.statusesRetweet = function(req, res) {
 }
 
 exports.getTweeterData = function(req, res) {
+  var token, token_secret;
 
-  var message = null;
+  if(_.has(req.session.passport.user, 'twitter_token')) {
+    token = req.session.passport.user.twitter_token;
+    token_secret = req.session.passport.user.twitter_token_secret;
+  }
+
   settings.twitterAPI.users("show", {
         user_id: req.params.twitterIdStr
       , include_entities: true
     },
-    settings.TW_ACCESS_TOKEN_KEY,
-    settings.TW_ACCESS_TOKEN_SECRET,
+    token || settings.TW_ACCESS_TOKEN_KEY,
+    token_secret || settings.TW_ACCESS_TOKEN_SECRET,
     function(error, data, response) {
       console.log("getTweeterData data = ", data);
       res.json({
@@ -273,12 +280,10 @@ exports.getTweeterTweet = function(req, res) {
 
   // 未ログインなら何もせずバック
   if(_.isUndefined(req.session.passport.user)) return;
-  console.log(req.params.twitterIdStr);
-  console.log(req.params.nextCursorId);
 
   opts = {
       user_id: req.params.twitterIdStr
-    , count: 200
+    , count: NUM_GET_TWEETER_TWEET
     , include_entities: true
     , include_rts: false
     ,
@@ -288,9 +293,6 @@ exports.getTweeterTweet = function(req, res) {
     opts.max_id = req.params.nextCursorId;
   }
 
-  console.log(opts);
-
-  var message = null;
   settings.twitterAPI.getTimeline("user_timeline",
     opts,
     req.session.passport.user.twitter_token,

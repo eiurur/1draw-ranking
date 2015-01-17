@@ -59,11 +59,11 @@ angular.module('myApp.controllers', [])
 
     // ユーザがツイッターに投稿した画像を取得
     // HACK: ツイッターに投稿された画像をすべて表示するビューに切り替えるかのBooleanだけど、命名が悪すぎる。。。
-    $scope.isAllShow = false;
+    $scope.isOneDrawShow = true;
     $scope.userAllPict = [];
     var nextCursorId = nextCursorId || 0;
     $scope.toggleShowMode = function() {
-      if(!$scope.isAllShow) return;
+      if($scope.isOneDrawShow) return;
       UserService.getTweeterTweet($routeParams.twitterIdStr, nextCursorId).
         success(function(data) {
           nextCursorId = data.data[data.data.length-1].id_str;
@@ -74,6 +74,11 @@ angular.module('myApp.controllers', [])
             return hasPict;
           });
 
+          // 並び順の整合性をとるため、totalNumとcreatedAt(created_atだと文字列を含んでおり、バグるため、id_str)の設定を行う。
+          _.each(tweetListIncludePict, function(tweet) {
+            tweet.totalNum = tweet.retweet_count + tweet.favorite_count;
+            tweet.createdAt = tweet.id_str;
+          });
           $scope.userAllPict = $scope.userAllPict.concat(tweetListIncludePict);
         });
     }
@@ -102,11 +107,12 @@ angular.module('myApp.controllers', [])
       });
 
     // 画像の並びを投稿順と人気順で切り替えるロジック
-    $scope.isNewer = false;
+    $scope.isPopularOrder = true;
     $scope.orderProp = "totalNum";
     $scope.toggleOrderBy = function() {
-      $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
+      $scope.orderProp = ($scope.isPopularOrder) ? "totalNum" : "createdAt";
     }
+
   })
   .controller('DetailCtrl', function ($scope, $routeParams, $interval, PostService) {
 
