@@ -145,7 +145,7 @@ angular.module('myApp.controllers', [])
           // 並び順の整合性をとるため、totalNumとcreatedAt(created_atだと文字列を含んでおり、バグるため、id_str)の設定を行う。
           _.each(tweetListIncludePict, function(tweet) {
             tweet.totalNum = tweet.retweet_count + tweet.favorite_count;
-            tweet.createdAt = tweet.id_str;
+            tweet.tweetIdStr = tweet.id_str;
           });
           $scope.userAllPict = $scope.userAllPict.concat(tweetListIncludePict);
         });
@@ -178,7 +178,7 @@ angular.module('myApp.controllers', [])
     $scope.isPopularOrder = true;
     $scope.orderProp = "totalNum";
     $scope.toggleOrderBy = function() {
-      $scope.orderProp = ($scope.isPopularOrder) ? "totalNum" : "createdAt";
+      $scope.orderProp = ($scope.isPopularOrder) ? "totalNum" : "tweetIdStr";
     }
 
   })
