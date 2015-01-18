@@ -15,6 +15,7 @@ angular.module('myApp.controllers', [])
     // HACK:
     // index.jadeを開いたとき、findTagRegistered()を二回呼び出している状態。
     // 無駄だけど解決法が分からない。
+    // $broadcastを試みたけど動かない。
     TagService.findRegistered()
       .success(function(data) {
         var categories = (_.isNull(data.data)) ? CategoryService.default : JSON.parse(data.data.categoriesStr);
@@ -62,6 +63,11 @@ angular.module('myApp.controllers', [])
   })
   .controller('MyTagCtrl', function ($scope, $routeParams, CategoryService, PostService, TagService) {
 
+    // HACK: とりあえずpromise使ってネスト減らしたい。
+    // HACK: 命名もTagとCategoryがごっちゃのまま書いたからめちゃくちゃ。要修正
+    // 多分忘れるからロジックのメモ
+    // 1. 全てのカテゴリとタグ、あと、自分が登録しているタグを持ってくる
+    // 2. $scope.tagAllへタグとそれに対応するカテゴリ、そしてそれが登録済みかどうかのbooleanを代入していく
     CategoryService.findAll()
       .success(function(categoryAll) {
         TagService.findAll()
@@ -81,8 +87,6 @@ angular.module('myApp.controllers', [])
               });
           });
       });
-
-
 
     $scope.checkAll = function() {
       $scope.tagAll = _.each($scope.tagAll, function(tag) {
@@ -286,50 +290,35 @@ angular.module('myApp.controllers', [])
 
     function updateTweetList(data) {
       var idx
+        , variable
         , posts  = data.rankPosts || data.posts
         , target = data.rankPosts !== undefined ? "ranking" : "new"
         ;
 
       posts.forEach(function(newData, newDataIndex){
+        variable = (target === "ranking") ? 'rankPosts' : 'posts';
+        idx = _.findIndex($scope[variable], {tweetIdStr: newData.tweetIdStr});
 
-          if(target === "ranking") {
-            idx = _.findIndex($scope.rankPosts, {tweetIdStr: newData.tweetIdStr});
-          } else {
-            idx = _.findIndex($scope.posts, {tweetIdStr: newData.tweetIdStr});
-          }
+        // もし、新しい画像があれば
+        if(idx === -1) {
+          console.log("追加します！！");
+          $scope[variable].push(posts[newDataIndex]);
+          return;
+        }
 
-          // もし、新しい画像があれば
-          if(idx === -1) {
-            console.log("追加します！！");
-            if(target === "ranking") {
-              $scope.rankPosts.push(posts[newDataIndex]);
-            } else {
-              $scope.posts.push(posts[newDataIndex]);
-            }
-            return;
-          }
+        // 2014/11/08
+        // 突然$scope,rankPosts[idx]がundefindeを返すようになった。
+        // 原因不明につき応急処置
+        if(_.isUndefined($scope.rankPosts[idx])) return;
 
-          // 2014/11/08
-          // 突然$scope,rankPosts[idx]がundefindeを返すようになった。
-          // 原因不明につき応急処置
-          if(_.isUndefined($scope.rankPosts[idx])) return;
+        // リツイート数、ふぁぼ数に変化があれば更新
+        if($scope[variable][idx].favNum !== newData.favNum) {
+          $scope[variable][idx].favNum = newData.favNum;
+        }
+        if($scope[variable][idx].retweetNum !== newData.retweetNum) {
+          $scope[variable][idx].retweetNum = newData.retweetNum;
+        }
 
-          // リツイート数、ふぁぼ数に変化があれば更新
-          if($scope.rankPosts[idx].favNum !== newData.favNum) {
-            if(target === "ranking") {
-              $scope.rankPosts[idx].favNum = newData.favNum;
-            } else {
-              $scope.posts[idx].favNum = newData.favNum;
-            }
-          }
-
-          if($scope.rankPosts[idx].retweetNum !== newData.retweetNum){
-            if(target === "ranking") {
-              $scope.rankPosts[idx].retweetNum = newData.retweetNum;
-            } else {
-              $scope.posts[idx].retweetNum = newData.retweetNum;
-            }
-          }
       });
     }
   })
