@@ -114,4 +114,10 @@
   padding: 15px;
 }
 
+/**
+ * for tag page
+ * サイドバーを強制的に閉じる
+ */
+.hide-sidebar {
+  padding-left: 0;
 }

@@ -6,12 +6,15 @@
 var moment = require('moment');
 
 exports.index = function(req, res){
-  // res.setHeader('Last-Modified', moment().format('YYYY-MM-DD HH:mm:ss'));
   res.render('index');
 };
 
 exports.logout = function(req, res){
   console.log("index.js logout()");
+
+  if(!_.has(req.session, 'id')) return;
+
+  req.session.destroy();
   req.logout();
   console.log("index.js -> /");
   res.redirect('/');

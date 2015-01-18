@@ -4,16 +4,16 @@
     page-title='pageTitle')
 
   .page-content.inset
-    .row(ng-if="rankAllCategoryPosts.length != 0")
-      div(ng-repeat='rankCategoryPosts in rankAllCategoryPosts')
-        .col-md-12(ng-if="rankCategoryPosts.length != 0")
+    .row(ng-if="rankOverallPosts.length != 0")
+      div(ng-repeat='rankOverallPost in rankOverallPosts')
+        .col-md-12(ng-if="rankOverallPost.length != 0")
           .panel.panel-default
             .panel-heading
               h3.panel-title
-                a(href='/detail/{{rankCategoryPosts[0].category}}') {{(rankCategoryPosts[0].tags.split(","))[2]}}
+                a(href='/detail/{{rankOverallPost[0].category}}') {{rankOverallPost[0].tags}}
             div(style="overflow-x: scroll; white-space: nowrap;")
               .panel-body
-                .box-container(ng-repeat='rankCategoryPost in rankCategoryPosts')
+                .box-container(ng-repeat='rankCategoryPost in rankOverallPost')
                   .box
                     post(post='rankCategoryPost')
 
@@ -21,4 +21,4 @@
 
     loading(
       judgement-material-whether-or-not-show-loading='isLoading',
-      judgement-material-whether-or-not-hide-page-content='rankAllCategoryPosts.length')
+      judgement-material-whether-or-not-hide-page-content='rankOverallPosts.length')

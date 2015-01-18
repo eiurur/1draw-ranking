@@ -44,19 +44,99 @@ angular.module('myApp.services', [])
       , readRankingAllCategory: function() {
         return $http.get('/api/readRankingAllCategory')
       }
+      , readOverallRanking: function(categories) {
+        return $http.post('/api/readOverallRanking', {categories: categories})
+      }
       , readUserPosts: function(tweetIdStr) {
         return $http.get('/api/readUserPosts/' + tweetIdStr)
       }
     }
     return post;
   })
+  // .service('myData', ['$rootScope', function ($rootScope) {
+  //     var message = 'This is my message.';
+  //     this.changeMessage = function(msg) {
+  //         message = msg;
+  //         $rootScope.$broadcast('change_message', message);
+  //     };
+  //     this.getMessage = function() {
+  //         return message;
+  //     };
+  // }])
   .service('MyService', function($http) {
-    var me = {
+    var my = {
       findUserDataByTwitterIdStr: function(twitterIdStr) {
         return $http.get('/api/findUserDataByTwitterIdStr/' + twitterIdStr)
       }
     }
-    return me;
+    return my;
+  })
+  .service('CategoryService', function($http) {
+    var category = {
+        default: [
+            'aikatsu'
+          , 'kancolle'
+          , 'lovelive'
+          , 'madomagi'
+          , 'millimas'
+          , 'mobamas'
+          , 'prpr'
+          , 'ptrainer'
+          , 'toho'
+        ]
+      , findDefault: function() {
+        return $http.get('/api/findCategoriesDefault')
+      }
+      , findAll: function() {
+        return $http.get('/api/findCategoriesAll')
+      }
+    }
+    return category;
+  })
+  .service('TagService', function($http) {
+    var tag = {
+        defaultCategories: [
+            'aikatsu'
+          , 'kancolle'
+          , 'lovelive'
+          , 'madomagi'
+          , 'millimas'
+          , 'mobamas'
+          , 'prpr'
+          , 'ptrainer'
+          , 'toho'
+        ]
+        , default: [
+            "#アイカツ版深夜の真剣お絵描き60分一本勝負"
+          , "#艦これ版深夜の真剣お絵描き60分一本勝負"
+          , "#ラブライブ版深夜の真剣お絵描き60分一本勝負"
+          , "#まどマギ版真剣深夜のお絵かき60分一本勝負"
+          , "#ミリマス版深夜の真剣お絵描き60分一本勝負"
+          , "#モバマス版深夜の真剣お絵かき60分1本勝負"
+          , "#prpr版深夜の真剣お絵描き60分一本勝負"
+          , "#ポケモントレーナー版深夜の真剣お絵描き60分一本勝負"
+          , "#深夜の真剣お絵描き60分一本勝負"
+        ]
+      , register: function(tagsStr, categoriesStr) {
+        return $http.post('/api/registerTag', {tagsStr: tagsStr, categoriesStr: categoriesStr})
+      }
+      , findRegistered: function() {
+        return $http.get('/api/findTagRegistered')
+      }
+      , findAll: function() {
+        return $http.get('/api/findTagAll')
+      }
+      , findDefault: function() {
+        return $http.get('/api/findTagDefault')
+      }
+      , findCategoriesDefault: function() {
+        return $http.get('/api/findCategoriesDefault')
+      }
+      , findCategoriesAll: function() {
+        return $http.get('/api/findCategoriesAll')
+      }
+    }
+    return tag;
   })
   .service('UserService', function($http) {
     var user = {

@@ -47,7 +47,7 @@
         return settings.CATEGORIES[idx];
       },
       tags: function(idx) {
-        return settings.TAGS[idx];
+        return settings.KEYWORDS[idx];
       },
       tweetUrl: function(entities) {
         var isPicFromTwitter = _.has(entities, 'media');

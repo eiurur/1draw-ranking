@@ -1,22 +1,29 @@
 'use strict';
 
 angular.module('myApp.controllers', [])
-  .controller('IndexCtrl', function ($scope, PostService) {
+  .controller('IndexCtrl', function ($scope, CategoryService, PostService, TagService) {
     $scope.isLoading = true;
     $scope.pageTitle = '総合ランキング';
 
     var isLoaded = (_.isEmpty(PostService.rankDatas)) ? false : true;
     if(isLoaded) {
-      $scope.rankAllCategoryPosts = PostService.rankDatas;
+      $scope.rankOverallPosts = PostService.rankDatas;
       $scope.isLoading = false;
       return;
     }
 
-    PostService.readRankingAllCategory().
-      success(function(data) {
-        $scope.rankAllCategoryPosts = data.rankAllCategoryPosts;
-        PostService.rankDatas = $scope.rankAllCategoryPosts;
-        $scope.isLoading = false;
+    // HACK:
+    // index.jadeを開いたとき、findTagRegistered()を二回呼び出している状態。
+    // 無駄だけど解決法が分からない。
+    TagService.findRegistered()
+      .success(function(data) {
+        var categories = (_.isNull(data.data)) ? CategoryService.default : JSON.parse(data.data.categoriesStr);
+        PostService.readOverallRanking(categories).
+          success(function(data) {
+            $scope.rankOverallPosts = data.rankOverallPosts;
+            PostService.rankDatas = $scope.rankOverallPosts;
+            $scope.isLoading = false;
+          });
       });
   })
   .controller('MyCtrl', function ($scope, $routeParams, PostService, UserService) {
@@ -43,9 +50,70 @@ angular.module('myApp.controllers', [])
       $scope.orderProp = ($scope.isNewer) ? "createdAt" : "totalNum";
     }
   })
-  .controller('MyTagCtrl', function ($scope, $routeParams, PostService, MyService) {
+  .controller('TagCtrl', function ($scope, PostService, TagService) {
+    $scope.isLoaded = false;
+    TagService.findRegistered()
+      .success(function(data) {
+        console.log('findTagRegistred data = ', data.data);
+        var categories = (_.isNull(data.data)) ? TagService.defaultCategories : JSON.parse(data.data.categoriesStr);
+        $scope.navContents = {categories: categories};
+      });
 
-    $scope.isLoading = true;
+  })
+  .controller('MyTagCtrl', function ($scope, $routeParams, CategoryService, PostService, TagService) {
+
+    CategoryService.findAll()
+      .success(function(categoryAll) {
+        TagService.findAll()
+          .success(function(tagAll) {
+            TagService.findRegistered()
+              .success(function(data) {
+                $scope.tagAll = [];
+                var selectedTags = (_.isNull(data.data)) ? TagService.default : JSON.parse(data.data.tagsStr);
+                _.each(tagAll.data, function(tag, idx) {
+                  var isSelected = _.contains(selectedTags, tagAll.data[idx]);
+                  $scope.tagAll.push({
+                      'tag': tag
+                    , 'category': categoryAll.data[idx]
+                    , 'isSelected': isSelected
+                  });
+                });
+              });
+          });
+      });
+
+
+
+    $scope.checkAll = function() {
+      $scope.tagAll = _.each($scope.tagAll, function(tag) {
+        tag.isSelected = true;
+      });
+    };
+
+    $scope.clearAll = function() {
+      $scope.tagAll = _.each($scope.tagAll, function(tag) {
+        tag.isSelected = false;
+      });
+    };
+
+    // TagRegisterだけどTagは必要ないかも。(必要なのはcategory)
+    // だから、全体的に命名が悪い。
+    // けど、ページ上で選択するのはタグだからMyTagCtrlってのは間違ってはいない。
+    // 間違っているのはMongoのスキーマだ(Tag)
+    // とりあえず今は、TagとCategoryの両方を保存しておくことにする(2つセットで利用する場面も出てくるかもしれないから念のため)
+    $scope.register = function() {
+      var tagsSelected = _.filter($scope.tagAll, 'isSelected');
+      var tags = _.pluck(tagsSelected, 'tag');
+      var tagsStr = JSON.stringify(tags);
+      var categories = _.pluck(tagsSelected, 'category');
+      var categoriesStr = JSON.stringify(categories);
+      console.log(tagsStr);
+      TagService.register(tagsStr, categoriesStr)
+        .success(function(data) {
+          console.log('register', data);
+        });
+    };
+
 
   })
   .controller('UserCtrl', function ($scope, $routeParams, PostService, TweetService, UserService) {
@@ -154,7 +222,7 @@ angular.module('myApp.controllers', [])
         success(function(data) {
           $scope.rankPosts = data.rankPosts;
           if(_.isUndefined(data.rankPosts[0])) return;
-          $scope.pageTitle = (data.rankPosts[0].tags.split(","))[2];
+          $scope.pageTitle = data.rankPosts[0].tags;
           cacheRank(data);
         });
 
@@ -181,7 +249,7 @@ angular.module('myApp.controllers', [])
       var properties = {
           'name': $routeParams.name
         , 'rankPosts': data.rankPosts
-        , 'pageTitle': (data.rankPosts[0].tags.split(","))[2]
+        , 'pageTitle': data.rankPosts[0].tags
       };
       var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
 

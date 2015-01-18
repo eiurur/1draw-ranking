@@ -25,7 +25,7 @@
               i.fa.fa-link
                 a.profile_url(href="{{userData.url}}", target="_blank") {{userData.url}}
 
-      .col-md-4
+      .col-md-4(ng-show='!isLoading')
         .onoffswitch
           input#sortswitch.onoffswitch-checkbox(type='checkbox', name='orderSwitch', ng-model="isPopularOrder", ng-change="toggleOrderBy()")
           label.onoffswitch-label(for='sortswitch')
@@ -51,7 +51,7 @@
           .col-md-12(ng-if="userCategoryPosts.length > 0")
             .panel.panel-default
               .panel-heading
-                h3.panel-title {{(userCategoryPosts[0].tags.split(","))[2]}}:
+                h3.panel-title {{userCategoryPosts[0].tags}}:
                   i.fa.fa-file-archive-o.pull-right.zip.dl-link(data-posts="{{userCategoryPosts}}", download-zip='download-zip')  {{userCategoryPosts.length}}
 
               div(style="overflow-x: scroll; white-space: nowrap;")
