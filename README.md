@@ -36,7 +36,7 @@ TODO
 - Favorite
 - Zip Download
 - [ ] LightBox
-- [ ] Tag individual settings
+- Tag individual settings
 - [ ] Responsive
 - [ ] Slideshow in detail page
 - [ ] Infinite scroll
