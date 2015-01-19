@@ -3,7 +3,9 @@
  * GET home page.
  */
 
-var moment = require('moment');
+var moment = require('moment')
+  , _      = require('lodash')
+  ;
 
 exports.index = function(req, res){
   res.render('index');
