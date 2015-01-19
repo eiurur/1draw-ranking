@@ -136,10 +136,8 @@ angular.module('myApp.controllers', [])
           $scope.isProcessing = false;
         });
     };
-
-
   })
-  .controller('UserCtrl', function ($scope, $routeParams, PostService, TweetService, UserService) {
+  .controller('UserCtrl', function ($scope, $routeParams, PostService, TweetService, UserService, toaster) {
     $scope.isLoading = true;
 
     // ユーザがワンドロタグで投稿した画像を取得
@@ -153,10 +151,24 @@ angular.module('myApp.controllers', [])
     $scope.isOneDrawShow = true;
     $scope.userAllPict = [];
     var nextCursorId = nextCursorId || 0;
-    $scope.toggleShowMode = function() {
+
+    var assignUserAllPict = function() {
       if($scope.isOneDrawShow) return;
+
       UserService.getTweeterTweet($routeParams.twitterIdStr, nextCursorId).
         success(function(data) {
+
+          // API制限くらったら return
+          if(_.isUndefined(data.data)) {
+            toaster.pop('error', "API制限。15分お待ち下さい。");
+            return;
+          }
+
+          // 全部読み終えたら(残りがないとき、APIは最後のツイートだけ取得する === 1) return
+          if(data.data.length < 2) {
+            toaster.pop('warning', "最後まで読み終えました。");
+            return;
+          }
           nextCursorId = data.data[data.data.length-1].id_str;
 
           // 画像付きツイートだけを抽出
@@ -171,8 +183,20 @@ angular.module('myApp.controllers', [])
             tweet.tweetIdStr = tweet.id_str;
           });
           $scope.userAllPict = $scope.userAllPict.concat(tweetListIncludePict);
+          assignUserAllPict();
         });
     }
+
+    $scope.toggleShowMode = function() {
+      if($scope.isOneDrawShow) return;
+      assignUserAllPict();
+    }
+
+    $scope.$on("$destroy", function() {
+      if ($scope.isOneDrawShow) {
+        $scope.isOneDrawShow = false;
+      }
+    });
 
     // ユーザデータをTwitterAPIを通して取得
     // xxx: 遅い
