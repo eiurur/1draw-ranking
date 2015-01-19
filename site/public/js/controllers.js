@@ -61,7 +61,9 @@ angular.module('myApp.controllers', [])
       });
 
   })
-  .controller('MyTagCtrl', function ($scope, $routeParams, CategoryService, PostService, TagService) {
+  .controller('MyTagCtrl', function ($scope, $routeParams, CategoryService, PostService, TagService, toaster) {
+
+    $scope.isLoading = true;
 
     // HACK: とりあえずpromise使ってネスト減らしたい。
     // HACK: 命名もTagとCategoryがごっちゃのまま書いたからめちゃくちゃ。要修正
@@ -84,6 +86,8 @@ angular.module('myApp.controllers', [])
                     , 'isSelected': isSelected
                   });
                 });
+
+                $scope.isLoading = false;
               });
           });
       });
@@ -92,6 +96,17 @@ angular.module('myApp.controllers', [])
       $scope.tagAll = _.each($scope.tagAll, function(tag) {
         tag.isSelected = true;
       });
+    };
+
+    $scope.backDefault = function() {
+      $scope.clearAll();
+      TagService.findDefault()
+        .success(function(data) {
+          $scope.tagAll = _.each($scope.tagAll, function(tag) {
+            if(!_.contains(data.data, tag.tag)) return;
+            tag.isSelected = true;
+          });
+        });
     };
 
     $scope.clearAll = function() {
@@ -106,6 +121,8 @@ angular.module('myApp.controllers', [])
     // 間違っているのはMongoのスキーマだ(Tag)
     // とりあえず今は、TagとCategoryの両方を保存しておくことにする(2つセットで利用する場面も出てくるかもしれないから念のため)
     $scope.register = function() {
+      $scope.isProcessing = true;
+
       var tagsSelected = _.filter($scope.tagAll, 'isSelected');
       var tags = _.pluck(tagsSelected, 'tag');
       var tagsStr = JSON.stringify(tags);
@@ -115,6 +132,8 @@ angular.module('myApp.controllers', [])
       TagService.register(tagsStr, categoriesStr)
         .success(function(data) {
           console.log('register', data);
+          toaster.pop('success', "登録しました。");
+          $scope.isProcessing = false;
         });
     };
 
