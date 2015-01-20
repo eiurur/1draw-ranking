@@ -18,6 +18,17 @@ angular.module('myApp.directives', [])
       }
     };
   }])
+  // .directive('Lightbox', function(Lightbox, LightboxService) {
+  //   return {
+  //     restrict: 'A',
+  //     link: function(scope, element, attrs) {
+  //       console.log('attrs = ', attrs);
+  //       element.on('click', function(e) {
+  //         console.log(click);
+  //       });
+  //     }
+  //   }
+  // })
   .directive('favoritable', ['toaster', 'FavService', function (toaster, FavService) {
     return {
       restrict: 'A',
@@ -62,6 +73,50 @@ angular.module('myApp.directives', [])
       }
     };
   }])
+  // .directive('zoom', function ($document) {
+  //   return {
+  //     restrict: 'A',
+  //     scope: {
+  //       num: '='
+  //     },
+  //     link: function(scope, element, attrs) {
+  //       element.on('click', function(event) {
+
+  //         // htmlをoverlay
+  //         // var body = $document[0].body;
+  //         // var bodyWidth = body.clientWidth;
+  //         // console.log("width of body is "+ bodyWidth);
+  //         var body = angular.element(document).find('body');
+  //         var lightbox = angular.element(document).find('lightbox-container');
+  //         console.log(body[0].offsetWidth);
+  //         lightbox.addClass('fullscreen-overlay');
+
+  //         // その配下にtemplete.htmlを挿入。()
+
+  //         // overlayの左右の真ん中にそれぞれ矢印ボタン用意
+
+  //         // 右押されたら$scope.imagesのcursorを進める。
+  //         // もし、なかったら0に戻す
+  //         var keyDownHandler = function(e) {
+  //           switch (e.keyCode) {
+  //             case 37: // ←
+  //               console.log('37 = ', e.keyCode);
+  //               break;
+  //             case 39: // →
+  //               console.log('39 = ', e.keyCode);
+  //               break;
+  //             case 243: // ESC
+  //               console.log('243 = ', e.keyCode);
+  //               break;
+  //           }
+  //         }
+  //         lightbox.on('keydown', keyDownHandler);
+
+  //         // overlayの部分が押されたらdismiss
+  //       });
+  //     }
+  //   };
+  // })
   .directive('downloadZip', [ 'toaster', 'DownloadService', function (toaster, DownloadService) {
     return {
       restrict: 'A',
@@ -71,7 +126,7 @@ angular.module('myApp.directives', [])
           // postデータは文字列として渡されるからオブジェクト？配列？の形式に直す。
           // TODO: zipFolderNameの定義は外部で行う。
           var postsParsed = JSON.parse(attrs.posts);
-          var tag = (postsParsed[0].tags.split(","))[2];
+          var tag = postsParsed[0].tags;
           var userName = postsParsed[0].userName;
           var userScreenName = postsParsed[0].userScreenName;
           var zipFolderName = "【" + tag + "】 " + userName + " 【@" + userScreenName + "】.zip";
@@ -109,16 +164,32 @@ angular.module('myApp.directives', [])
       */}).toString().replace(/(\n)/g, '').split('*')[1]
     };
   })
-  .directive('post', function () {
+  .directive('userProfile', function () {
     return {
       restrict: 'E',
       scope: {
-        post: '='
+        judgementMaterialWhetherOrNotShowLoading: '=',
+        userData: '='
       },
       template: (function () {/*
-        <a href="{{post.sourceOrigUrl}}" target="_blank">
-          <img img-preload="img-preload" ng-src="{{post.sourceUrl}}" class="img-responsive thumb-pict fade"/>
-        </a>
+        <div ng-if="judgementMaterialWhetherOrNotShowLoading" class="content-header">
+          <img class="user-profile_icon" ng-src="{{userData.profile_image_url_https}}" />
+          <div class="user-profile_name">{{userData.name}}</div>
+          <span class="user-profile_screen_name">@{{userData.screen_name}}</span>
+        </div>
+      */}).toString().replace(/(\n)/g, '').split('*')[1]
+    };
+  })
+  .directive('post', function () {
+    return {
+      restrict: 'E',
+      // replace: true,
+      scope: {
+          post: '='
+        , openModal: '&'
+      },
+      template: (function () {/*
+        <img img-preload="img-preload" ng-src="{{post.sourceUrl}}" class="img-responsive thumb-pict fade" data-ng-click="openModal()" />
         <div class="pict-discription">
           <div>
             <i data-tweet-id-str="{{post.tweetIdStr}}" retweetable="retweetable" class="fa fa-retweet fa-border icon-retweet"> {{post.retweetNum}}</i>
@@ -157,8 +228,7 @@ angular.module('myApp.directives', [])
           <div style='overflow-x: scroll; white-space: nowrap;'>
             <div class='panel-body'>
               <div ng-repeat='post in posts | orderBy: orderByExpression : orderByDirection | limitTo : limitNum' class='box'>
-                <post post='post'>
-                </post>
+                <post post='post' open-modal='openLightboxModal(posts, post, oderByDirection)'></post>
               </div>
             </div>
           </div>
@@ -174,7 +244,7 @@ angular.module('myApp.directives', [])
         judgementMaterialWhetherOrNotHidePageContent: '='
       },
       template: (function () {/*
-        <div ng-if="judgementMaterialWhetherOrNotShowLoading">
+        <div class="loading" ng-if="judgementMaterialWhetherOrNotShowLoading">
           <div class="fa-5x">
             <i class="fa fa-refresh pull-left fa-spin"></i>
           </div>

@@ -1,0 +1,23 @@
+#page-content-wrapper
+  .page-content.inset
+    .bs-callout.bs-callout-info
+      h4 投稿画像一覧
+      p ワンドロタグに投稿した画像を表示します
+
+    .row(ng-if="userAllCategoryPosts.length != 0")
+      div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
+        .col-md-12(ng-if="userCategoryPosts.length > 0")
+          .panel.panel-default
+            .panel-heading
+              h3.panel-title {{userCategoryPosts[0].tags}}:
+                i.fa.fa-file-archive-o.pull-right.zip.dl-link(data-posts="{{userCategoryPosts}}", download-zip='download-zip')  {{userCategoryPosts.length}}
+            div(style="overflow-x: scroll; white-space: nowrap;")
+              .panel-body
+                .box-container(ng-repeat='userCategoryPost in userCategoryPosts | orderBy: orderProp: true')
+                  .box
+                    post(post='userCategoryPost')
+          .interval-space
+
+    loading(
+      judgement-material-whether-or-not-show-loading='isLoading',
+      judgement-material-whether-or-not-hide-page-content='userAllCategoryPosts.length')

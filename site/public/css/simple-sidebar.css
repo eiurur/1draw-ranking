@@ -114,4 +114,14 @@
   padding: 15px;
 }
 
+.sidebar-nav_category {
+  padding-left: 8px;
+}
+
+/**
+ * for tag page
+ * サイドバーを強制的に閉じる
+ */
+.hide-sidebar {
+  padding-left: 0;
 }

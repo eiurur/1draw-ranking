@@ -6,19 +6,37 @@
   .page-content.inset
     .row(ng-if="posts.length > 0")
       .col-md-12
-        panel(
-          panel-title='リツイートランキング',
-          posts='rankPosts',
-          order-by-expression='retweetNum',
-          order-by-direction='desc',
-          limit-num='20')
+        //- panel(
+        //-   panel-title='リツイートランキング',
+        //-   posts='rankPosts',
+        //-   order-by-expression='retweetNum',
+        //-   order-by-direction='desc',
+        //-   limit-num='20')
+        //- .interval-space
+        //- panel(
+        //-   panel-title='新着',
+        //-   posts='posts',
+        //-   order-by-expression='createdAt',
+        //-   order-by-direction='desc',
+        //-   limit-num='10')
+
+        .panel.panel-default
+          .panel-heading
+            h3.panel-title リツイートランキング
+          div(style="overflow-x: scroll; white-space: nowrap;")
+            .panel-body
+              .box-container(ng-repeat='rankPost in rankPosts | orderBy: "retweetNum" : "desc" | limitTo : 20')
+                .box
+                  post(post='rankPost', open-modal='openLightboxModal(rankPosts, rankPost, "retweetNum")')
         .interval-space
-        panel(
-          panel-title='新着',
-          posts='posts',
-          order-by-expression='createdAt',
-          order-by-direction='desc',
-          limit-num='10')
+        .panel.panel-default
+          .panel-heading
+            h3.panel-title 新着
+          div(style="overflow-x: scroll; white-space: nowrap;")
+            .panel-body
+              .box-container(ng-repeat='post in posts | orderBy: "createdAt" : "desc" | limitTo : 20')
+                .box
+                  post(post='post', open-modal='openLightboxModal(posts, post, "createdAt")')
 
     loading(
       judgement-material-whether-or-not-show-loading='isLoading',

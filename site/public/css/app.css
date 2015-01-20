@@ -1,10 +1,11 @@
 /* app css stylesheet */
 
-/*body {
-  overflow-y : hidden;
-}*/
 a {
   text-decoration: none;
+}
+
+.no-link {
+  pointer-events:none;
 }
 
 .menu {
@@ -16,7 +17,7 @@ a {
 
 .menu:before {
   content: "[";
-}20px;
+}
 
 .menu:after {
   content: "]";
@@ -39,19 +40,15 @@ a {
 .dummy {
     margin-top: 100%;
 }
+
 .thumbnail {
     position: absolute;
-    /*
-    top: 15px;
-    bottom: 0;
-    left: 15px;
-    right: 0;
-    */
     text-align:center;
     margin: 5px;
-    /*padding-top:calc(50% - 30px); */
 }
+
 .thumb-pict {
+  cursor: pointer;
   border: 1px solid #ddd;;
   border-radius: 4px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.4), 5px 5px 10px rgba(255,255,255,0.3) inset, -5px -5px 10px rgba(255,255,255,0.3) inset;
@@ -65,7 +62,11 @@ a {
 
 .sidebar-arrow {
   margin-right: 33px;
-  /*margin-right: 20px;*/
+}
+
+.sidebar-toggle {
+  margin-right: 33px;
+  z-index: 100;
 }
 
 .sidebar-ex-link {
@@ -102,15 +103,18 @@ a {
 .dl-link {
   cursor: pointer;
 }
+
 .dl-link:hover {
   color: #03A9F5;
 }
+
 .zip {
   margin-right: 5px;
 }
 
-/* clearfix */
-
+/**
+ * clearfix
+ */
 .box-container {
   display: inline-block;
 }
@@ -159,17 +163,187 @@ a {
 .li-user {
   line-height: 80px !important;
 }
+
 .icon {
-  /*padding: 16px 10px 10px 0;*/
   margin: 16px 10px 10px 0;
   border-radius: 100%;
 }
 
 /**
- * Notify
+ * Notify(toadter)
  */
 .notify-success-img {
   padding-top: 15px;
   width: 150px;
   height: auto;
+}
+
+/**
+ * User profile in user.jade
+ */
+.user-profile {
+  min-height: 73px;
+  margin-bottom: 20px;
+}
+
+.user-profile_icon {
+  display: inline-block;
+  border: 1px solid #ddd;;
+  max-height: 73px;
+  -moz-border-radius: 8px / 8px;
+  -webkit-border-radius: 8px 8px;
+  border-radius: 8px / 8px;
+}
+
+.user-profile_text {
+  padding-left: 8px;
+  overflow: hidden;
+  zoom: 1;
+  font-size: 1.2em;
+  line-height: 1.6
+}
+
+.user-profile-text_name {
+  vertical-align: top;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.user-profile-text_screen_name {
+  margin-left: 8px;
+  color: #B3B3B1;
+}
+
+.user-profile-text_description {
+  font-size: 0.8em;
+  max-width: 480px;
+}
+
+.user-profile-text_url {
+  padding-top: 4px;
+}
+
+.fa-link {
+  font-size: 0.8em;
+  vertical-align: middle;
+  color: #B3B3B1;
+}
+
+.profile_url {
+  margin-left: 5px;
+}
+
+/**
+ *  for Loading icon in user.jade
+ */
+.loading {
+  padding-bottom: 93px;
+}
+
+/**
+ * image clop in user.jade
+ */
+.cover {
+  display: inline-block;
+  background-color: #ccc;
+  background-position: center center;
+  background-repeat: no-repeat;
+  margin: 5px;
+  width: 200px;
+  height: 200px;
+  border: 1px solid #ccc;
+  background-size: cover;
+}
+
+
+/**
+ * Bootstrap callout (注意書きのCSS)
+ */
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.bs-callout p:last-child {
+    margin-bottom: 0;
+}
+.bs-callout code {
+    border-radius: 3px;
+}
+.bs-callout+.bs-callout {
+    margin-top: -5px;
+}
+.bs-callout-default {
+    border-left-color: #777;
+}
+.bs-callout-default h4 {
+    color: #777;
+}
+.bs-callout-primary {
+    border-left-color: #428bca;
+}
+.bs-callout-primary h4 {
+    color: #428bca;
+}
+.bs-callout-success {
+    border-left-color: #5cb85c;
+}
+.bs-callout-success h4 {
+    color: #5cb85c;
+}
+.bs-callout-danger {
+    border-left-color: #d9534f;
+}
+.bs-callout-danger h4 {
+    color: #d9534f;
+}
+.bs-callout-warning {
+    border-left-color: #f0ad4e;
+}
+.bs-callout-warning h4 {
+    color: #f0ad4e;
+}
+.bs-callout-info {
+    border-left-color: #5bc0de;
+}
+.bs-callout-info h4 {
+    color: #5bc0de;
+}
+
+/**
+ * My_tag
+ */
+.tag-select-container {
+  padding: 48px 0;
+}
+
+/**
+ * Lightbix
+ */
+.lightbox-image-container {
+  text-align: left;
+}
+
+.modal-content {
+  background-color: rgba(0,0,0,0);
+  border: none;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.modal-body {
+  padding: 0 0 15px 0;
+  border: none;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
 }

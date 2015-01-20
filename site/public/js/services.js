@@ -44,17 +44,135 @@ angular.module('myApp.services', [])
       , readRankingAllCategory: function() {
         return $http.get('/api/readRankingAllCategory')
       }
+      , readOverallRanking: function(categories) {
+        return $http.post('/api/readOverallRanking', {categories: categories})
+      }
       , readUserPosts: function(tweetIdStr) {
         return $http.get('/api/readUserPosts/' + tweetIdStr)
       }
     }
     return post;
   })
-  .service('UserService', function($http) {
-    var user = {
+  // .service('myData', ['$rootScope', function ($rootScope) {
+  //     var message = 'This is my message.';
+  //     this.changeMessage = function(msg) {
+  //         message = msg;
+  //         $rootScope.$broadcast('change_message', message);
+  //     };
+  //     this.getMessage = function() {
+  //         return message;
+  //     };
+  // }])
+  .service('MyService', function($http) {
+    var my = {
       findUserDataByTwitterIdStr: function(twitterIdStr) {
         return $http.get('/api/findUserDataByTwitterIdStr/' + twitterIdStr)
       }
     }
+    return my;
+  })
+  .service('LightboxService', function() {
+    var lightbox = {
+      images: []
+    };
+    return lightbox;
+  })
+  .service('CategoryService', function($http) {
+    var category = {
+        default: [
+            'aikatsu'
+          , 'kancolle'
+          , 'lovelive'
+          , 'madomagi'
+          , 'millimas'
+          , 'mobamas'
+          , 'prpr'
+          , 'ptrainer'
+          , 'toho'
+        ]
+      , findDefault: function() {
+        return $http.get('/api/findCategoriesDefault')
+      }
+      , findAll: function() {
+        return $http.get('/api/findCategoriesAll')
+      }
+    }
+    return category;
+  })
+  .service('TagService', function($http) {
+    var tag = {
+        defaultCategories: [
+            'aikatsu'
+          , 'kancolle'
+          , 'lovelive'
+          , 'madomagi'
+          , 'millimas'
+          , 'mobamas'
+          , 'prpr'
+          , 'ptrainer'
+          , 'toho'
+        ]
+        , default: [
+            "#アイカツ版深夜の真剣お絵描き60分一本勝負"
+          , "#艦これ版深夜の真剣お絵描き60分一本勝負"
+          , "#ラブライブ版深夜の真剣お絵描き60分一本勝負"
+          , "#まどマギ版真剣深夜のお絵かき60分一本勝負"
+          , "#ミリマス版深夜の真剣お絵描き60分一本勝負"
+          , "#モバマス版深夜の真剣お絵かき60分1本勝負"
+          , "#prpr版深夜の真剣お絵描き60分一本勝負"
+          , "#ポケモントレーナー版深夜の真剣お絵描き60分一本勝負"
+          , "#深夜の真剣お絵描き60分一本勝負"
+        ]
+      , register: function(tagsStr, categoriesStr) {
+        return $http.post('/api/registerTag', {tagsStr: tagsStr, categoriesStr: categoriesStr})
+      }
+      , findRegistered: function() {
+        return $http.get('/api/findTagRegistered')
+      }
+      , findAll: function() {
+        return $http.get('/api/findTagAll')
+      }
+      , findDefault: function() {
+        return $http.get('/api/findTagDefault')
+      }
+      , findCategoriesDefault: function() {
+        return $http.get('/api/findCategoriesDefault')
+      }
+      , findCategoriesAll: function() {
+        return $http.get('/api/findCategoriesAll')
+      }
+    }
+    return tag;
+  })
+  .service('UserService', function($http) {
+    var user = {
+        getTweeterData: function(twitterIdStr) {
+        return $http.get('/api/getTweeterData/' + twitterIdStr)
+      }
+      , getTweeterTweet: function(twitterIdStr, nextCursorId) {
+        return $http.get('/api/getTweeterTweet/' + twitterIdStr + '/' + nextCursorId)
+      }
+    }
     return user;
+  })
+  .service("TweetService", function($http) {
+    return {
+      activateLink: function(tweet) {
+        return tweet.replace(/((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&amp;%@!&#45;\/]))?)/g, "<a href=\"$1\" target=\"_blank\">$1</a>").replace(/(^|\s)(@|＠)(\w+)/g, "$1<a href=\"http://www.twitter.com/$3\" target=\"_blank\">@$3</a>").replace(/(?:^|[^ーー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9&_\/>]+)[#＃]([ー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*[ー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z]+[ー゛゜々ヾヽぁ-ヶ一-龠ａ-ｚＡ-Ｚ０-９a-zA-Z0-9_]*)/g, ' <a href="http://twitter.com/search?q=%23$1" target="_blank">#$1</a>');
+      },
+      iconBigger: function(url) {
+        if (_.isUndefined(url)) { return ''; }
+        return url.replace('normal', 'bigger');
+      },
+      getExpandedURLFromURL: function(entities) {
+        if (!_.has(entities, 'url')) { return ''; }
+        return entities.url.urls;
+      },
+      getExpandedURLFromDescription: function(entities) {
+        if (!_.has(entities, 'description')) { return ''; }
+        if (!_.has(entities.description, 'urls')) { return ''; }
+        return entities.description.urls;
+      }
+    };
   });
+

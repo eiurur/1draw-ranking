@@ -2,8 +2,8 @@ angular.module('myApp', [
     'ngRoute'
   , 'ngAnimate'
   , 'ngSanitize'
-  // , 'bootstrapLightbox'
   , 'toaster'
+  , 'bootstrapLightbox'
   , 'myApp.filters'
   , 'myApp.services'
   , 'myApp.directives'
@@ -19,6 +19,19 @@ angular.module('myApp', [
         templateUrl: 'partials/detail',
         controller: 'DetailCtrl'
       }).
+      when('/my', {
+        templateUrl: 'partials/my',
+        controller: 'MyCtrl'
+      }).
+      when('/my/post/:twitterIdStr', {
+        templateUrl: 'partials/my_post',
+        controller: 'MyPostCtrl'
+      }).
+      when('/my/setting/tag', {
+        templateUrl: 'partials/my_tag',
+        controller: 'MyTagCtrl'
+      }).
+      // ここに/my/setting/watchlist　くる
       when('/user/:twitterIdStr', {
         templateUrl: 'partials/user',
         controller: 'UserCtrl'
@@ -33,4 +46,33 @@ angular.module('myApp', [
         redirectTo: '/'
       });
     $locationProvider.html5Mode(true);
-  }]);
+  }]).
+  config(function(LightboxProvider) {
+    LightboxProvider.templateUrl = 'templete/lightbox.html';
+    LightboxProvider.getImageUrl = function(image) {
+      return image.sourceOrigUrl || image.extended_entities.media[0].media_url + ':orig';
+    };
+    LightboxProvider.getImageCaption = function(image) {
+      return {
+        tweetIdStr: image.tweetIdStr,
+        url: image.sourceOrigUrl,
+        text: image.text,
+        name: image.name,
+        screenName: image.screenName,
+        icon: image.icon
+      };
+    };
+    LightboxProvider.calculateImageDimensionLimits = function(dimensions) {
+      return {
+        maxWidth: dimensions.windowWidth - 102
+      };
+    };
+    return LightboxProvider.calculateModalDimensions = function(dimensions) {
+      var width;
+      width = Math.max(200, dimensions.imageDisplayWidth + 2);
+      return {
+        width: width,
+        height: "auto"
+      };
+    };
+  });
