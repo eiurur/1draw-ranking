@@ -28,7 +28,7 @@ Support tags
 - ポケモントレーナー版深夜の真剣お絵描き60分一本勝負
 - ボルテ版深夜の真剣お絵描き60分一本勝負
 
-and ![more][https://github.com/eiurur/1draw-ranking/raw/master/support-tags.md]...
+and [more](https://github.com/eiurur/1draw-ranking/raw/master/support-tags.md)...
 
 TODO
 ------
