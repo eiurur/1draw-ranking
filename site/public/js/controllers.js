@@ -1,6 +1,32 @@
 'use strict';
 
 angular.module('myApp.controllers', [])
+  .controller('LightboxCtrl', function ($scope, Lightbox, TweetService) {
+    $scope.Lightbox = Lightbox;
+    $scope.openLightboxModal = function(images, image, orderProp) {
+
+      var order = orderProp || 'totalNum';
+
+      // sortしないとダメ。ついでにsortByで返される並びが昇順なので降順に直す。
+      images = _.sortBy(images, order).reverse();
+
+      // Problem: Angularjs wrong $index after orderBy
+      // Solution: http://stackoverflow.com/questions/16118762/angularjs-wrong-index-after-orderby
+      var index = _.findLastIndex(images, {tweetIdStr: image.tweetIdStr || image.id_str});
+
+      _.each(images, function(image) {
+          image.tweetIdStr = image.tweetIdStr || image.id_str
+        , image.sourceOrigUrl = image.sourceOrigUrl || image.extended_entities.media[0].media_url + ':orig'
+        // , image.sourceUrl = image.sourceUrl || image.user.screen_name
+        // , image.text = image.tweetText || TweetService.activateLink(image.text)
+        , image.name = image.userName || image.user.name
+        , image.screenName = image.userScreenName || image.user.screen_name
+        // , image.icon = image.icon || TweetService.iconBigger(image.user.profile_image_url_https)
+      });
+
+      Lightbox.openModal(images, index);
+    };
+  })
   .controller('IndexCtrl', function ($scope, CategoryService, PostService, TagService) {
     $scope.isLoading = true;
     $scope.pageTitle = '総合ランキング';
@@ -55,7 +81,7 @@ angular.module('myApp.controllers', [])
     $scope.isLoaded = false;
     TagService.findRegistered()
       .success(function(data) {
-        console.log('findTagRegistred data = ', data.data);
+        // console.log('findTagRegistred data = ', data.data);
         var categories = (_.isNull(data.data)) ? TagService.defaultCategories : JSON.parse(data.data.categoriesStr);
         $scope.navContents = {categories: categories};
       });
@@ -128,16 +154,14 @@ angular.module('myApp.controllers', [])
       var tagsStr = JSON.stringify(tags);
       var categories = _.pluck(tagsSelected, 'category');
       var categoriesStr = JSON.stringify(categories);
-      console.log(tagsStr);
       TagService.register(tagsStr, categoriesStr)
         .success(function(data) {
-          console.log('register', data);
           toaster.pop('success', "登録しました。");
           $scope.isProcessing = false;
         });
     };
   })
-  .controller('UserCtrl', function ($scope, $routeParams, PostService, TweetService, UserService, toaster) {
+  .controller('UserCtrl', function ($scope, $routeParams, LightboxService, PostService, TweetService, UserService, toaster) {
     $scope.isLoading = true;
 
     // ユーザがワンドロタグで投稿した画像を取得
@@ -166,7 +190,7 @@ angular.module('myApp.controllers', [])
 
           // 全部読み終えたら(残りがないとき、APIは最後のツイートだけ取得する === 1) return
           if(data.data.length < 2) {
-            toaster.pop('warning', "最後まで読み終えました。");
+            toaster.pop('success', "最後まで読み終えました。");
             return;
           }
           nextCursorId = data.data[data.data.length-1].id_str;
@@ -182,6 +206,7 @@ angular.module('myApp.controllers', [])
             tweet.totalNum = tweet.retweet_count + tweet.favorite_count;
             tweet.tweetIdStr = tweet.id_str;
           });
+          LightboxService.images = LightboxService.images.concat(tweetListIncludePict);
           $scope.userAllPict = $scope.userAllPict.concat(tweetListIncludePict);
           assignUserAllPict();
         });
@@ -193,9 +218,7 @@ angular.module('myApp.controllers', [])
     }
 
     $scope.$on("$destroy", function() {
-      if ($scope.isOneDrawShow) {
-        $scope.isOneDrawShow = false;
-      }
+      $scope.isOneDrawShow = true;
     });
 
     // ユーザデータをTwitterAPIを通して取得
@@ -344,7 +367,7 @@ angular.module('myApp.controllers', [])
 
         // もし、新しい画像があれば
         if(idx === -1) {
-          console.log("追加します！！");
+          // console.log("追加します！！");
           $scope[variable].push(posts[newDataIndex]);
           return;
         }

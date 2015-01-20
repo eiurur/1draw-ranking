@@ -1,9 +1,9 @@
 #page-content-wrapper
-  page-title(
-    judgement-material-whether-or-not-show-loading='!isLoading',
-    page-title='pageTitle')
-
   .page-content.inset
+    .bs-callout.bs-callout-info
+      h4 投稿画像一覧
+      p ワンドロタグに投稿した画像を表示します
+
     .row(ng-if="userAllCategoryPosts.length != 0")
       div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
         .col-md-12(ng-if="userCategoryPosts.length > 0")

@@ -71,6 +71,12 @@ angular.module('myApp.services', [])
     }
     return my;
   })
+  .service('LightboxService', function() {
+    var lightbox = {
+      images: []
+    };
+    return lightbox;
+  })
   .service('CategoryService', function($http) {
     var category = {
         default: [

@@ -1,11 +1,4 @@
 #page-content-wrapper
-  //- user-profile(
-  //-   judgement-material-whether-or-not-show-loading='!isLoading',
-  //-   user-data='userData')
-  //- page-title(
-  //-   judgement-material-whether-or-not-show-loading='!isLoading',
-  //-   page-title='pageTitle')
-
   .page-content.inset
 
     loading(
@@ -58,10 +51,11 @@
                 .panel-body
                   .box-container(ng-repeat='userCategoryPost in userCategoryPosts | orderBy: orderProp: true')
                     .box
-                      post(post='userCategoryPost')
+                      post(post='userCategoryPost', open-modal='openLightboxModal(userCategoryPosts, userCategoryPost, orderProp)')
+
             .interval-space
 
     .row(ng-if="userAllPict.length != 0")
       .col-md-12(ng-hide="isOneDrawShow")
         .box-container(ng-repeat='userPict in userAllPict | orderBy: orderProp: true')
-          .cover(style="background-image: url('{{userPict.extended_entities.media[0].media_url_https}}:small')")
+          .cover(style="background-image: url('{{userPict.extended_entities.media[0].media_url_https}}:small')", ng-click='openLightboxModal(userAllPict, userPict, orderProp)')

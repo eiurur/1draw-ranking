@@ -48,6 +48,7 @@ a {
 }
 
 .thumb-pict {
+  cursor: pointer;
   border: 1px solid #ddd;;
   border-radius: 4px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.4), 5px 5px 10px rgba(255,255,255,0.3) inset, -5px -5px 10px rgba(255,255,255,0.3) inset;
@@ -315,7 +316,34 @@ a {
     color: #5bc0de;
 }
 
+/**
+ * My_tag
+ */
+.tag-select-container {
+  padding: 48px 0;
+}
 
 /**
- * tagc checkbox to button
+ * Lightbix
  */
+.lightbox-image-container {
+  text-align: left;
+}
+
+.modal-content {
+  background-color: rgba(0,0,0,0);
+  border: none;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.modal-body {
+  padding: 0 0 15px 0;
+  border: none;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}

@@ -30,6 +30,7 @@ var getPostDatas = function(params) {
           , userName: postData.userName
           , userScreenName: postData.userScreenName
           , userIdStr: postData.userIdStr
+          , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl
           , sourceOrigUrl: postData.sourceUrl
           , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')

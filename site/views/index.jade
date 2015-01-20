@@ -12,7 +12,8 @@ block body
             img.pull-right.icon(ng-src='{{user._json.profile_image_url_https}}')
             span.username @{{user.username}}
         li(ng-repeat='category in navContents.categories')
-          a(href='/detail/{{category}}') # {{category}}
+          a(href='/detail/{{category}}') #
+            span.sidebar-nav_category.text-capitalize {{category}}
             span.pull-right.sidebar-arrow
               i.fa.fa-angle-right
         li
@@ -27,5 +28,5 @@ block body
           a(href='/logout', target='_self', ng-show='isAuthenticated') Logout
             span.pull-right.sidebar-ex-link
               i.fa.fa-sign-out
-
-    div(ng-view)
+    span(ng-controller='LightboxCtrl')
+      div(ng-view)
