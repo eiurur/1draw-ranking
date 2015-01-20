@@ -1,0 +1,38 @@
+<div class="modal-body"
+    ng-swipe-left="Lightbox.nextImage()"
+    ng-swipe-right="Lightbox.prevImage()">
+  <div class="lightbox-image-container">
+
+    <!-- image -->
+    <img lightbox-src="{{Lightbox.imageUrl}}" alt="", ng-click="$dismiss()", aria-hidden="true" img-preload="img-preload" class="fade">
+
+    <!-- caption -->
+    <div class="media">
+      <!-- <a href="https://twitter.com/{{Lightbox.imageCaption.screenName}}" target="_blank"><img ng-src="{{Lightbox.imageCaption.icon}}" class="user-profile_icon pull-left"/></a> -->
+      <div class="user-profile_text">
+        <!-- <div class="user-profile-text_name">{{Lightbox.imageCaption.name}} -->
+        <!-- </div><span class="user-profile-text_screen_name">@{{Lightbox.imageCaption.screenName}}</span> -->
+        <div class="row">
+          <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+            <i data-tweet-id-str="{{Lightbox.imageCaption.tweetIdStr}}" retweetable="retweetable" class="fa fa-2x fa-retweet icon-retweet"></i>
+          </div>
+          <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+            <i data-tweet-id-str="{{Lightbox.imageCaption.tweetIdStr}}" favoritable="favoritable" class="fa fa-2x fa-star icon-star"></i>
+          </div>
+          <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+            <a href="https://twitter.com/{{Lightbox.imageCaption.screenName}}/status/{{Lightbox.imageCaption.tweetIdStr}}/photo/1" target="_blank">
+              <i class="fa fa-2x fa-twitter icon-twitter"></i>
+            </a>
+          </div>
+          <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+            <a href="{{Lightbox.imageCaption.url}}?.jpg" download="download">
+              <i class="fa fa-2x fa-download"></i>
+            </a>
+          </div>
+        </div>
+        <!-- <div ng-bind-html="Lightbox.imageCaption.text | newlines" class="user-profile-text_description"> -->
+        <!-- </div> -->
+      </div>
+    </div>
+  </div>
+</div>
