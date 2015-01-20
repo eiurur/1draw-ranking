@@ -11,7 +11,7 @@ Summary of the day is posted to the following tumblog.
 
 <a href="http://eiua-1dr.tumblr.com/" target="_blank">#1draw-Ranking - tumblr</a>
 
-Corresponding tags
+Support tags
 -------
 
 - ラブライブ版深夜の真剣お絵描き60分一本勝負
@@ -28,6 +28,8 @@ Corresponding tags
 - ポケモントレーナー版深夜の真剣お絵描き60分一本勝負
 - ボルテ版深夜の真剣お絵描き60分一本勝負
 
+and ![more][https://github.com/eiurur/1draw-ranking/raw/master/support-tags.md]...
+
 TODO
 ------
 
@@ -35,12 +37,12 @@ TODO
 - Retweet
 - Favorite
 - Zip Download
-- [ ] LightBox
+- LightBox
 - Tag individual settings
 - [ ] Responsive
 - [ ] Slideshow in detail page
-- [ ] Infinite scroll
-- [ ] Toggle orderBy in user page
+- Infinite scroll
+- Toggle orderBy in user page
 - [ ] Watch list(not twitter follow)
 
 License
