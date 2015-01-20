@@ -1,0 +1,29 @@
+#page-content-wrapper
+  .page-content.inset.tag-settings
+
+    .bs-callout.bs-callout-info
+      h4 タグ設定
+      p サイドバーに表示するタグの設定を行います。
+
+    .row(ng-if="tagAll.length")
+      .col-md-12
+        button.btn.btn-primary.btn-large(ng-click='register()', ng-disabled='isProcessing')
+          | 登録
+        button.btn.btn-default.btn-large(ng-click='backDefault()', ng-disabled='isProcessing')
+          | デフォルトに戻す
+        button.btn.btn-info.btn-large(ng-click='checkAll()', ng-disabled='isProcessing')
+          | すべて選択
+        button.btn.btn-danger.btn-large(ng-click='clearAll()', ng-disabled='isProcessing')
+          | すべて解除
+    .row.tag-select-container
+      span.col-xs-12.col-sm-12.col-md-6.col-lg-4(ng-repeat='tag in tagAll')
+        input(type='checkbox', id='i{{tag.category}}', ng-model='tag.isSelected')
+        label(for='i{{tag.category}}') {{tag.tag}}
+    .row(ng-if="tagAll.length")
+      .col-md-12
+        button.btn.btn-primary.btn-block(ng-click='register()', ng-disabled='isProcessing')
+          | 登録
+
+    loading(
+      judgement-material-whether-or-not-show-loading='isLoading',
+      judgement-material-whether-or-not-hide-page-content='tagAll.length')

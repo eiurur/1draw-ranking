@@ -9,10 +9,6 @@
     ;
 
   exports.getTweetFromTwitter= function(){
-
-    /**
-     * 新規ツイート保存処理
-     */
     settings.twitter.stream('statuses/filter', {'track': settings.KEYWORDS}, function(stream) {
 
       stream.on('data', function(data){

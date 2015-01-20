@@ -3,64 +3,17 @@ extends layout
 block body
   toaster-container
   #wrapper(ng-controller='AdminUserCtrl')
-    #sidebar-wrapper
+    #sidebar-wrapper(ng-controller='TagCtrl')
       ul.sidebar-nav
         li.sidebar-brand
           a(href='/') #1draw-Ranking
         li.li-user(ng-if='isAuthenticated')
-          a.user(href='/user/{{user._json.id_str}}')
+          a.user(href='/my')
             img.pull-right.icon(ng-src='{{user._json.profile_image_url_https}}')
             span.username @{{user.username}}
-        li
-          a(href='/detail/lovelive') # LoveLive!
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/aikatsu') # Aikatsu!
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/kancolle') # Kancolle
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/mobamas') # Mobamas
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/millimas') # Millimas
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/toho') # Toho
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/vocaloid') # Vocaloid
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/madomagi') # Madomagi
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/aigis') # Aigis
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/gf') # GF
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/prpr') # Prpr
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/ptrainer') # Ptrainer
-            span.pull-right.sidebar-arrow
-              i.fa.fa-angle-right
-        li
-          a(href='/detail/SDVX') # SDVX
+        li(ng-repeat='category in navContents.categories')
+          a(href='/detail/{{category}}') #
+            span.sidebar-nav_category.text-capitalize {{category}}
             span.pull-right.sidebar-arrow
               i.fa.fa-angle-right
         li
@@ -75,6 +28,5 @@ block body
           a(href='/logout', target='_self', ng-show='isAuthenticated') Logout
             span.pull-right.sidebar-ex-link
               i.fa.fa-sign-out
-
-    //- span(ng-controller='IllustLightBoxCtrl')
-    div(ng-view)
+    span(ng-controller='LightboxCtrl')
+      div(ng-view)

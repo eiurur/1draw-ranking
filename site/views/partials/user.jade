@@ -1,24 +1,61 @@
 #page-content-wrapper
-  page-title(
-    judgement-material-whether-or-not-show-loading='!isLoading',
-    page-title='pageTitle')
-
   .page-content.inset
-    .row(ng-if="userAllCategoryPosts.length != 0")
-      div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
-        .col-md-12(ng-if="userCategoryPosts.length > 0")
-          .panel.panel-default
-            .panel-heading
-              h3.panel-title {{(userCategoryPosts[0].tags.split(","))[2]}}:
-                i.fa.fa-file-archive-o.pull-right.zip.dl-link(data-posts="{{userCategoryPosts}}", download-zip='download-zip')  {{userCategoryPosts.length}}
-
-            div(style="overflow-x: scroll; white-space: nowrap;")
-              .panel-body
-                .box-container(ng-repeat='userCategoryPost in userCategoryPosts | orderBy: orderProp: true')
-                  .box
-                    post(post='userCategoryPost')
-          .interval-space
 
     loading(
       judgement-material-whether-or-not-show-loading='isLoading',
       judgement-material-whether-or-not-hide-page-content='userAllCategoryPosts.length')
+
+    .row
+      .col-md-8
+        .user-profile(ng-if='!isLoading')
+          a(href="https://twitter.com/{{userData.screen_name}}", target="_blank")
+            img.user-profile_icon.pull-left(ng-src='{{userData.profile_image_url_https}}')
+          .user-profile_text
+            .user-profile-text_name {{userData.name}}
+            span.user-profile-text_screen_name @{{userData.screen_name}}
+            .user-profile-text_description(ng-bind-html='userData.description | newlines')
+            .user-profile-text_url(ng-show="userData.url.length > 0")
+              i.fa.fa-link
+                a.profile_url(href="{{userData.url}}", target="_blank") {{userData.url}}
+
+      .col-md-4(ng-show='!isLoading')
+        .onoffswitch
+          input#sortswitch.onoffswitch-checkbox(type='checkbox', name='orderSwitch', ng-model="isPopularOrder", ng-change="toggleOrderBy()")
+          label.onoffswitch-label(for='sortswitch')
+            span.onoffswitch-inner
+              span.onoffswitch-active
+                span.onoffswitch-switch 人気
+              span.onoffswitch-inactive
+                span.onoffswitch-switch 新着
+
+        .onoffswitch(ng-show="isAuthenticated")
+          input#showswitch.onoffswitch-checkbox(type='checkbox', name='showModeSwitch', ng-model="isOneDrawShow", ng-change="toggleShowMode()")
+          label.onoffswitch-label(for='showswitch')
+            span.onoffswitch-inner
+              span.onoffswitch-active
+                span.onoffswitch-switch 1d
+              span.onoffswitch-inactive
+                span.onoffswitch-switch 一覧
+
+
+    .row(ng-if="userAllCategoryPosts.length != 0")
+      div(ng-show="isOneDrawShow")
+        div(ng-repeat='userCategoryPosts in userAllCategoryPosts')
+          .col-md-12(ng-if="userCategoryPosts.length > 0")
+            .panel.panel-default
+              .panel-heading
+                h3.panel-title {{userCategoryPosts[0].tags}}:
+                  i.fa.fa-file-archive-o.pull-right.zip.dl-link(data-posts="{{userCategoryPosts}}", download-zip='download-zip')  {{userCategoryPosts.length}}
+
+              div(style="overflow-x: scroll; white-space: nowrap;")
+                .panel-body
+                  .box-container(ng-repeat='userCategoryPost in userCategoryPosts | orderBy: orderProp: true')
+                    .box
+                      post(post='userCategoryPost', open-modal='openLightboxModal(userCategoryPosts, userCategoryPost, orderProp)')
+
+            .interval-space
+
+    .row(ng-if="userAllPict.length != 0")
+      .col-md-12(ng-hide="isOneDrawShow")
+        .box-container(ng-repeat='userPict in userAllPict | orderBy: orderProp: true')
+          .cover(style="background-image: url('{{userPict.extended_entities.media[0].media_url_https}}:small')", ng-click='openLightboxModal(userAllPict, userPict, orderProp)')

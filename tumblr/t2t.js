@@ -23,12 +23,10 @@
     }, function(error, postDatas) {
       if(_.isEmpty(postDatas)) return;
       var tags, title;
-      var postText = '<strong>' + (postDatas[0].tags.split(","))[2] + '</strong><hr>';
+      var postText = '<strong>' + postDatas[0].tags + '</strong><hr>';
       postDatas.forEach(function (postData, i) {
         i++;
         if(i === 1) {
-          // tags = postData.tags
-          tags = (postDatas[0].tags.split(","))[3];
           title = params['correspondDate'];
           postText += '<h2>' + i + '位</h2>';
         } else if (i === 2) {
@@ -47,10 +45,9 @@
       });
 
       // post to tumblr
-      my.cl("Go ------> Tumblr : " + tags);
+      my.cl("Go ------> Tumblr : " + postText);
       settings.tumblr.post('/post', {
           type: 'text'
-        , tags: tags
         , title: title
         , body: postText
       }, function(err, json){
@@ -66,7 +63,7 @@
 
     console.log("post2Tumblr2200");
 
-    settings.CATEGORIES.forEach(function (name) {
+    settings.CATEGORIES_DEFAULT.forEach(function (name) {
       var numShow
         , correspondDate = cd.getCorrespondDate(name)
         ;
@@ -96,7 +93,7 @@
 
     console.log("post2Tumblr2330");
 
-    settings.CATEGORIES.forEach(function (name) {
+    settings.CATEGORIES_DEFAULT.forEach(function (name) {
       var numShow = 20
         , correspondDate = cd.getCorrespondDate(name)
         ;

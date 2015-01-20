@@ -3,8 +3,8 @@
     , _            = require('lodash')
     , moment       = require('moment')
     , my           = require(dir + 'my')
+    , dependModule = require(dir + 'dependModule')
     , exception    = require(dir + 'exception')
-    , cd           = require(dir + 'corresponddate')
     , PostProvider = require(dir + 'model').PostProvider
     , settings     = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
     ;
@@ -39,10 +39,6 @@
       },
       hashtagIdx: function(hashtag) {
         return _.indexOf(settings.KEYWORDS, hashtag);
-      },
-      deadline: function(category) {
-        deadline = _.find(settings.DEADLINES, {'category': category});
-        return (_.isUndefined(deadline)) ? '22:00' : deadline.time;
       }
     };
 
@@ -51,7 +47,7 @@
         return settings.CATEGORIES[idx];
       },
       tags: function(idx) {
-        return settings.TAGS[idx];
+        return settings.KEYWORDS[idx];
       },
       tweetUrl: function(entities) {
         var isPicFromTwitter = _.has(entities, 'media');
@@ -79,7 +75,7 @@
         var createdHm      = my.formatHm(created_at);
         var createdYMD     = my.formatYMD(created_at);
         var createdYMDHm   = my.formatYMDHm(created_at);
-        var deadline       = get.deadline(category);
+        var deadline       = dependModule.getDeadline(category);
 
         var createdAt      = my.formatYMDHms(created_at);
         var correspondDate = (createdHm < deadline) ? moment(createdYMDHm).add('days', -1).format("YYYY-MM-DD") : createdYMD;

@@ -7,10 +7,13 @@ var dir          = '../../lib/'
   , Promise      = require('es6-promise').Promise
   , cd           = require(dir + 'corresponddate')
   , my           = require(dir + 'my')
-  , UserProvider = require(dir + 'model').UserProvider
   , PostProvider = require(dir + 'model').PostProvider
+  , UserProvider = require(dir + 'model').UserProvider
+  , TagProvider  = require(dir + 'model').TagProvider
   , settings     = process.env.NODE_ENV === "production" ? require(dir + "production") : require(dir + "development")
   ;
+
+var NUM_GET_TWEETER_TWEET = 100;
 
 var getPostDatas = function(params) {
   return new Promise(function(resolve, reject) {
@@ -27,6 +30,7 @@ var getPostDatas = function(params) {
           , userName: postData.userName
           , userScreenName: postData.userScreenName
           , userIdStr: postData.userIdStr
+          , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl
           , sourceOrigUrl: postData.sourceUrl
           , sourceUrl: postData.sourceUrl.replace(/:orig/g, ':medium')
@@ -119,6 +123,41 @@ exports.readRankingAllCategory = function (req, res) {
   });
 };
 
+exports.readOverallRanking = function (req, res) {
+
+  console.time("readOverallRanking");
+  var tasks = [];
+
+  _.each(req.body.categories, function(name){
+    console.log(name);
+    var opt = {
+        name: name
+      , correspondDate: cd.getCorrespondDate(name)
+      , numShow: 10
+    }
+
+    tasks.push(
+      new Promise(function(resolve, reject) {
+        getPostDatas({
+            opt: opt
+          , query: 'findDescTotalPoint'
+        })
+        .then(function(rankCategoryPosts) {
+          return resolve(rankCategoryPosts);
+        });
+      })
+    );
+  });
+
+  Promise.all(tasks)
+  .then(function(rankOverallPosts) {
+    console.timeEnd("readOverallRanking");
+    res.json({
+      rankOverallPosts: rankOverallPosts
+    });
+  });
+};
+
 exports.readUserPosts = function (req, res) {
 
   var tasks = [];
@@ -164,16 +203,71 @@ exports.findUserDataByTwitterIdStr = function(req, res) {
   });
 }
 
+exports.findTagRegistered = function(req, res) {
 
-exports.logout = function(req, res) {
+  // HACK: もっと綺麗に書きたい
+  if(_.isUndefined(req.session.passport.user)) {
+    res.json({
+      data: null
+    });
+    return;
+  }
 
-  if(!_.has(req.session, 'id')) return;
+  console.log(req.session.passport.user);
 
-  req.session.destroy();
-  res.json({
-    data: "ok"
+  TagProvider.findOne({
+    twitterIdStr: req.session.passport.user._json.id_str
+  }, function(error, data) {
+    console.log("tagData = ", data);
+    res.json({
+        data: data
+    });
   });
 }
+
+// '#ラブライブ版~'
+exports.findTagAll = function(req, res) {
+  res.json({
+    data: settings.KEYWORDS
+  });
+}
+
+exports.findTagDefault = function(req, res) {
+  res.json({
+    data: settings.KEYWORDS_DEFAULT
+  });
+}
+
+// ex 'lovelive'
+exports.findCategoriesDefault = function(req, res) {
+  res.json({
+    data: settings.CATEGORIES_DEFAULT
+  });
+}
+
+exports.findCategoriesAll = function(req, res) {
+  res.json({
+    data: settings.CATEGORIES
+  });
+}
+
+
+exports.registerTag = function(req, res) {
+  if(_.isUndefined(req.session.passport.user)) return;
+
+  console.log(req.body);
+  console.log(req.session.passport.user._json.id_str);
+  TagProvider.upsert({
+      twitterIdStr: req.session.passport.user._json.id_str
+    , tagsStr: req.body.tagsStr
+    , categoriesStr: req.body.categoriesStr
+  }, function(err, data) {
+    res.json({
+      data: data
+    });
+  });
+}
+
 
 exports.isAuthenticated = function(req, res) {
 
@@ -186,7 +280,6 @@ exports.isAuthenticated = function(req, res) {
     data: sessionUserData
   });
 }
-
 exports.findUserById = function(req, res) {
   UserProvider.findUserById({
     twitterIdStr: req.body.twitterIdStr
@@ -246,6 +339,58 @@ exports.statusesRetweet = function(req, res) {
       }
       res.json({
           data: message
+      });
+    }
+  );
+}
+
+exports.getTweeterData = function(req, res) {
+  var token, token_secret;
+
+  if(_.has(req.session.passport.user, 'twitter_token')) {
+    token = req.session.passport.user.twitter_token;
+    token_secret = req.session.passport.user.twitter_token_secret;
+  }
+
+  settings.twitterAPI.users("show", {
+        user_id: req.params.twitterIdStr
+      , include_entities: true
+    },
+    token || settings.TW_ACCESS_TOKEN_KEY,
+    token_secret || settings.TW_ACCESS_TOKEN_SECRET,
+    function(error, data, response) {
+      console.log("getTweeterData data = ", data);
+      res.json({
+          data: data
+      });
+    }
+  );
+}
+
+exports.getTweeterTweet = function(req, res) {
+
+  // 未ログインなら何もせずバック
+  if(_.isUndefined(req.session.passport.user)) return;
+
+  opts = {
+      user_id: req.params.twitterIdStr
+    , count: NUM_GET_TWEETER_TWEET
+    , include_entities: true
+    , include_rts: false
+    ,
+  };
+
+  if(req.params.nextCursorId !== '0') {
+    opts.max_id = req.params.nextCursorId;
+  }
+
+  settings.twitterAPI.getTimeline("user_timeline",
+    opts,
+    req.session.passport.user.twitter_token,
+    req.session.passport.user.twitter_token_secret,
+    function(error, data, response) {
+      res.json({
+          data: data
       });
     }
   );

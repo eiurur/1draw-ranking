@@ -141,7 +141,17 @@ exports.serve = function() {
   app.get('/api/readUserPosts/:twitterIdStr', api.readUserPosts);
   app.get('/api/findUserDataByTwitterIdStr/:twitterIdStr', api.findUserDataByTwitterIdStr);
   app.get('/api/isAuthenticated', api.isAuthenticated);
+  app.get('/api/getTweeterData/:twitterIdStr', api.getTweeterData);
+  app.get('/api/getTweeterTweet/:twitterIdStr/:nextCursorId', api.getTweeterTweet);
+  app.get('/api/findTagRegistered', api.findTagRegistered);
+  app.get('/api/findTagDefault', api.findTagDefault);
+  app.get('/api/findTagAll', api.findTagAll);
+  app.get('/api/findCategoriesDefault', api.findCategoriesDefault);
+  app.get('/api/findCategoriesAll', api.findCategoriesAll);
+
   app.post('/api/findUserById', api.findUserById);
+  app.post('/api/readOverallRanking', api.readOverallRanking);
+  app.post('/api/registerTag', api.registerTag);
   app.post('/api/createFavorite', api.createFavorite);
   app.post('/api/statusesRetweet', api.statusesRetweet);
   app.post('/api/downloadZip', api.downloadZip);
