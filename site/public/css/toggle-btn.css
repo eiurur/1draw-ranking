@@ -11,6 +11,11 @@
     display: block; overflow: hidden; cursor: pointer;
     border: 0px solid #F5F5F5; border-radius: 0px;
 }
+
+.onoffswitch-interval {
+    margin: 0 10px;
+}
+
 .onoffswitch-inner {
     display: block; width: 200%; margin-left: -100%;
     -moz-transition: margin 0.1s ease-in 0s; -webkit-transition: margin 0.1s ease-in 0s;

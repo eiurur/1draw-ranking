@@ -28,7 +28,7 @@
               span.onoffswitch-inactive
                 span.onoffswitch-switch 新着
 
-        .onoffswitch(ng-show="isAuthenticated")
+        .onoffswitch.onoffswitch-interval(ng-show="isAuthenticated")
           input#showswitch.onoffswitch-checkbox(type='checkbox', name='showModeSwitch', ng-model="isOneDrawShow", ng-change="toggleShowMode()")
           label.onoffswitch-label(for='showswitch')
             span.onoffswitch-inner

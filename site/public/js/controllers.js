@@ -16,6 +16,7 @@ angular.module('myApp.controllers', [])
 
       _.each(images, function(image) {
           image.tweetIdStr = image.tweetIdStr || image.id_str
+        , image.userIdStr = image.userIdStr || image.user.id_str
         , image.sourceOrigUrl = image.sourceOrigUrl || image.extended_entities.media[0].media_url + ':orig'
         // , image.sourceUrl = image.sourceUrl || image.user.screen_name
         // , image.text = image.tweetText || TweetService.activateLink(image.text)
@@ -23,6 +24,8 @@ angular.module('myApp.controllers', [])
         , image.screenName = image.userScreenName || image.user.screen_name
         // , image.icon = image.icon || TweetService.iconBigger(image.user.profile_image_url_https)
       });
+      console.log(images);
+
 
       Lightbox.openModal(images, index);
     };
@@ -193,6 +196,8 @@ angular.module('myApp.controllers', [])
             toaster.pop('success', "最後まで読み終えました。");
             return;
           }
+
+          // nextCursorId = _.last(data.data).id_str;
           nextCursorId = data.data[data.data.length-1].id_str;
 
           // 画像付きツイートだけを抽出

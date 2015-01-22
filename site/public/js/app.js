@@ -51,10 +51,18 @@ angular.module('myApp', [
     LightboxProvider.templateUrl = 'templete/lightbox.html';
     LightboxProvider.getImageUrl = function(image) {
       return image.sourceOrigUrl || image.extended_entities.media[0].media_url + ':orig';
+
+      // origサイズだと携帯からの閲覧はパフォーマンス的に厳しいからlargeサイズに変換する。
+      // でも、画像長押しで保存したい。どっちも優先すべきか…。
+      // if(image.sourceUrl) {
+      //   return image.sourceUrl.replace(/:medium/g, ':large');
+      // }
+      // return image.extended_entities.media[0].media_url + ':large';
     };
     LightboxProvider.getImageCaption = function(image) {
       return {
         tweetIdStr: image.tweetIdStr,
+        userIdStr: image.userIdStr,
         url: image.sourceOrigUrl,
         text: image.text,
         name: image.name,

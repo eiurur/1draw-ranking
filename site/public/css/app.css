@@ -1,4 +1,13 @@
-/* app css stylesheet */
+html, body {
+  font-family: YuGothic, 'Yu Gothic', '游ゴシック体', '游ゴシック', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', 'Meiryo', 'MSPゴシック', 'Osaka', 'MS PGothic', 'Arial', 'Helvetica', 'Verdana', 'sans-serif';
+  margin-top: 0;
+  /*font-size: 22px;*/
+  color: #000;
+  height: 100%;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color:　#F3F3F3;
+}
 
 a {
   text-decoration: none;
@@ -346,4 +355,11 @@ a {
   -o-box-shadow: none;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
+}
+
+/**
+ * Sidebar
+ */
+.sidebar-nav_category {
+  padding-left: 8px;
 }
