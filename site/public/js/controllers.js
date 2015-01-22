@@ -24,7 +24,6 @@ angular.module('myApp.controllers', [])
         , image.screenName = image.userScreenName || image.user.screen_name
         // , image.icon = image.icon || TweetService.iconBigger(image.user.profile_image_url_https)
       });
-      console.log(images);
 
 
       Lightbox.openModal(images, index);
@@ -144,8 +143,6 @@ angular.module('myApp.controllers', [])
       });
     };
 
-    // TagRegisterだけどTagは必要ないかも。(必要なのはcategory)
-    // だから、全体的に命名が悪い。
     // けど、ページ上で選択するのはタグだからMyTagCtrlってのは間違ってはいない。
     // 間違っているのはMongoのスキーマだ(Tag)
     // とりあえず今は、TagとCategoryの両方を保存しておくことにする(2つセットで利用する場面も出てくるかもしれないから念のため)
@@ -372,7 +369,6 @@ angular.module('myApp.controllers', [])
 
         // もし、新しい画像があれば
         if(idx === -1) {
-          // console.log("追加します！！");
           $scope[variable].push(posts[newDataIndex]);
           return;
         }
