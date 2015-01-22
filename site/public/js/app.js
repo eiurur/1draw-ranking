@@ -62,6 +62,7 @@ angular.module('myApp', [
     LightboxProvider.getImageCaption = function(image) {
       return {
         tweetIdStr: image.tweetIdStr,
+        userIdStr: image.userIdStr,
         url: image.sourceOrigUrl,
         text: image.text,
         name: image.name,
