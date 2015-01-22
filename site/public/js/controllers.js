@@ -193,6 +193,8 @@ angular.module('myApp.controllers', [])
             toaster.pop('success', "最後まで読み終えました。");
             return;
           }
+
+          // nextCursorId = _.last(data.data).id_str;
           nextCursorId = data.data[data.data.length-1].id_str;
 
           // 画像付きツイートだけを抽出

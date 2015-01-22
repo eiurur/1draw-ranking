@@ -8,7 +8,6 @@ bower_components/*
 gulpfile*
 **/application_.mf
 1d_*
-site/public/templete/*
 clean.js
 1draw-*
 lib/*-test*
