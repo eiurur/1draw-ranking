@@ -18,17 +18,6 @@ angular.module('myApp.directives', [])
       }
     };
   }])
-  // .directive('Lightbox', function(Lightbox, LightboxService) {
-  //   return {
-  //     restrict: 'A',
-  //     link: function(scope, element, attrs) {
-  //       console.log('attrs = ', attrs);
-  //       element.on('click', function(e) {
-  //         console.log(click);
-  //       });
-  //     }
-  //   }
-  // })
   .directive('favoritable', ['toaster', 'FavService', function (toaster, FavService) {
     return {
       restrict: 'A',
@@ -42,10 +31,8 @@ angular.module('myApp.directives', [])
                 toaster.pop('success', "お気に入りに追加しました。", '<img src="' + data.data.entities.media[0].media_url + '" class="notify-success-img">', 3000, 'trustedHtml');
               }
             }).error(function(status, data) {
-
                console.log(status);
                console.log(data);
-
             });
         });
       }
@@ -73,50 +60,6 @@ angular.module('myApp.directives', [])
       }
     };
   }])
-  // .directive('zoom', function ($document) {
-  //   return {
-  //     restrict: 'A',
-  //     scope: {
-  //       num: '='
-  //     },
-  //     link: function(scope, element, attrs) {
-  //       element.on('click', function(event) {
-
-  //         // htmlをoverlay
-  //         // var body = $document[0].body;
-  //         // var bodyWidth = body.clientWidth;
-  //         // console.log("width of body is "+ bodyWidth);
-  //         var body = angular.element(document).find('body');
-  //         var lightbox = angular.element(document).find('lightbox-container');
-  //         console.log(body[0].offsetWidth);
-  //         lightbox.addClass('fullscreen-overlay');
-
-  //         // その配下にtemplete.htmlを挿入。()
-
-  //         // overlayの左右の真ん中にそれぞれ矢印ボタン用意
-
-  //         // 右押されたら$scope.imagesのcursorを進める。
-  //         // もし、なかったら0に戻す
-  //         var keyDownHandler = function(e) {
-  //           switch (e.keyCode) {
-  //             case 37: // ←
-  //               console.log('37 = ', e.keyCode);
-  //               break;
-  //             case 39: // →
-  //               console.log('39 = ', e.keyCode);
-  //               break;
-  //             case 243: // ESC
-  //               console.log('243 = ', e.keyCode);
-  //               break;
-  //           }
-  //         }
-  //         lightbox.on('keydown', keyDownHandler);
-
-  //         // overlayの部分が押されたらdismiss
-  //       });
-  //     }
-  //   };
-  // })
   .directive('downloadZip', [ 'toaster', 'DownloadService', function (toaster, DownloadService) {
     return {
       restrict: 'A',
@@ -183,7 +126,6 @@ angular.module('myApp.directives', [])
   .directive('post', function () {
     return {
       restrict: 'E',
-      // replace: true,
       scope: {
           post: '='
         , openModal: '&'

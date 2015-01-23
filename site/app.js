@@ -37,7 +37,6 @@ exports.serve = function() {
   /**
    * passport
    */
-  // Passport sessionのセットアップ
   passport.serializeUser(function(user, done) {
     done(null, user);
   });
@@ -46,7 +45,6 @@ exports.serve = function() {
     done(null, obj);
   });
 
-  // PassportでTwitterStrategyを使うための設定
   passport.use(new TwitterStrategy({
     consumerKey: settings.TW_CONSUMER_KEY,
     consumerSecret: settings.TW_CONSUMER_SECRET,
@@ -54,7 +52,6 @@ exports.serve = function() {
   }, function(token, tokenSecret, profile, done) {
       profile.twitter_token = token;
       profile.twitter_token_secret = tokenSecret;
-      // console.log("User profile = ", profile);
       UserProvider.upsert({
         profile: profile
       }, function(err) {
@@ -133,7 +130,6 @@ exports.serve = function() {
   app.get('/', routes.index);
   app.get('/partials/:name', routes.partials);
 
-
   // JSON API
   app.get('/api/readAll/:name', api.readAll);
   app.get('/api/readRanking/:name', api.readRanking);
@@ -155,7 +151,6 @@ exports.serve = function() {
   app.post('/api/createFavorite', api.createFavorite);
   app.post('/api/statusesRetweet', api.statusesRetweet);
   app.post('/api/downloadZip', api.downloadZip);
-
 
   // redirect all others to the index (HTML5 history)
   app.get('*', routes.index);
