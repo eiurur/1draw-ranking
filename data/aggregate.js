@@ -118,6 +118,7 @@
         , userIdStr: my.getTweetData(data, 'user.id_str', isRT)
         , userScreenName: my.getTweetData(data, 'screen_name', isRT)
         , userName: my.getTweetData(data, 'name', isRT)
+        , userIcon: my.getTweetData(data, 'profile_image_url_bigger', isRT)
         , tweetText: my.getTweetData(data, 'text', isRT)
         , tweetUrl: normalize.tweetUrl(my.getTweetData(data, 'entities', isRT))
         , sourceUrl: normalize.sourceUrl(my.getTweetData(data, 'entities', isRT))
@@ -167,7 +168,7 @@
           insertDB(tweetData);
           return;
         }
-        var tweetDataForUpdate = _.pick(tweetData, 'tweetIdStr', 'retweetNum', 'favNum', 'totalNum');
+        var tweetDataForUpdate = _.pick(tweetData, 'tweetIdStr', 'userIcon', 'retweetNum', 'favNum', 'totalNum');
         updateDB(tweetDataForUpdate);
         console.timeEnd("aggregate");
       });

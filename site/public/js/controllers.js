@@ -254,7 +254,7 @@ angular.module('myApp.controllers', [])
     }
 
   })
-  .controller('DetailCtrl', function ($scope, $routeParams, $interval, PostService) {
+  .controller('DetailCtrl', function ($scope, $routeParams, $interval, PostService, Ranking) {
 
     var idx
       , isCached
@@ -264,11 +264,17 @@ angular.module('myApp.controllers', [])
       , INTERVAL = 5 * 1000
       ;
 
-    $scope.isLoading = false
+    $scope.isLoading = false;
+    $scope.isRankingAllShow = false;
 
     idx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
     isCached = (idx !== -1);
     isExistData = (_.isUndefined(PostService.detailPostDatas[idx]) || PostService.detailPostDatas[idx].postWidth !== 0);
+
+
+
+    $scope.ranking = new Ranking($routeParams.name);
+
 
     // detailページを開いたら即座にPostServiceへキャッシュを保存する。
     // PosrServiceがキャッシュを所有している !== ツイートデータを所有している
@@ -297,6 +303,7 @@ angular.module('myApp.controllers', [])
           $scope.pageTitle = data.rankPosts[0].tags;
           cacheRank(data);
         });
+
 
     }
 

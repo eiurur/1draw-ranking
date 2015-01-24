@@ -30,6 +30,7 @@ var getPostDatas = function(params) {
           , userName: postData.userName
           , userScreenName: postData.userScreenName
           , userIdStr: postData.userIdStr
+          , userIcon: postData.userIcon
           , tweetText: postData.tweetText
           , tweetUrl: postData.tweetUrl
           , sourceOrigUrl: postData.sourceUrl
@@ -83,6 +84,28 @@ exports.readRanking = function (req, res) {
   })
   .then(function(rankPosts) {
     console.timeEnd("readRanking");
+    res.json({
+      rankPosts: rankPosts
+    });
+  });
+};
+
+exports.readRankingAll = function (req, res) {
+
+  console.time("readRankingAll");
+  var opt = {
+      name: req.params.name
+    , correspondDate: cd.getCorrespondDate(req.params.name)
+    , skip  : req.params.skip
+    , numShow: 20
+  };
+
+  getPostDatas({
+      opt: opt
+    , query: 'findDescTotalPoint'
+  })
+  .then(function(rankPosts) {
+    console.timeEnd("readRankingAll");
     res.json({
       rankPosts: rankPosts
     });

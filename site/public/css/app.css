@@ -363,3 +363,103 @@ a {
 .sidebar-nav_category {
   padding-left: 8px;
 }
+
+/**
+ * Detail-Ranking
+ */
+.ranking-checkbox {
+  margin: 17px 0 0 20px;
+}
+
+.detail-ranking-wrap {
+  width: 1200px;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+
+.detail-ranking-content {
+  width: 480px;
+  float: left;
+  /*margin: 0 15px 30px 15px;*/
+  margin: 0 0px 30px 0px;
+  background-color: #f6f6f6;
+  box-shadow: rgba(0, 0, 0, .15) 0 0 2px;
+  border-radius: 4px;
+}
+
+.detail-ranking-rank {
+  height: 20px;
+  margin: 15px 15px;
+  text-overflow: ellipsis;
+  /*width: 330px;*/
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.detail-ranking-rank h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight:  bold;
+}
+.detail-ranking-img {
+  background-color: #fff;
+  border-top: 1px solid #d8d8d8;
+  border-bottom: 1px solid #d8d8d8;
+}
+.detail-ranking-img img {
+  margin: 0 auto;
+}
+
+.detail-ranking-text {
+  min-height: 63px;
+  margin: 15px 15px;
+}
+
+.detail-ranking-meta {
+  height: 35px;
+  padding: 10px 20px;
+  background-color: #f2f2f2;
+  border-top: 1px solid #d8d8d8;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* [??] aタグだけなぜか下にずれているので上に浮かせる。 */
+.detail-ranking-meta a {
+  margin-top: -2px;
+}
+
+
+.detail-ranking-user_icon {
+  display: inline-block;
+  border: 1px solid #ddd;;
+  max-height: 48px;
+  -moz-border-radius: 4px / 4px;
+  -webkit-border-radius: 4px 4px;
+  border-radius: 4px / 4px;
+}
+
+.detail-ranking-user_text {
+  padding-left: 15px;
+  overflow: hidden;
+  zoom: 1;
+  font-size: 1.1em;
+  line-height: 1.6
+}
+
+.detail-ranking-user-text_name {
+  vertical-align: top;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.detail-ranking-user-text_screen_name {
+  margin-left: 8px;
+  color: #B3B3B1;
+}
+
+.detail-ranking-user-text_tweet {
+  font-size: 0.9em;
+  max-width: 480px;
+}

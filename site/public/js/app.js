@@ -4,8 +4,10 @@ angular.module('myApp', [
   , 'ngSanitize'
   , 'toaster'
   , 'bootstrapLightbox'
+  , 'infinite-scroll'
   , 'myApp.filters'
   , 'myApp.services'
+  , 'myApp.factories'
   , 'myApp.directives'
   , 'myApp.controllers'
   ]).

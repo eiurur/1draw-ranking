@@ -133,6 +133,7 @@ exports.serve = function() {
   // JSON API
   app.get('/api/readAll/:name', api.readAll);
   app.get('/api/readRanking/:name', api.readRanking);
+  app.get('/api/readRankingAll/:name/:skip', api.readRankingAll);
   app.get('/api/readRankingAllCategory', api.readRankingAllCategory);
   app.get('/api/readUserPosts/:twitterIdStr', api.readUserPosts);
   app.get('/api/findUserDataByTwitterIdStr/:twitterIdStr', api.findUserDataByTwitterIdStr);

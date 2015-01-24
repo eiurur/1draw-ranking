@@ -1,25 +1,24 @@
 #page-content-wrapper
-  page-title(
-    judgement-material-whether-or-not-show-loading='!isLoading',
-    page-title='pageTitle')
+
+  .row
+    .col-sm-8
+      page-title(
+        judgement-material-whether-or-not-show-loading='!isLoading',
+        page-title='pageTitle')
+
+    .col-sm-4(ng-show='!isLoading')
+      .onoffswitch.ranking-checkbox
+        input#sortswitch.onoffswitch-checkbox(type='checkbox', name='orderSwitch', ng-model="isRankingAllShow")
+        label.onoffswitch-label(for='sortswitch')
+          span.onoffswitch-inner
+            span.onoffswitch-active
+              span.onoffswitch-switch 全て
+            span.onoffswitch-inactive
+              span.onoffswitch-switch 通常
 
   .page-content.inset
     .row(ng-if="posts.length > 0")
-      .col-md-12
-        //- panel(
-        //-   panel-title='リツイートランキング',
-        //-   posts='rankPosts',
-        //-   order-by-expression='retweetNum',
-        //-   order-by-direction='desc',
-        //-   limit-num='20')
-        //- .interval-space
-        //- panel(
-        //-   panel-title='新着',
-        //-   posts='posts',
-        //-   order-by-expression='createdAt',
-        //-   order-by-direction='desc',
-        //-   limit-num='10')
-
+      .col-md-12(ng-hide='isRankingAllShow')
         .panel.panel-default
           .panel-heading
             h3.panel-title リツイートランキング
@@ -28,6 +27,7 @@
               .box-container(ng-repeat='rankPost in rankPosts | orderBy: "retweetNum" : "desc" | limitTo : 20')
                 .box
                   post(post='rankPost', open-modal='openLightboxModal(rankPosts, rankPost, "retweetNum")')
+
         .interval-space
         .panel.panel-default
           .panel-heading
@@ -37,6 +37,36 @@
               .box-container(ng-repeat='post in posts | orderBy: "createdAt" : "desc" | limitTo : 20')
                 .box
                   post(post='post', open-modal='openLightboxModal(posts, post, "createdAt")')
+
+
+      .col-md-12(ng-show='isRankingAllShow')
+        div(infinite-scroll='ranking.nextPage()', infinite-scroll-disabled='ranking.busy', infinite-scroll-distance='1')
+          div(ng-repeat='item in ranking.items')
+            div(style='clear: both;')
+            .detail-ranking-content
+              .detail-ranking-rank
+                h2 {{$index + 1}} 位
+                  span.pull-right {{item.totalNum}} 点
+              .detail-ranking-img
+                img.img-responsive.fade(img-preload='img-preload', ng-src='{{item.sourceUrl}}', ng-click='openLightboxModal(ranking.items, item, "totalNum")')
+              .detail-ranking-text
+                a(href="https://twitter.com/{{item.userScreenName}}", target="_blank")
+                  img.detail-ranking-user_icon.pull-left(ng-src='{{item.userIcon}}')
+                .detail-ranking-user_text
+                  .detail-ranking-user-text_name {{item.userName}}
+                  span.detail-ranking-user-text_screen_name @{{item.userScreenName}}
+                  .detail-ranking-user-text_tweet(ng-bind-html='item.tweetText | newlines')
+              .detail-ranking-meta
+                  i.fa.fa-retweet.icon-retweet(data-tweet-id-str='{{item.tweetIdStr}}', retweetable='retweetable')  {{item.retweetNum}}
+                  i.fa.fa-star.icon-star(data-tweet-id-str='{{item.tweetIdStr}}', favoritable='favoritable')  {{item.favNum}}
+                  a(href='user/{{item.userIdStr}}')
+                    .fa.fa-user
+                  a(href='https://{{item.tweetUrl}}', target='_blank')
+                    .fa.fa-twitter.icon-twitter
+                  a(href='{{item.sourceOrigUrl}}?.jpg', download='download')
+                    .fa.fa-download
+
+              div(ng-show='ranking.busy') Loading data...
 
     loading(
       judgement-material-whether-or-not-show-loading='isLoading',
