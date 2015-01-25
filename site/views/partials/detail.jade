@@ -1,20 +1,19 @@
 #page-content-wrapper
 
-  .row
-    .col-md-9.col-xs-12
-      page-title(
-        judgement-material-whether-or-not-show-loading='!isLoading',
-        page-title='pageTitle')
+  page-title.title(
+    judgement-material-whether-or-not-show-loading='!isLoading',
+    page-title='pageTitle')
 
-    .col-md-3.col-xs-12(ng-show='!isLoading')
-      .onoffswitch.ranking-checkbox
-        input#sortswitch.onoffswitch-checkbox(type='checkbox', name='orderSwitch', ng-model="isRankingAllShow")
-        label.onoffswitch-label(for='sortswitch')
-          span.onoffswitch-inner
-            span.onoffswitch-active
-              span.onoffswitch-switch 全て
-            span.onoffswitch-inactive
-              span.onoffswitch-switch 通常
+  span.pull-right.toggle-btn(ng-show='!isLoading')
+    .onoffswitch.ranking-checkbox
+      input#sortswitch.onoffswitch-checkbox(type='checkbox', name='orderSwitch', ng-model="isRankingAllShow")
+      label.onoffswitch-label(for='sortswitch')
+        span.onoffswitch-inner
+          span.onoffswitch-active
+            span.onoffswitch-switch 全て
+          span.onoffswitch-inactive
+            span.onoffswitch-switch 通常
+  div(style='clear: both;')
 
   .page-content.inset
     .row(ng-if="posts.length > 0")

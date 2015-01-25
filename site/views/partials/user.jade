@@ -5,38 +5,37 @@
       judgement-material-whether-or-not-show-loading='isLoading',
       judgement-material-whether-or-not-hide-page-content='userAllCategoryPosts.length')
 
-    .row
-      .col-md-8
-        .user-profile(ng-if='!isLoading')
-          a(href="https://twitter.com/{{userData.screen_name}}", target="_blank")
-            img.user-profile_icon.pull-left(ng-src='{{userData.profile_image_url_https}}')
-          .user-profile_text
-            .user-profile-text_name {{userData.name}}
-            span.user-profile-text_screen_name @{{userData.screen_name}}
-            .user-profile-text_description(ng-bind-html='userData.description | newlines')
-            .user-profile-text_url(ng-show="userData.url.length > 0")
-              i.fa.fa-link
-                a.profile_url(href="{{userData.url}}", target="_blank") {{userData.url}}
+    .user-profile.title(ng-if='!isLoading')
+      a(href="https://twitter.com/{{userData.screen_name}}", target="_blank")
+        img.user-profile_icon.pull-left(ng-src='{{userData.profile_image_url_https}}')
+      .user-profile_text
+        .user-profile-text_name {{userData.name}}
+        span.user-profile-text_screen_name @{{userData.screen_name}}
+        .user-profile-text_description(ng-bind-html='userData.description | newlines')
+        .user-profile-text_url(ng-show="userData.url.length > 0")
+          i.fa.fa-link
+            a.profile_url(href="{{userData.url}}", target="_blank") {{userData.url}}
 
-      .col-md-4(ng-show='!isLoading')
-        .onoffswitch
-          input#sortswitch.onoffswitch-checkbox(type='checkbox', name='orderSwitch', ng-model="isPopularOrder", ng-change="toggleOrderBy()")
-          label.onoffswitch-label(for='sortswitch')
-            span.onoffswitch-inner
-              span.onoffswitch-active
-                span.onoffswitch-switch 人気
-              span.onoffswitch-inactive
-                span.onoffswitch-switch 新着
+    span.pull-right(ng-show='!isLoading')
+      .onoffswitch
+        input#sortswitch.onoffswitch-checkbox(type='checkbox', name='orderSwitch', ng-model="isPopularOrder", ng-change="toggleOrderBy()")
+        label.onoffswitch-label(for='sortswitch')
+          span.onoffswitch-inner
+            span.onoffswitch-active
+              span.onoffswitch-switch 人気
+            span.onoffswitch-inactive
+              span.onoffswitch-switch 新着
 
-        .onoffswitch.onoffswitch-interval(ng-show="isAuthenticated")
-          input#showswitch.onoffswitch-checkbox(type='checkbox', name='showModeSwitch', ng-model="isOneDrawShow", ng-change="toggleShowMode()")
-          label.onoffswitch-label(for='showswitch')
-            span.onoffswitch-inner
-              span.onoffswitch-active
-                span.onoffswitch-switch 1d
-              span.onoffswitch-inactive
-                span.onoffswitch-switch 一覧
+      .onoffswitch.onoffswitch-interval(ng-show="isAuthenticated")
+        input#showswitch.onoffswitch-checkbox(type='checkbox', name='showModeSwitch', ng-model="isOneDrawShow", ng-change="toggleShowMode()")
+        label.onoffswitch-label(for='showswitch')
+          span.onoffswitch-inner
+            span.onoffswitch-active
+              span.onoffswitch-switch 1d
+            span.onoffswitch-inactive
+              span.onoffswitch-switch 一覧
 
+    div(style='clear: both;')
 
     .row(ng-if="userAllCategoryPosts.length != 0")
       div(ng-show="isOneDrawShow")

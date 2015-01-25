@@ -225,7 +225,7 @@ a {
 
 .user-profile-text_description {
   font-size: 0.8em;
-  max-width: 480px;
+  max-width: 540px;
 }
 
 .user-profile-text_url {
@@ -462,4 +462,22 @@ a {
 .detail-ranking-user-text_tweet {
   font-size: 0.9em;
   max-width: 480px;
+}
+
+/**
+ * title
+ * # ~
+ * とか
+ * user profile
+ * とか
+ */
+.title {
+  display: inline-block;
+}
+
+/**
+ * toggle-btn(ページ名の右端に表示)
+ */
+.toggle-btn {
+  margin: 3px 20px 0 0;
 }
