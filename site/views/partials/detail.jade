@@ -1,12 +1,12 @@
 #page-content-wrapper
 
   .row
-    .col-sm-8
+    .col-md-9.col-xs-12
       page-title(
         judgement-material-whether-or-not-show-loading='!isLoading',
         page-title='pageTitle')
 
-    .col-sm-4(ng-show='!isLoading')
+    .col-md-3.col-xs-12(ng-show='!isLoading')
       .onoffswitch.ranking-checkbox
         input#sortswitch.onoffswitch-checkbox(type='checkbox', name='orderSwitch', ng-model="isRankingAllShow")
         label.onoffswitch-label(for='sortswitch')
@@ -39,7 +39,7 @@
                   post(post='post', open-modal='openLightboxModal(posts, post, "createdAt")')
 
 
-      .col-md-12(ng-show='isRankingAllShow')
+      .col-md-12(ng-if='isRankingAllShow')
         div(infinite-scroll='ranking.nextPage()', infinite-scroll-disabled='ranking.busy', infinite-scroll-distance='1')
           div(ng-repeat='item in ranking.items')
             div(style='clear: both;')
