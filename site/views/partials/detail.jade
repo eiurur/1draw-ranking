@@ -4,7 +4,7 @@
     judgement-material-whether-or-not-show-loading='!isLoading',
     page-title='pageTitle')
 
-  span.pull-right.toggle-btn(ng-show='!isLoading')
+  span.pull-right.toggle-btn(ng-show='!isLoading && posts.length > 0')
     .onoffswitch.ranking-checkbox
       input#sortswitch.onoffswitch-checkbox(type='checkbox', name='orderSwitch', ng-model="isRankingAllShow")
       label.onoffswitch-label(for='sortswitch')
