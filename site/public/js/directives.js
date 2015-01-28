@@ -185,6 +185,9 @@ angular.module('myApp.directives', [])
         judgementMaterialWhetherOrNotShowLoading: '=',
         judgementMaterialWhetherOrNotHidePageContent: '='
       },
+      link: function(scope, element, attrs) {
+        scope.isShowMaterial = _.flatten(scope.judgementMaterialWhetherOrNotHidePageContent, true);
+      },
       template: (function () {/*
         <div class="loading" ng-if="judgementMaterialWhetherOrNotShowLoading">
           <div class="fa-5x">
@@ -192,7 +195,7 @@ angular.module('myApp.directives', [])
           </div>
         </div>
         <div ng-if="!judgementMaterialWhetherOrNotShowLoading">
-          <div ng-if="judgementMaterialWhetherOrNotHidePageContent == 0">
+          <div ng-if="isShowMaterial.length == 0">
             <div class="fa-5x">
               <span class="fa-stack"><i class="fa fa-picture-o fa-stack-1x pull-left"></i><i class="fa fa-ban fa-stack-2x pull-left text-danger"></i></span>
               No data ...
