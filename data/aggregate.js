@@ -145,7 +145,7 @@
      * Main
      */
     try {
-      console.time("aggregate");
+      // console.time("aggregate");
 
       var isRT = (_.has(data, 'retweeted_status'));
 
@@ -157,7 +157,7 @@
 
       if(!isRT) {
         insertDB(tweetData);
-        console.timeEnd("aggregate");
+        // console.timeEnd("aggregate");
         return;
       }
 
