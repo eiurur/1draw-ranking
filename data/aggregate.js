@@ -170,7 +170,6 @@
         }
         var tweetDataForUpdate = _.pick(tweetData, 'tweetIdStr', 'userIcon', 'retweetNum', 'favNum', 'totalNum');
         updateDB(tweetDataForUpdate);
-        console.timeEnd("aggregate");
       });
 
     } catch(e) {
