@@ -21,7 +21,7 @@
     }, function(error, postDatas) {
       if(_.isEmpty(postDatas)) return;
       var tags, title;
-      var postText = '<strong>' + postDatas[0].tags + '</strong><hr><p>[[MORE]]</p>';
+      var postText = '<strong>' + '【' + params['correspondDate'] + '】 ' +  postDatas[0].tags + '</strong><hr><p>[[MORE]]</p>';
       postDatas.forEach(function (postData, i) {
         photos.push(postData.sourceUrl);
 
