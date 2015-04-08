@@ -12,7 +12,7 @@
 
 
   var postPhots2tumblr = function(params) {
-    photos = [];
+    var photos = [];
 
     PostProvider.findDescTotalPoint({
         name: params['name']
@@ -64,7 +64,7 @@
     console.log("post2Tumblr2200");
 
     settings.CATEGORIES_DEFAULT.forEach(function (name) {
-      var numShow
+      var numShow = 10
         , correspondDate = cd.getCorrespondDate(name)
         ;
 
@@ -72,12 +72,6 @@
       // Kancolle, Yuruyuri, Aikatsu!
       if(name === 'lovelive') return;
 
-      // if(name === 'kancolle') {
-      //   numShow = 20;
-      // } else {
-      //   numShow = 10;
-      // }
-      numShow = 10;
       console.log("---------------------------");
       console.log("カテゴリ : " + name);
       postPhots2tumblr({
