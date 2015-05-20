@@ -17,6 +17,10 @@ a {
   pointer-events:none;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;
@@ -168,6 +172,7 @@ a {
   color: #009FE9;
   cursor: pointer;
 }
+
 
 .li-user {
   line-height: 80px !important;
