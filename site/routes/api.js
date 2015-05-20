@@ -465,3 +465,12 @@ exports.downloadZip = function(req, res) {
     });
   });
 }
+
+exports.download = function(req, res) {
+  console.log("\n========> download\n");
+  return my.loadBase64Data(req.body.url).then(function(base64Data) {
+    return res.json({
+      base64Data: base64Data
+    });
+  });
+}

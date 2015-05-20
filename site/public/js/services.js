@@ -23,10 +23,35 @@ angular.module('myApp.services', [])
       }
     };
   })
-  .service('DownloadService', function($http) {
+  .service('DownloadService', ["$http", function($http) {
     return {
+      exec: function(url) {
+        return $http.post('/api/download', {url: url});
+      },
+
       zip: function(posts) {
         return  $http.post('/api/downloadZip', {posts: posts});
+      }
+    };
+  }])
+  .service('ConvertService', function() {
+    return {
+      base64toBlob: function(_base64) {
+        var arr, blob, data, i, mime, tmp;
+        i = void 0;
+        tmp = _base64.split(',');
+        data = atob(tmp[1]);
+        mime = tmp[0].split(':')[1].split(';')[0];
+        arr = new Uint8Array(data.length);
+        i = 0;
+        while (i < data.length) {
+          arr[i] = data.charCodeAt(i);
+          i++;
+        }
+        blob = new Blob([arr], {
+          type: mime
+        });
+        return blob;
       }
     };
   })

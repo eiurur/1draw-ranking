@@ -151,7 +151,9 @@ exports.serve = function() {
   app.post('/api/registerTag', api.registerTag);
   app.post('/api/createFavorite', api.createFavorite);
   app.post('/api/statusesRetweet', api.statusesRetweet);
+  app.post('/api/download', api.download);
   app.post('/api/downloadZip', api.downloadZip);
+
 
   // redirect all others to the index (HTML5 history)
   app.get('*', routes.index);
