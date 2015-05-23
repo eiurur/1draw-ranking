@@ -23,14 +23,33 @@ angular.module('myApp.factories', [])
 
     return Tweeter;
   })
-  .factory('Ranking', function($http, TweetService) {
+  .factory('Ranking', function($http, TweetService, PostService) {
     var Ranking = function(name) {
-      this.name = name;
-      this.items = [];
-      this.busy = false;
+      this.name   = name;
+      this.busy   = false;
       this.isLast = false;
-      this.num = 20;
-      this.skip = 0;
+      this.num    = 20;
+      this.idx    = _.findIndex(PostService.detailPostDatas, {'name': name});
+      // var a = function() {
+      //   if(_.has(PostService.detailPostDatas[this.idx], 'rankingAllPosts')) {
+      //     this.items  = [].concat(PostService.detailPostDatas[this.idx].rankingAllPosts);
+      //     this.skip  = PostService.detailPostDatas[this.idx].skip
+      //   } else {
+      //     this.items = [];
+      //     this.skip = 0;
+      //   }
+      // }
+      // console.log('Before = ', this);
+      // setTimeout(a.call(this), 0);
+      // console.log('After = ', this);
+
+      if(_.has(PostService.detailPostDatas[this.idx], 'rankingAllPosts')) {
+        this.items  = [].concat(PostService.detailPostDatas[this.idx].rankingAllPosts);
+        this.skip  = PostService.detailPostDatas[this.idx].skip
+      } else {
+        this.items = [];
+        this.skip = 0;
+      }
     };
 
     Ranking.prototype.nextPage = function() {
@@ -48,8 +67,16 @@ angular.module('myApp.factories', [])
             items[i].tweetText = TweetService.activateLink(items[i].tweetText);
             this.items.push(items[i]);
           }
+
           this.skip += 20;
           this.busy = false;
+
+          PostService.cachePosts({
+              'name': this.name
+            , 'type': 'rankingAll'
+            , 'posts': this.items
+            , 'skip': this.skip
+          });
 
       }.bind(this));
     };

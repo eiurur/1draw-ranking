@@ -64,7 +64,9 @@
                     .fa.fa-twitter.icon-twitter
                   a.clickable
                     i.fa.fa-download(data-url='{{item.sourceOrigUrl}}', filename='{{item.userScreenName}}_{{item.tweetIdStr}}', download-from-url='download-from-url')
-              div(ng-show='ranking.busy') Loading data...
+
+        .col-md-12
+          div(ng-show='ranking.busy') Loading data...
 
     loading(
       judgement-material-whether-or-not-show-loading='isLoading',

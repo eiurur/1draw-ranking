@@ -75,6 +75,24 @@ angular.module('myApp.services', [])
       , readUserPosts: function(tweetIdStr) {
         return $http.get('/api/readUserPosts/' + tweetIdStr)
       }
+      , cachePosts: function(data) {
+        if(data.type === 'rankingAll') {
+          var properties = {
+              'name': data.name
+            , 'rankingAllPosts': data.posts
+            , 'skip': data.skip
+          }
+
+          var idx = _.findIndex(this.detailPostDatas, {'name': data.name});
+
+          if(idx === -1) {
+            this.detailPostDatas.push(properties);
+            return;
+          }
+
+          this.detailPostDatas[idx] = _.merge(properties, this.detailPostDatas[idx]);
+        }
+      }
     }
     return post;
   })

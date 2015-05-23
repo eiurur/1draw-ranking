@@ -279,10 +279,10 @@ angular.module('myApp.controllers', [])
     if(isCached && isExistData) {
 
       // 体感速度を向上するため、キャッシュ(Service)からデータを取得。
-      $scope.name             = PostService.detailPostDatas[idx].name;
-      $scope.posts            = [].concat(PostService.detailPostDatas[idx].posts);
-      $scope.rankPosts        = [].concat(PostService.detailPostDatas[idx].rankPosts);
-      $scope.pageTitle        = PostService.detailPostDatas[idx].pageTitle;
+      $scope.name      = PostService.detailPostDatas[idx].name;
+      $scope.posts     = [].concat(PostService.detailPostDatas[idx].posts);
+      $scope.rankPosts = [].concat(PostService.detailPostDatas[idx].rankPosts);
+      $scope.pageTitle = PostService.detailPostDatas[idx].pageTitle;
 
     } else {
 
@@ -341,6 +341,7 @@ angular.module('myApp.controllers', [])
         PostService.detailPostDatas.push(properties);
         return;
       }
+
       PostService.detailPostDatas[readRankingIdx] = _.merge(properties, PostService.detailPostDatas[readRankingIdx]);
     }
 
@@ -360,10 +361,16 @@ angular.module('myApp.controllers', [])
         PostService.detailPostDatas.push(properties);
         return;
       }
+
       PostService.detailPostDatas[readAllIdx] = _.merge(properties, PostService.detailPostDatas[readAllIdx]);
     }
 
     function replaceCachedNew(data){
+      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
+      PostService.detailPostDatas[readAllIdx].posts = data.posts;
+    }
+
+    function replaceCachedRanking(data){
       var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
       PostService.detailPostDatas[readAllIdx].posts = data.posts;
     }
