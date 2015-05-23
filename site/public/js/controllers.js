@@ -149,11 +149,12 @@ angular.module('myApp.controllers', [])
     $scope.register = function() {
       $scope.isProcessing = true;
 
-      var tagsSelected = _.filter($scope.tagAll, 'isSelected');
-      var tags = _.pluck(tagsSelected, 'tag');
-      var tagsStr = JSON.stringify(tags);
-      var categories = _.pluck(tagsSelected, 'category');
+      var tagsSelected  = _.filter($scope.tagAll, 'isSelected');
+      var tags          = _.pluck(tagsSelected, 'tag');
+      var tagsStr       = JSON.stringify(tags);
+      var categories    = _.pluck(tagsSelected, 'category');
       var categoriesStr = JSON.stringify(categories);
+
       TagService.register(tagsStr, categoriesStr)
         .success(function(data) {
           toaster.pop('success', "登録しました。");
@@ -254,7 +255,7 @@ angular.module('myApp.controllers', [])
     }
 
   })
-  .controller('DetailCtrl', function ($scope, $routeParams, $interval, PostService, Ranking) {
+  .controller('DetailCtrl', function ($scope, $routeParams, $interval, PostService, ViewService, Ranking) {
 
     var idx
       , isCached
@@ -264,27 +265,26 @@ angular.module('myApp.controllers', [])
       , INTERVAL = 5 * 1000
       ;
 
-    $scope.isLoading = false;
+    $scope.isLoading        = false;
     $scope.isRankingAllShow = false;
 
-    idx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
-    isCached = (idx !== -1);
+    idx         = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
+    isCached    = (idx !== -1);
     isExistData = (_.isUndefined(PostService.detailPostDatas[idx]) || PostService.detailPostDatas[idx].postWidth !== 0);
 
-
-
     $scope.ranking = new Ranking($routeParams.name);
-
 
     // detailページを開いたら即座にPostServiceへキャッシュを保存する。
     // PosrServiceがキャッシュを所有している !== ツイートデータを所有している
     if(isCached && isExistData) {
 
       // 体感速度を向上するため、キャッシュ(Service)からデータを取得。
-      $scope.name = PostService.detailPostDatas[idx].name;
-      $scope.posts = [].concat(PostService.detailPostDatas[idx].posts);
-      $scope.rankPosts = [].concat(PostService.detailPostDatas[idx].rankPosts);
-      $scope.pageTitle = PostService.detailPostDatas[idx].pageTitle;
+      $scope.name             = PostService.detailPostDatas[idx].name;
+      $scope.posts            = [].concat(PostService.detailPostDatas[idx].posts);
+      $scope.rankPosts        = [].concat(PostService.detailPostDatas[idx].rankPosts);
+      $scope.pageTitle        = PostService.detailPostDatas[idx].pageTitle;
+      $scope.isRankingAllShow = ViewService.isRankingAllShow;
+
     } else {
 
       // 初回
@@ -303,8 +303,6 @@ angular.module('myApp.controllers', [])
           $scope.pageTitle = data.rankPosts[0].tags;
           cacheRank(data);
         });
-
-
     }
 
     checkUpdates = function() {
@@ -324,6 +322,14 @@ angular.module('myApp.controllers', [])
       if (timer) { $interval.cancel(timer); }
     });
 
+    $scope.$watch('isRankingAllShow', function(newVal, oldVal) {
+      ViewService.isRankingAllShow = newVal;
+    });
+
+
+    /**
+     * Methods
+     */
     function cacheRank(data){
       var properties = {
           'name': $routeParams.name

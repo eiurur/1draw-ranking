@@ -78,6 +78,11 @@ angular.module('myApp.services', [])
     }
     return post;
   })
+  .service('ViewService', function() {
+    return {
+      isRankingAllShow: false
+    };
+  })
   // .service('myData', ['$rootScope', function ($rootScope) {
   //     var message = 'This is my message.';
   //     this.changeMessage = function(msg) {
