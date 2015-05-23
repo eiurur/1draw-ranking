@@ -30,21 +30,15 @@ angular.module('myApp.factories', [])
       this.isLast = false;
       this.num    = 20;
       this.idx    = _.findIndex(PostService.detailPostDatas, {'name': name});
-      // var a = function() {
-      //   if(_.has(PostService.detailPostDatas[this.idx], 'rankingAllPosts')) {
-      //     this.items  = [].concat(PostService.detailPostDatas[this.idx].rankingAllPosts);
-      //     this.skip  = PostService.detailPostDatas[this.idx].skip
-      //   } else {
-      //     this.items = [];
-      //     this.skip = 0;
-      //   }
-      // }
-      // console.log('Before = ', this);
-      // setTimeout(a.call(this), 0);
-      // console.log('After = ', this);
+
+      var that = this;
+      PostService.readCount(name)
+        .success(function(data) {
+          that.totalItemNum = data.count;
+        });
 
       if(_.has(PostService.detailPostDatas[this.idx], 'rankingAllPosts')) {
-        this.items  = [].concat(PostService.detailPostDatas[this.idx].rankingAllPosts);
+        this.items = [].concat(PostService.detailPostDatas[this.idx].rankingAllPosts);
         this.skip  = PostService.detailPostDatas[this.idx].skip
       } else {
         this.items = [];

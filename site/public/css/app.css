@@ -496,7 +496,7 @@ a {
  * Go to top
  */
 .footer__buttons-wrapper {
-  bottom: 14px;
+  bottom: 44px;
   position: fixed;
   right: 14px;
   z-index: 10000;
@@ -516,4 +516,14 @@ a {
 
 .fa-angle-up {
   color: #ccd1d9;
+}
+
+/**
+ * Footer
+ */
+.footer__statuses-wrapper {
+  bottom: 14px;
+  position: fixed;
+  right: 14px;
+  z-index: 10000;
 }

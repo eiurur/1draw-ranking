@@ -75,6 +75,9 @@ angular.module('myApp.services', [])
       , readUserPosts: function(tweetIdStr) {
         return $http.get('/api/readUserPosts/' + tweetIdStr)
       }
+      , readCount: function(name) {
+        return $http.get('/api/readCount/' + name)
+      }
       , cachePosts: function(data) {
         if(data.type === 'rankingAll') {
           var properties = {

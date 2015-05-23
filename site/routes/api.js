@@ -213,6 +213,17 @@ exports.readUserPosts = function (req, res) {
 };
 
 
+exports.readCount = function(req, res) {
+  PostProvider.countOnlyCorrespondDate({
+      name: req.params.name
+    , correspondDate: cd.getCorrespondDate(req.params.name)
+  }, function(error, count) {
+    res.json({
+      count: count
+    });
+  });
+}
+
 exports.findUserDataByTwitterIdStr = function(req, res) {
 
   // TODO: PostProviderじゃなくてUserProviderにしたい。

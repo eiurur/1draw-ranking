@@ -145,6 +145,7 @@ exports.serve = function() {
   app.get('/api/findTagAll', api.findTagAll);
   app.get('/api/findCategoriesDefault', api.findCategoriesDefault);
   app.get('/api/findCategoriesAll', api.findCategoriesAll);
+  app.get('/api/readCount/:name', api.readCount);
 
   app.post('/api/findUserById', api.findUserById);
   app.post('/api/readOverallRanking', api.readOverallRanking);

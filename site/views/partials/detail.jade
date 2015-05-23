@@ -76,6 +76,11 @@
                 i.fa.fa-circle.fa-stack-2x
                 i.fa.fa-angle-up.fa-stack-1x.icon--clickable
 
+        .footer__statuses-wrapper
+          .footer__statuses
+            .footer__total
+              {{ranking.items.length}} / {{ranking.totalItemNum}}
+
     loading(
       judgement-material-whether-or-not-show-loading='isLoading',
       judgement-material-whether-or-not-hide-page-content='posts.length')
