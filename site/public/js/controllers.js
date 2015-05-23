@@ -272,6 +272,9 @@ angular.module('myApp.controllers', [])
     isCached    = (idx !== -1);
     isExistData = (_.isUndefined(PostService.detailPostDatas[idx]) || PostService.detailPostDatas[idx].postWidth !== 0);
 
+    // if($scope.isRankingAllShow) {
+    //   $scope.ranking = new Ranking($routeParams.name);
+    // }
     $scope.ranking = new Ranking($routeParams.name);
 
     // detailページを開いたら即座にPostServiceへキャッシュを保存する。
@@ -291,7 +294,11 @@ angular.module('myApp.controllers', [])
       PostService.readAll($routeParams.name).
         success(function(data) {
           $scope.posts = data.posts;
-          cacheNew(data);
+          PostService.saveCachePosts({
+              'type': 'new'
+            , 'name': $routeParams.name
+            , 'posts': data.posts
+          });
           $scope.isLoading = false;
         });
 
@@ -300,7 +307,12 @@ angular.module('myApp.controllers', [])
           $scope.rankPosts = data.rankPosts;
           if(_.isUndefined(data.rankPosts[0])) return;
           $scope.pageTitle = data.rankPosts[0].tags;
-          cacheRank(data);
+          PostService.saveCachePosts({
+              'type': 'ranking'
+            , 'name': $routeParams.name
+            , 'posts': data.rankPosts
+            , 'pageTitle': data.rankPosts[0].tags
+          });
         });
     }
 
@@ -308,12 +320,21 @@ angular.module('myApp.controllers', [])
       PostService.readAll($routeParams.name).
         success(function(data) {
           updateTweetList(data);
-          replaceCachedNew(data);
+          PostService.updateCachePosts({
+              'type': 'new'
+            , 'name': $routeParams.name
+            , 'property': data.posts
+          });
         });
+
       PostService.readRanking($routeParams.name).
         success(function(data) {
           updateTweetList(data);
-          replaceCachedRank(data);
+          PostService.updateCachePosts({
+              'name': $routeParams.name
+            , 'posts': data.rankPosts
+            , 'property': data.rankPosts
+          });
         });
     };
     timer = $interval(checkUpdates, INTERVAL);
@@ -329,52 +350,6 @@ angular.module('myApp.controllers', [])
     /**
      * Methods
      */
-    function cacheRank(data){
-      var properties = {
-          'name': $routeParams.name
-        , 'rankPosts': data.rankPosts
-        , 'pageTitle': data.rankPosts[0].tags
-      };
-      var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
-
-      if(readRankingIdx === -1) {
-        PostService.detailPostDatas.push(properties);
-        return;
-      }
-
-      PostService.detailPostDatas[readRankingIdx] = _.merge(properties, PostService.detailPostDatas[readRankingIdx]);
-    }
-
-    function replaceCachedRank(data){
-      var readRankingIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
-      PostService.detailPostDatas[readRankingIdx].rankPosts = data.rankPosts;
-    }
-
-    function cacheNew(data){
-      var properties = {
-          'name': $routeParams.name
-        , 'posts': data.posts
-      };
-      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
-
-      if(readAllIdx === -1) {
-        PostService.detailPostDatas.push(properties);
-        return;
-      }
-
-      PostService.detailPostDatas[readAllIdx] = _.merge(properties, PostService.detailPostDatas[readAllIdx]);
-    }
-
-    function replaceCachedNew(data){
-      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
-      PostService.detailPostDatas[readAllIdx].posts = data.posts;
-    }
-
-    function replaceCachedRanking(data){
-      var readAllIdx = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
-      PostService.detailPostDatas[readAllIdx].posts = data.posts;
-    }
-
     function updateTweetList(data) {
       var idx
         , variable

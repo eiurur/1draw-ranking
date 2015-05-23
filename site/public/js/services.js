@@ -78,23 +78,38 @@ angular.module('myApp.services', [])
       , readCount: function(name) {
         return $http.get('/api/readCount/' + name)
       }
-      , cachePosts: function(data) {
+      , saveCachePosts: function(data) {
         if(data.type === 'rankingAll') {
           var properties = {
               'name': data.name
             , 'rankingAllPosts': data.posts
             , 'skip': data.skip
           }
-
-          var idx = _.findIndex(this.detailPostDatas, {'name': data.name});
-
-          if(idx === -1) {
-            this.detailPostDatas.push(properties);
-            return;
+        } else if (data.type === 'ranking') {
+          var properties = {
+              'name': data.name
+            , 'rankPosts': data.posts
+            , 'pageTitle': data.pageTitle
           }
-
-          this.detailPostDatas[idx] = _.merge(properties, this.detailPostDatas[idx]);
+        } else {
+          var properties = {
+              'name': data.name
+            , 'posts': data.posts
+          };
         }
+
+        var idx = _.findIndex(this.detailPostDatas, {'name': data.name});
+
+        if(idx === -1) {
+          this.detailPostDatas.push(properties);
+          return;
+        }
+
+        this.detailPostDatas[idx] = _.merge(properties, this.detailPostDatas[idx]);
+      }
+      , updateCachePosts: function(data) {
+        var idx = _.findIndex(this.detailPostDatas, {'name': data.name});
+        this.detailPostDatas[idx][data.propety] = data.posts;
       }
     }
     return post;

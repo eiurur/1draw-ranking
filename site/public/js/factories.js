@@ -65,7 +65,7 @@ angular.module('myApp.factories', [])
           this.skip += 20;
           this.busy = false;
 
-          PostService.cachePosts({
+          PostService.saveCachePosts({
               'name': this.name
             , 'type': 'rankingAll'
             , 'posts': this.items
