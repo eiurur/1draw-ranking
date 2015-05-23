@@ -62,9 +62,8 @@
                     .fa.fa-user
                   a(href='https://{{item.tweetUrl}}', target='_blank')
                     .fa.fa-twitter.icon-twitter
-                  a(href='{{item.sourceOrigUrl}}?.jpg', download='download')
-                    .fa.fa-download
-
+                  a.clickable
+                    i.fa.fa-download(data-url='{{item.sourceOrigUrl}}', filename='{{item.userScreenName}}_{{item.tweetIdStr}}', download-from-url='download-from-url')
               div(ng-show='ranking.busy') Loading data...
 
     loading(
