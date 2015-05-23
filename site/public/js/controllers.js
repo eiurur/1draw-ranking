@@ -266,7 +266,7 @@ angular.module('myApp.controllers', [])
       ;
 
     $scope.isLoading        = false;
-    $scope.isRankingAllShow = false;
+    $scope.isRankingAllShow = ViewService.isRankingAllShow;
 
     idx         = _.findIndex(PostService.detailPostDatas, {'name': $routeParams.name});
     isCached    = (idx !== -1);
@@ -283,7 +283,6 @@ angular.module('myApp.controllers', [])
       $scope.posts            = [].concat(PostService.detailPostDatas[idx].posts);
       $scope.rankPosts        = [].concat(PostService.detailPostDatas[idx].rankPosts);
       $scope.pageTitle        = PostService.detailPostDatas[idx].pageTitle;
-      $scope.isRankingAllShow = ViewService.isRankingAllShow;
 
     } else {
 
