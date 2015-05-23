@@ -112,6 +112,21 @@ angular.module('myApp.directives', [])
       }
     };
   }])
+  .directive("scrollOnClick", function() {
+    return {
+      restrict: "A",
+      scope: {
+        scrollTo: "@"
+      },
+      link: function(scope, element, attrs) {
+        return element.on('click', function() {
+          return $('html, body').animate({
+            scrollTop: $(scope.scrollTo).offset().top
+          }, "slow");
+        });
+      }
+    };
+  })
   .directive('pageTitle', function () {
     return {
       restrict: 'E',

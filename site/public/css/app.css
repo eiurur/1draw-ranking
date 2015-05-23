@@ -491,14 +491,29 @@ a {
 }
 
 
+
 /**
- * Loading on footer
+ * Go to top
  */
-.footer--loading {
+.footer__buttons-wrapper {
+  bottom: 14px;
   position: fixed;
-  bottom: 0px;
-  height: 15px;
-  background: rgba(255, 255, 255, 0.3);
-  text-align: center;
-  width: 100%;
+  right: 14px;
+  z-index: 10000;
+}
+
+.footer__buttons {
+  position: relative;
+}
+
+.fotter__inout-wrapper {
+  margin-bottom: 8px;
+}
+
+.fa-circle {
+  color: black;
+}
+
+.fa-angle-up {
+  color: #ccd1d9;
 }
