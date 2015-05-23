@@ -49,7 +49,7 @@
               .detail-ranking-img
                 img.img-responsive.fade(img-preload='img-preload', ng-src='{{item.sourceUrl}}', ng-click='openLightboxModal(ranking.items, item, "totalNum")')
               .detail-ranking-text
-                a(href="https://twitter.com/{{item.userScreenName}}", target="_blank")
+                a(href='user/{{item.userIdStr}}')
                   img.detail-ranking-user_icon.pull-left(ng-src='{{item.userIcon}}')
                 .detail-ranking-user_text
                   .detail-ranking-user-text_name {{item.userName}}
