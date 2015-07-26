@@ -51,7 +51,7 @@
         if(err) {
           console.log(err);
         }
-        console.log(resp.posts); // use them for something
+        console.log(resp); // use them for something
       });
     });
   }
