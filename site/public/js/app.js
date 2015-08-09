@@ -44,7 +44,7 @@ angular.module('myApp', [
       when('http://127.0.0.1:9000/auth/twitter/callback', {
         redirectTo: '/'
       }).
-      when('http://ldraw-ranking.herokuapp.com/auth/twitter/callback', {
+      when('/auth/twitter/callback', {
         redirectTo: '/'
       });
     $locationProvider.html5Mode(true);
