@@ -47,11 +47,11 @@
       settings.client.photo(settings.TUMBLOG_NAME, {
         caption: postText,
         data: photos
-      }, function (err, resp) {
+      }, function (err, res) {
         if(err) {
           console.log(err);
         }
-        console.log(resp); // use them for something
+        console.log(res); // use them for something
       });
     });
   }
