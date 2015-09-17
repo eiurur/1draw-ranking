@@ -9,7 +9,7 @@ Ranking system with #1draw at the target in twitter.
 
 Summary of the day is posted to the following tumblog.
 
-<a href="http://eiua-1dr.tumblr.com/" target="_blank">#1draw-Ranking - tumblr</a>
+<a href="http://1draw-ranking.tumblr.com/" target="_blank">#1draw-Ranking - tumblr</a>
 
 Support tags
 -------
