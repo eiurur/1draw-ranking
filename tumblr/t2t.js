@@ -83,10 +83,10 @@
   };
 
   // for lovelive
-  exports.post2Tumblr2330 = function() {
+  exports.post2Tumblr2300 = function() {
     var nowTime = new Date();
 
-    console.log("post2Tumblr2330");
+    console.log("post2Tumblr2300");
 
     settings.CATEGORIES_DEFAULT.forEach(function (name) {
       var numShow = 10
