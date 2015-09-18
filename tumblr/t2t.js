@@ -72,6 +72,9 @@
       // Kancolle, Yuruyuri, Aikatsu!
       if(name === 'lovelive') return;
 
+      // 非公式版のアカウント(@pokeT1DRAW)が再開させたものの、曜日にとって開始時刻が違い、対応させるのが面倒なのでTumblrにはいっそ投稿しないことにした。
+      if(name === 'ptrainer') return;
+
       console.log("---------------------------");
       console.log("カテゴリ : " + name);
       postPhots2tumblr({
@@ -93,9 +96,12 @@
         , correspondDate = cd.getCorrespondDate(name)
         ;
 
-      // 23:30
+      // 23:00
       // LoveLive!
       if(name !== 'lovelive') return;
+
+      // 非公式版のアカウント(@pokeT1DRAW)が再開させたものの、曜日にとって開始時刻が違い、対応させるのが面倒なのでTumblrにはいっそ投稿しないことにした。
+      if(name === 'ptrainer') return;
 
       console.log("---------------------------");
       console.log("カテゴリ : " + name);
