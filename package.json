@@ -37,6 +37,7 @@
     "passport-twitter": "^1.0.2",
     "request": "^2.42.0",
     "session": "^0.1.0",
+    "sushi": "^1.2.2",
     "tumblr": "^0.4.1",
     "tumblrwks": "~0.2.0",
     "yakaa": "^1.0.0"
