@@ -57,6 +57,20 @@
   }
 
 
+  /**
+   * post to tumblr from CLI
+   * @param  {Object} params category format is 'aikatsu', date format is '2015-10-15'
+   */
+  exports.post = function(params) {
+    console.log("postByCategory:: category = " + params.category + ", date: "  + params.date);
+    postPhots2tumblr({
+        name: params.category
+      , correspondDate: params.date
+      , numShow: 10
+    });
+  };
+
+
   // for kancolle, aikatsu, yuruyuri, mobamas
   exports.post2Tumblr2200 = function() {
     var nowTime = new Date();
