@@ -30,7 +30,6 @@
     "mongodb": "^1.4.12",
     "mongoose": "^3.8.15",
     "morgan": "^1.0.0",
-    "newrelic": "^1.7.5",
     "node-twitter-api": "^1.3.0",
     "passport": "^0.2.1",
     "passport-twitter": "^1.0.2",

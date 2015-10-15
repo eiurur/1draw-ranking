@@ -1,6 +1,6 @@
 (function() {
   var async               = require('async')
-    , newrelic            = require('newrelic')
+    // , newrelic            = require('newrelic')
     , cronJob             = require('cron').CronJob
     , my                  = require('./lib/my')
     , serve               = require('./site/app').serve
