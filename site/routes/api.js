@@ -222,7 +222,7 @@ exports.readCount = function(req, res) {
       count: count
     });
   });
-}
+};
 
 exports.findUserDataByTwitterIdStr = function(req, res) {
 
@@ -235,7 +235,7 @@ exports.findUserDataByTwitterIdStr = function(req, res) {
       userData: userData
     });
   });
-}
+};
 
 exports.findTagRegistered = function(req, res) {
 
@@ -257,33 +257,33 @@ exports.findTagRegistered = function(req, res) {
         data: data
     });
   });
-}
+};
 
 // '#ラブライブ版~'
 exports.findTagAll = function(req, res) {
   res.json({
     data: settings.KEYWORDS
   });
-}
+};
 
 exports.findTagDefault = function(req, res) {
   res.json({
     data: settings.KEYWORDS_DEFAULT
   });
-}
+};
 
 // ex 'lovelive'
 exports.findCategoriesDefault = function(req, res) {
   res.json({
     data: settings.CATEGORIES_DEFAULT
   });
-}
+};
 
 exports.findCategoriesAll = function(req, res) {
   res.json({
     data: settings.CATEGORIES
   });
-}
+};
 
 
 exports.registerTag = function(req, res) {
@@ -300,7 +300,7 @@ exports.registerTag = function(req, res) {
       data: data
     });
   });
-}
+};
 
 
 exports.isAuthenticated = function(req, res) {
@@ -313,7 +313,8 @@ exports.isAuthenticated = function(req, res) {
   res.json({
     data: sessionUserData
   });
-}
+};
+
 exports.findUserById = function(req, res) {
   UserProvider.findUserById({
     twitterIdStr: req.body.twitterIdStr
@@ -322,7 +323,7 @@ exports.findUserById = function(req, res) {
       data: data
     });
   });
-}
+};
 
 exports.createFavorite = function(req, res) {
 
@@ -349,7 +350,7 @@ exports.createFavorite = function(req, res) {
       });
     }
   );
-}
+};
 
 exports.statusesRetweet = function(req, res) {
 
@@ -376,7 +377,7 @@ exports.statusesRetweet = function(req, res) {
       });
     }
   );
-}
+};
 
 exports.getTweeterData = function(req, res) {
   var token, token_secret;
@@ -399,7 +400,7 @@ exports.getTweeterData = function(req, res) {
       });
     }
   );
-}
+};
 
 exports.getTweeterTweet = function(req, res) {
 
@@ -428,7 +429,7 @@ exports.getTweeterTweet = function(req, res) {
       });
     }
   );
-}
+};
 
 exports.downloadZip = function(req, res) {
 
@@ -475,7 +476,7 @@ exports.downloadZip = function(req, res) {
       data: base64ArrayCompacted
     });
   });
-}
+};
 
 exports.download = function(req, res) {
   console.log("\n========> download\n");
@@ -484,4 +485,4 @@ exports.download = function(req, res) {
       base64Data: base64Data
     });
   });
-}
+};
