@@ -20,7 +20,7 @@
       , tumblr_pict_pattern       = /^[\s\S]*(http|https):\/\/tmblr.co\/[\s\S]*/g
       , twitpic_pict_pattern      = /^[\s\S]*(twitpic)/
       , twipple_pict_pattern      = /^[\s\S]*(p.twipple.jp)/
-      , twitter_short_url_pattern = /^[\s\S]*(http:\/\/t.co\/[\w]+)/
+      , twitter_short_url_pattern = /^[\s\S]*((http|https):\/\/t.co\/[\w]+)/
       ;
 
 
