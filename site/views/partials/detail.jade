@@ -57,7 +57,7 @@
                   .detail-ranking-user-text_tweet(ng-bind-html='item.tweetText | newlines')
               .detail-ranking-meta
                   i.fa.fa-retweet.icon-retweet(data-tweet-id-str='{{item.tweetIdStr}}', retweetable='retweetable')  {{item.retweetNum}}
-                  i.fa.fa-star.icon-star(data-tweet-id-str='{{item.tweetIdStr}}', favoritable='favoritable')  {{item.favNum}}
+                  i.fa.fa-heart.icon-heart(data-tweet-id-str='{{item.tweetIdStr}}', favoritable='favoritable')  {{item.favNum}}
                   a(href='user/{{item.userIdStr}}')
                     .fa.fa-user
                   a(href='https://{{item.tweetUrl}}', target='_blank')

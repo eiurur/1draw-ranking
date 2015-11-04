@@ -39,7 +39,7 @@
         postText += '<a href="' + postData.tweetUrl + '" target="_blank"><img src="' + postData.sourceUrl + '"></a>';
         postText += '<blockquote>' + postData.tweetText + '</blockquote>';
         postText += '<i class="fa fa-retweet fa-2x fa-border icon-retweet"> ' + postData.retweetNum + '</i>';
-        postText += '<i class="fa fa-star fa-2x fa-border icon-star"> ' + postData.favNum + '</i>';
+        postText += '<i class="fa fa-heart fa-2x fa-border icon-heart"> ' + postData.favNum + '</i>';
         postText += '<a href="https://twitter.com/' + postData.userScreenName + '" target="_blank"><i class="fa fa-twitter fa-2x fa-border icon-twitter"></i></a>';
         postText += '<br><hr><br>';
       });

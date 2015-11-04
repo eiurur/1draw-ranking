@@ -169,7 +169,7 @@ angular.module('myApp.directives', [])
         <div class="pict-discription">
           <div>
             <i data-tweet-id-str="{{post.tweetIdStr}}" retweetable="retweetable" class="fa fa-retweet fa-border icon-retweet"> {{post.retweetNum}}</i>
-            <i data-tweet-id-str="{{post.tweetIdStr}}" favoritable="favoritable" class="fa fa-star fa-border icon-star"> {{post.favNum}}</i>
+            <i data-tweet-id-str="{{post.tweetIdStr}}" favoritable="favoritable" class="fa fa-heart fa-border icon-heart"> {{post.favNum}}</i>
             <a href="user/{{post.userIdStr}}" >
               <div class="fa fa-user fa-border"></div>
             </a>
