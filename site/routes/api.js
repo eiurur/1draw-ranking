@@ -328,7 +328,13 @@ exports.findUserById = function(req, res) {
 exports.createFavorite = function(req, res) {
 
   // 未ログインなら何もせずバック
-  if(_.isUndefined(req.session.passport.user)) return;
+  if(_.isUndefined(req.session.passport.user)) {
+    res.json({
+        error: 'notAuthorized'
+    });
+    return;
+  }
+
 
   var message = null;
   settings.twitterAPI.favorites("create", {
@@ -355,7 +361,13 @@ exports.createFavorite = function(req, res) {
 exports.statusesRetweet = function(req, res) {
 
   // 未ログインなら何もせずバック
-  if(_.isUndefined(req.session.passport.user)) return;
+  if(_.isUndefined(req.session.passport.user)) {
+    res.json({
+        error: 'notAuthorized'
+    });
+    return;
+  }
+
 
   var message = null;
   settings.twitterAPI.statuses("retweet", {

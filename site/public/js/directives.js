@@ -25,14 +25,20 @@ angular.module('myApp.directives', [])
         element.on('click', function(event) {
           FavService.createFavorite(attrs.tweetIdStr)
             .success(function(data) {
+              if(_.has(data, 'error')) {
+                toaster.pop('warning', "ログインしてください");
+                return;
+              }
+
               if(data.data === null) {
                 toaster.pop('warning', "既にお気に入り済みです。");
               } else {
                 toaster.pop('success', "お気に入りに追加しました。", '<img src="' + data.data.entities.media[0].media_url + '" class="notify-success-img">', 3000, 'trustedHtml');
               }
             }).error(function(status, data) {
-               console.log(status);
-               console.log(data);
+              console.log(status);
+              console.log(data);
+              toaster.pop('warning', "ログインしてください");
             });
         });
       }
@@ -49,6 +55,11 @@ angular.module('myApp.directives', [])
           if(!window.confirm('リツイートしてもよろしいですか？')) return;
           RetweetService.statusesRetweet(attrs.tweetIdStr)
             .success(function(data) {
+              if(_.has(data, 'error')) {
+                toaster.pop('warning', "ログインしてください");
+                return;
+              }
+
               if(data.data === null) {
                 toaster.pop('warning', "既にリツイート済みです。");
               } else {
