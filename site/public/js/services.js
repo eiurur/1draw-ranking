@@ -149,6 +149,7 @@ angular.module('myApp.services', [])
             'aikatsu'
           , 'dairoku'
           , 'kancolle'
+          , 'kirara'
           , 'lovelive'
           , 'madomagi'
           , 'millimas'
@@ -156,6 +157,7 @@ angular.module('myApp.services', [])
           , 'prpr'
           , 'ptrainer'
           , 'toho'
+          , 'yuyusiki'
         ]
       , findDefault: function() {
         return $http.get('/api/findCategoriesDefault')
@@ -172,6 +174,7 @@ angular.module('myApp.services', [])
             'aikatsu'
           , 'dairoku'
           , 'kancolle'
+          , 'kirara'
           , 'lovelive'
           , 'madomagi'
           , 'millimas'
@@ -179,11 +182,13 @@ angular.module('myApp.services', [])
           , 'prpr'
           , 'ptrainer'
           , 'toho'
+          , 'yuyusiki'
         ]
         , default: [
             "#アイカツ版深夜の真剣お絵描き60分一本勝負"
           , "#第六駆版深夜の真剣お絵描き60分一本勝負"
           , "#艦これ版深夜の真剣お絵描き60分一本勝負"
+          , "#まんがタイムきらら版深夜の真剣お絵描き60分一本勝負"
           , "#ラブライブ版深夜の真剣お絵描き60分一本勝負"
           , "#まどマギ版真剣深夜のお絵かき60分一本勝負"
           , "#ミリマス版深夜の真剣お絵描き60分一本勝負"
@@ -191,6 +196,7 @@ angular.module('myApp.services', [])
           , "#prpr版深夜の真剣お絵描き60分一本勝負"
           , "#ポケモントレーナー版深夜の真剣お絵描き60分一本勝負"
           , "#深夜の真剣お絵描き60分一本勝負"
+          , "#ゆゆ式版深夜の真剣お絵描き60分一本勝負"
         ]
       , register: function(tagsStr, categoriesStr) {
         return $http.post('/api/registerTag', {tagsStr: tagsStr, categoriesStr: categoriesStr})
