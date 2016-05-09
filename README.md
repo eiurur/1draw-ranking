@@ -30,7 +30,7 @@ Support tags
 
 and [more](https://github.com/eiurur/1draw-ranking/raw/master/support-tags.md)...
 
-TODO
+Feature
 ------
 
 - Twitter Login
@@ -39,11 +39,9 @@ TODO
 - Zip Download
 - LightBox
 - Tag individual settings
-- [ ] Responsive
-- [ ] Slideshow in detail page
 - Infinite scroll
 - Toggle orderBy in user page
-- [ ] Watch list(not twitter follow)
+- [ ] Slideshow in detail page
 
 License
 ------
