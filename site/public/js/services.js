@@ -173,6 +173,7 @@ angular.module('myApp.services', [])
         defaultCategories: [
             'aikatsu'
           , 'dairoku'
+          , 'gochiusa'
           , 'kancolle'
           , 'kirara'
           , 'lovelive'
@@ -187,6 +188,7 @@ angular.module('myApp.services', [])
         , default: [
             "#アイカツ版深夜の真剣お絵描き60分一本勝負"
           , "#第六駆版深夜の真剣お絵描き60分一本勝負"
+          , "#ごちうさ版深夜の真剣お絵描き60分一本勝負"
           , "#艦これ版深夜の真剣お絵描き60分一本勝負"
           , "#まんがタイムきらら版深夜の真剣お絵描き60分一本勝負"
           , "#ラブライブ版深夜の真剣お絵描き60分一本勝負"
