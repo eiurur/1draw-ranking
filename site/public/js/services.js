@@ -147,6 +147,7 @@ angular.module('myApp.services', [])
     var category = {
         default: [
             'aikatsu'
+          , 'aist'
           , 'dairoku'
           , 'gochiusa'
           , 'kancolle'
@@ -173,6 +174,7 @@ angular.module('myApp.services', [])
     var tag = {
         defaultCategories: [
             'aikatsu'
+          , 'aist'
           , 'dairoku'
           , 'gochiusa'
           , 'kancolle'
@@ -188,6 +190,7 @@ angular.module('myApp.services', [])
         ]
         , default: [
             "#アイカツ版深夜の真剣お絵描き60分一本勝負"
+          , "#アイカツスターズ版深夜の真剣お絵描き60分一本勝負"
           , "#第六駆版深夜の真剣お絵描き60分一本勝負"
           , "#ごちうさ版深夜の真剣お絵描き60分一本勝負"
           , "#艦これ版深夜の真剣お絵描き60分一本勝負"
