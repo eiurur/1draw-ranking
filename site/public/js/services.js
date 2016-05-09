@@ -148,6 +148,7 @@ angular.module('myApp.services', [])
         default: [
             'aikatsu'
           , 'dairoku'
+          , 'gochiusa'
           , 'kancolle'
           , 'kirara'
           , 'lovelive'
