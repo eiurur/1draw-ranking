@@ -151,7 +151,7 @@ exports.readOverallRanking = function (req, res) {
   console.time("readOverallRanking");
   var tasks = [];
 
-  _.each(req.body.categories, function(name){
+  tasks = _.map(req.body.categories, function(name){
     console.log(name);
     var opt = {
         name: name
@@ -159,8 +159,7 @@ exports.readOverallRanking = function (req, res) {
       , numShow: 10
     }
 
-    tasks.push(
-      new Promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
         getPostDatas({
             opt: opt
           , query: 'findDescTotalPoint'
@@ -168,8 +167,7 @@ exports.readOverallRanking = function (req, res) {
         .then(function(rankCategoryPosts) {
           return resolve(rankCategoryPosts);
         });
-      })
-    );
+      });
   });
 
   Promise.all(tasks)
