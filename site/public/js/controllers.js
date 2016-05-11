@@ -14,7 +14,7 @@ angular.module('myApp.controllers', [])
       // Solution: http://stackoverflow.com/questions/16118762/angularjs-wrong-index-after-orderby
       var index = _.findLastIndex(images, {tweetIdStr: image.tweetIdStr || image.id_str});
 
-      _.each(images, function(image) {
+      var normalizedImages = _.map(images, function(image) {
           image.tweetIdStr = image.tweetIdStr || image.id_str
         , image.userIdStr = image.userIdStr || image.user.id_str
         , image.sourceOrigUrl = image.sourceOrigUrl || image.extended_entities.media[0].media_url + ':orig'
@@ -23,10 +23,11 @@ angular.module('myApp.controllers', [])
         , image.name = image.userName || image.user.name
         , image.screenName = image.userScreenName || image.user.screen_name
         // , image.icon = image.icon || TweetService.iconBigger(image.user.profile_image_url_https)
+        return image;
       });
 
 
-      Lightbox.openModal(images, index);
+      Lightbox.openModal(normalizedImages, index);
     };
   })
   .controller('IndexCtrl', function ($scope, CategoryService, PostService, TagService) {
@@ -233,10 +234,10 @@ angular.module('myApp.controllers', [])
         var expandedUrlListInDescription = TweetService.getExpandedURLFromDescription(data.data.entities);
         var expandedUrlListInUrl = TweetService.getExpandedURLFromURL(data.data.entities);
 
-        _.each(expandedUrlListInDescription, function(urls) {
+        _.map(expandedUrlListInDescription, function(urls) {
           data.data.description = data.data.description.replace(urls.url, urls.expanded_url);
         });
-        _.each(expandedUrlListInUrl, function(urls) {
+        _.map(expandedUrlListInUrl, function(urls) {
           data.data.url = data.data.url.replace(urls.url, urls.expanded_url);
         });
 

@@ -117,24 +117,22 @@ exports.readRankingAllCategory = function (req, res) {
   console.time("readRankingAllCategory");
   var tasks = [];
 
-  _.each(settings.CATEGORIES, function(name){
+  tasks = _.map(settings.CATEGORIES, function(name){
     var opt = {
         name: name
       , correspondDate: cd.getCorrespondDate(name)
       , numShow: 10
     }
 
-    tasks.push(
-      new Promise(function(resolve, reject) {
-        getPostDatas({
-            opt: opt
-          , query: 'findDescTotalPoint'
-        })
-        .then(function(rankCategoryPosts) {
-          return resolve(rankCategoryPosts);
-        });
+    return new Promise(function(resolve, reject) {
+      getPostDatas({
+          opt: opt
+        , query: 'findDescTotalPoint'
       })
-    );
+      .then(function(rankCategoryPosts) {
+        return resolve(rankCategoryPosts);
+      });
+    });
   });
 
   Promise.all(tasks)
@@ -183,23 +181,22 @@ exports.readUserPosts = function (req, res) {
 
   var tasks = [];
 
-  _.each(settings.CATEGORIES, function(name){
+  tasks = _.map(settings.CATEGORIES, function(name){
     var opt = {
         name: name
       , twitterIdStr: req.params.twitterIdStr
     }
 
-    tasks.push(
-      new Promise(function(resolve, reject) {
-        getPostDatas({
-            opt: opt
-          , query: 'findByTwitterIdStrAndCategory'
-        })
-        .then(function(userAllCategoryPosts) {
-          return resolve(userAllCategoryPosts);
-        });
+
+    return new Promise(function(resolve, reject) {
+      getPostDatas({
+          opt: opt
+        , query: 'findByTwitterIdStrAndCategory'
       })
-    );
+      .then(function(userAllCategoryPosts) {
+        return resolve(userAllCategoryPosts);
+      });
+    });
   });
 
   Promise.all(tasks)
@@ -462,21 +459,19 @@ exports.downloadZip = function(req, res) {
   };
 
   var tasks = [];
-  _.each(req.body.posts, function(post){
-    tasks.push(
-      new Promise(function(resolve, reject) {
-        loadBase64Image(post.sourceOrigUrl)
-        .then(function(imageBase64) {
-          return resolve({
-              image: imageBase64
-            , name: post.tweetIdStr
-          });
-        })
-        .catch(function(error) {
-          return resolve('');
+  tasks = _.map(req.body.posts, function(post){
+    return new Promise(function(resolve, reject) {
+      loadBase64Image(post.sourceOrigUrl)
+      .then(function(imageBase64) {
+        return resolve({
+            image: imageBase64
+          , name: post.tweetIdStr
         });
       })
-    );
+      .catch(function(error) {
+        return resolve('');
+      });
+    });
   });
 
   Promise.all(tasks)

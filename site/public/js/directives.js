@@ -90,7 +90,7 @@ angular.module('myApp.directives', [])
           DownloadService.zip(postsParsed)
             .success(function(data) {
               var zip = new JSZip();
-              _.each(data.data, function(file){
+              _.map(data.data, function(file){
                 zip.file(file.name + '.jpg', file.image, {base64: true});
               });
               var content = zip.generate({type:"blob"});
