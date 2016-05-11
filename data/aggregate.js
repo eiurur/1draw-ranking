@@ -61,7 +61,7 @@
       },
       sourceUrl: function(entities) {
         var isPicFromTwitter = _.has(entities, 'media');
-        if(isPicFromTwitter) return entities.media[0].media_url + ':orig';
+        if(isPicFromTwitter) return entities.media[0].media_url_https + ':orig';
 
         var isPicFromTwitpic = twitpic_pict_pattern.test(entities.urls[0].display_url)
         if(isPicFromTwitpic) return entities.urls[0].expanded_url.replace('twitpic.com/', 'twitpic.com/show/full/');
