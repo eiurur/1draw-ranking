@@ -107,13 +107,13 @@ angular.module('myApp.controllers', [])
               .success(function(data) {
                 $scope.tagAll = [];
                 var selectedTags = (_.isNull(data.data)) ? TagService.default : JSON.parse(data.data.tagsStr);
-                _.each(tagAll.data, function(tag, idx) {
+                $scope.tagAll = _.map(tagAll.data, function(tag, idx) {
                   var isSelected = _.contains(selectedTags, tagAll.data[idx]);
-                  $scope.tagAll.push({
+                  return {
                       'tag': tag
                     , 'category': categoryAll.data[idx]
                     , 'isSelected': isSelected
-                  });
+                  };
                 });
 
                 $scope.isLoading = false;
