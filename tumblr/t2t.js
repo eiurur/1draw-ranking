@@ -11,6 +11,11 @@
     ;
 
 
+  var getTags = function(hashtag) {
+    var idx  = _.indexOf(settings.KEYWORDS_DEFAULT, hashtag);
+    return settings.TAGS[idx];
+  };
+
   var postPhots2tumblr = function(params) {
     var photos = [];
 
@@ -21,6 +26,9 @@
     }, function(error, postDatas) {
       if(_.isEmpty(postDatas)) return;
       var tags, title;
+      tags = getTags(postDatas[0].tags);
+
+
       var postText = '<strong>' + '【' + params['correspondDate'] + '】 ' +  postDatas[0].tags + '</strong><hr><p>[[MORE]]</p>';
       postDatas.forEach(function (postData, i) {
         photos.push(postData.sourceUrl);
@@ -46,7 +54,8 @@
 
       settings.client.photo(settings.TUMBLOG_NAME, {
         caption: postText,
-        data: photos
+        data: photos,
+        tags: tags
       }, function (err, res) {
         if(err) {
           console.log(err);
