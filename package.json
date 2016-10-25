@@ -6,7 +6,7 @@
   "author": "eiurur",
   "scripts": {
     "start": "node app.js",
-    "postinstall": "rm -rf node_modules && npm cache clean && npm install"
+    "postinstall": "rm -rf node_modules && npm cache clean"
   },
   "dependencies": {
     "async": "^0.9.0",
