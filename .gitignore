@@ -3,9 +3,9 @@ development.js
 newrelic_agent.log
 assets/*
 deploy/*
-node_modules/*
+node_modules/**
 !node_modules/tumblr.js
-bower_components/*
+bower_components/**
 gulpfile*
 **/application_.mf
 1d_*
