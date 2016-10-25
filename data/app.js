@@ -9,24 +9,24 @@
     ;
 
   exports.getTweetFromTwitter= function(){
-    settings.twitter.stream('statuses/filter', {'track': settings.KEYWORDS}, function(stream) {
 
-      stream.on('data', function(data){
-        aggregate.aggregate(data);
+    settings.T.stream('statuses/filter', {'track': settings.KEYWORDS})
+      .on('tweet', function(tweet){
+
+        aggregate.aggregate(tweet);
       });
+    //   stream.on('end', function (response) {
 
-      stream.on('end', function (response) {
+    //     // 切断された場合の処理
+    //     my.cl("end");
+    //   });
 
-        // 切断された場合の処理
-        my.cl("end");
-      });
+    //   stream.on('destroy', function (response) {
 
-      stream.on('destroy', function (response) {
-
-        // 接続が破棄された場合の処理
-        my.cl("destroy");
-      });
-    });
+    //     // 接続が破棄された場合の処理
+    //     my.cl("destroy");
+    //   });
+    // });
   }
 
 })();

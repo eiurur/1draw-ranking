@@ -38,6 +38,7 @@
     "sushi": "^1.2.2",
     "tumblr": "^0.4.1",
     "tumblrwks": "~0.2.0",
+    "twit": "^2.2.5",
     "yakaa": "^1.0.0"
   },
   "devDependencies": {
