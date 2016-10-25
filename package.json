@@ -70,6 +70,6 @@
     "vinyl-source-stream": "^1.0.0"
   },
   "engines": {
-    "node": "4.1.2"
+    "node": "6.x"
   }
 }
