@@ -19,9 +19,6 @@
 
         // 切断された場合の処理
         my.cl("end");
-
-        // 自動で再起動
-        arguments.callee();
       });
 
       stream.on('destroy', function (response) {
