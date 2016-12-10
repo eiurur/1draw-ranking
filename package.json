@@ -39,12 +39,15 @@
     "session": "^0.1.0",
     "sushi": "^1.2.2",
     "tumblr": "^0.4.1",
-    "tumblr.js": "https://github.com/matthewisabel/tumblr.js/tarball/multi-image-posting",
+    "tumblr.js": "github:matthewisabel/tumblr.js",
     "tumblrwks": "~0.2.0",
     "twit": "^2.2.5",
     "yakaa": "^1.0.0"
   },
   "engines": {
     "node": "6.x"
+  },
+  "devDependencies": {
+    "tumblr.js": "github:matthewisabel/tumblr.js"
   }
 }
