@@ -17,9 +17,6 @@ var NUM_GET_TWEETER_TWEET = 100;
 
 var getPostDatas = function(params) {
   return new Promise(function(resolve, reject) {
-
-    console.log(params);
-
     PostProvider[params.query](params.opt, function(error, postDatas) {
       var postWidth = 0
         , dataCount = 0
