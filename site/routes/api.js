@@ -22,6 +22,7 @@ var getPostDatas = function(params) {
       var postWidth = 0
         , dataCount = 0
         , posts     = []
+        , postDatas = postDatas || []
         ;
 
       postDatas.forEach(function (postData) {
