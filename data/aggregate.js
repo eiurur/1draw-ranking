@@ -147,6 +147,7 @@
     try {
       // console.time("aggregate");
 
+      console.log(data)
       var isRT = (_.has(data, 'retweeted_status'));
 
       checkIllegalTweet(isRT)
@@ -154,6 +155,7 @@
       var tweetData = assign(isRT);
 
       delete tweetData.entities;
+
 
       if(!isRT) {
         insertDB(tweetData);

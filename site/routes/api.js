@@ -235,7 +235,7 @@ exports.findUserDataByTwitterIdStr = function(req, res) {
 exports.findTagRegistered = function(req, res) {
 
   // HACK: もっと綺麗に書きたい
-  if(_.isUndefined(req.session.passport.user)) {
+  if(!req.session.passport || _.isUndefined(req.session.passport.user)) {
     res.json({
       data: null
     });
@@ -302,7 +302,7 @@ exports.isAuthenticated = function(req, res) {
 
   var sessionUserData = null;
 
-  if(!_.isUndefined(req.session.passport.user)) {
+  if(req.session.passport && !_.isUndefined(req.session.passport.user)) {
     sessionUserData = req.session.passport.user;
   }
   res.json({

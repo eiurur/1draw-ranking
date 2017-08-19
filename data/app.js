@@ -9,9 +9,9 @@
     ;
 
   exports.getTweetFromTwitter= function(){
-
-    settings.T.stream('statuses/filter', {'track': settings.KEYWORDS})
-    .on('tweet', function(tweet){
+    var stream = settings.T.stream('statuses/filter', {'track': settings.KEYWORDS});
+    stream.on('tweet', function(tweet){
+      console.log(tweet);
       aggregate.aggregate(tweet);
     });
   }
